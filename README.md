@@ -10,11 +10,8 @@
 
   - React + Vite
   - Tailwind
-  - Django + REST
+  - Golang
   - GraphQL
-
-2. Second Architecture
-
-  - HTMX
-  - Tailwind
-  - Django
+  - SurrealDB -> deploy??
+  - Socket.io
+  - Upoadthing || Supabase
