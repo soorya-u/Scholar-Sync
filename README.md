@@ -1,4 +1,4 @@
-# Convo
+# Scholar-Sync
 
 ## Objective
 
@@ -13,5 +13,11 @@
   - Golang
   - GraphQL
   - SurrealDB -> deploy??
-  - Socket.io
-  - Upoadthing || Supabase
+  - Socket.io?
+  - Supabase
+
+2. Second Architecture
+
+  - React + Vite
+  - Tailwind
+  - Pocketbase -> Deploy
