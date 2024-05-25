@@ -1,16 +1,37 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"os"
+
+	"github.com/gin-gonic/gin"
+	"github.com/soorya-u/scholar-sync/routes"
+)
+
+const defaultPort = "8080"
 
 func main() {
-	r := gin.Default()
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = defaultPort
+	}
 
-	r.GET("/api", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"data": "gin working",
+	server := gin.Default()
+
+	api := server.Group("/api")
+	{
+		api.GET("/test", func(ctx *gin.Context) {
+			ctx.JSON(200, gin.H{
+				"data": "Gin is Working",
+			})
 		})
-	})
+	}
 
-	r.Run(":7000")
+	graphql := server.Group("/graphql")
+	{
+		graphql.POST("", routes.GraphQLHandler())
+		graphql.GET("/playground", routes.PlaygroundHandler())
+	}
+
+	server.Run(":" + port)
 
 }
