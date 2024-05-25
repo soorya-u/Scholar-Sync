@@ -5,6 +5,7 @@ go 1.22.3
 require (
 	github.com/99designs/gqlgen v0.17.47
 	github.com/gin-gonic/gin v1.10.0
+	github.com/surrealdb/surrealdb.go v0.2.1
 	github.com/vektah/gqlparser/v2 v2.5.12
 )
 
