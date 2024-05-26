@@ -8,8 +8,10 @@
 
 1. First Architecture
 
-  - [ ] React + Vite
-  - [ ] Tailwind
+  - [x] React + Vite
+  - [x] Tailwind
+  - [x] Tanstack Router
+  - [x] Apollo GQL
   - [x] Golang
     - [x] Gin 
   - [x] GraphQL
