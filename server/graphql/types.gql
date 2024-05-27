@@ -15,19 +15,19 @@ type Profile {
   createdAt: Time!
 }
 
-type Server {
+type Core {
   id: UUID!
   name: String!
   creator: Profile!
-  groups: [Group]
+  nexus: [Nexus]
   createdAt: Time!
   updatedAt: Time!
 }
 
-type Group {
+type Nexus {
   id: UUID!
   name: String!
-  server: Server!
+  core: Core!
   creator: Profile!
   files: [File]
   announcements: [Announcement]
@@ -37,15 +37,17 @@ type Group {
 
 type File {
   id: UUID!
-  group: Group!
+  title: String!
   fileUrl: String!
   sentBy: Profile!
+  nexus: Nexus!
   timeStamp: Time!
 }
 
 type Announcement {
   id: UUID!
-  group: Group!
+  nexus: Nexus!
+  title: String!
   message: String!
   sentBy: Profile!
   timeStamp: Time!

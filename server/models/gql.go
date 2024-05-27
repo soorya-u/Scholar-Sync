@@ -13,29 +13,29 @@ import (
 
 type Announcement struct {
 	ID        uuid.UUID `json:"id"`
-	Group     *Group    `json:"group"`
+	Nexus     *Nexus    `json:"nexus"`
+	Title     string    `json:"title"`
 	Message   string    `json:"message"`
 	SentBy    *Profile  `json:"sentBy"`
 	TimeStamp time.Time `json:"timeStamp"`
 }
 
-type File struct {
+type Core struct {
 	ID        uuid.UUID `json:"id"`
-	Group     *Group    `json:"group"`
-	FileURL   string    `json:"fileUrl"`
-	SentBy    *Profile  `json:"sentBy"`
-	TimeStamp time.Time `json:"timeStamp"`
+	Name      string    `json:"name"`
+	Creator   *Profile  `json:"creator"`
+	Nexus     []*Nexus  `json:"nexus,omitempty"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-type Group struct {
-	ID            uuid.UUID       `json:"id"`
-	Name          string          `json:"name"`
-	Server        *Server         `json:"server"`
-	Creator       *Profile        `json:"creator"`
-	Files         []*File         `json:"files,omitempty"`
-	Announcements []*Announcement `json:"announcements,omitempty"`
-	CreatedAt     time.Time       `json:"createdAt"`
-	UpdatedAt     time.Time       `json:"updatedAt"`
+type File struct {
+	ID        uuid.UUID `json:"id"`
+	Title     string    `json:"title"`
+	FileURL   string    `json:"fileUrl"`
+	SentBy    *Profile  `json:"sentBy"`
+	Nexus     *Nexus    `json:"nexus"`
+	TimeStamp time.Time `json:"timeStamp"`
 }
 
 type LoginData struct {
@@ -44,6 +44,17 @@ type LoginData struct {
 }
 
 type Mutation struct {
+}
+
+type Nexus struct {
+	ID            uuid.UUID       `json:"id"`
+	Name          string          `json:"name"`
+	Core          *Core           `json:"core"`
+	Creator       *Profile        `json:"creator"`
+	Files         []*File         `json:"files,omitempty"`
+	Announcements []*Announcement `json:"announcements,omitempty"`
+	CreatedAt     time.Time       `json:"createdAt"`
+	UpdatedAt     time.Time       `json:"updatedAt"`
 }
 
 type Profile struct {
@@ -55,15 +66,6 @@ type Profile struct {
 }
 
 type Query struct {
-}
-
-type Server struct {
-	ID        uuid.UUID `json:"id"`
-	Name      string    `json:"name"`
-	Creator   *Profile  `json:"creator"`
-	Groups    []*Group  `json:"groups,omitempty"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type SignUpData struct {
