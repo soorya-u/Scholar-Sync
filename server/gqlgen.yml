@@ -24,7 +24,7 @@ resolver:
   package: resolvers
   filename_template: "{name}.go"
   # Optional: turn on to not generate template comments above resolvers
-  # omit_template_comment: false
+  omit_template_comment: false
 
 # Optional: turn on use ` + "`" + `gqlgen:"fieldName"` + "`" + ` tags in your models
 # struct_tag: json
@@ -85,3 +85,6 @@ models:
       - github.com/99designs/gqlgen/graphql.Int
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
+  UUID:
+    model:
+      - github.com/99designs/gqlgen/graphql.UUID

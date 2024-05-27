@@ -1,52 +1,43 @@
 package database
 
-import (
-	"crypto/rand"
-	"fmt"
-	"math/big"
+// func (db *DB) CreateTodo(input models.NewTodo) (*models.Todo, error) {
+// 	randNumber, err := rand.Int(rand.Reader, big.NewInt(100))
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to generate random number: %v", err)
+// 	}
 
-	"github.com/soorya-u/scholar-sync/models"
-	"github.com/surrealdb/surrealdb.go"
-)
+// 	todo := &models.Todo{
+// 		Text: input.Text,
+// 		ID:   fmt.Sprintf("T%d", randNumber),
+// 		User: &models.User{ID: input.UserID, Name: "user " + input.UserID},
+// 	}
+// 	data, err := db.client.Create("todo", todo)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to create todo: %v", err)
+// 	}
 
-func (db *DB) CreateTodo(input models.NewTodo) (*models.Todo, error) {
-	randNumber, err := rand.Int(rand.Reader, big.NewInt(100))
-	if err != nil {
-		return nil, fmt.Errorf("failed to generate random number: %v", err)
-	}
+// 	var createdTodos []models.Todo
+// 	if err := surrealdb.Unmarshal(data, &createdTodos); err != nil {
+// 		return nil, fmt.Errorf("failed to unmarshal created todo: %v", err)
+// 	}
 
-	todo := &models.Todo{
-		Text: input.Text,
-		ID:   fmt.Sprintf("T%d", randNumber),
-		User: &models.User{ID: input.UserID, Name: "user " + input.UserID},
-	}
-	data, err := db.client.Create("todo", todo)
-	if err != nil {
-		return nil, fmt.Errorf("failed to create todo: %v", err)
-	}
+// 	if len(createdTodos) == 0 {
+// 		return nil, fmt.Errorf("no todo created")
+// 	}
 
-	var createdTodos []models.Todo
-	if err := surrealdb.Unmarshal(data, &createdTodos); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal created todo: %v", err)
-	}
+// 	return &createdTodos[0], nil
+// }
 
-	if len(createdTodos) == 0 {
-		return nil, fmt.Errorf("no todo created")
-	}
+// func (db *DB) GetAllTodos() ([]*models.Todo, error) {
+// 	var todos []*models.Todo
 
-	return &createdTodos[0], nil
-}
+// 	data, err := db.client.Select("todo")
+// 	if err != nil {
+// 		return nil, fmt.Errorf("failed to fetch todos: %v", err)
+// 	}
 
-func (db *DB) GetAllTodos() ([]*models.Todo, error) {
-	var todos []*models.Todo
-
-	data, err := db.client.Select("todo")
-	if err != nil {
-		return nil, fmt.Errorf("failed to fetch todos: %v", err)
-	}
-
-	if err := surrealdb.Unmarshal(data, &todos); err != nil {
-		return nil, fmt.Errorf("failed to unmarshal fetched todos: %v", err)
-	}
-	return todos, nil
-}
+// 	if err := surrealdb.Unmarshal(data, &todos); err != nil {
+// 		return nil, fmt.Errorf("failed to unmarshal fetched todos: %v", err)
+// 	}
+// 	return todos, nil
+// }

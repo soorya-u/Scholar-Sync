@@ -2,25 +2,117 @@
 
 package models
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type Announcement struct {
+	ID        uuid.UUID `json:"id"`
+	Nexus     *Nexus    `json:"nexus"`
+	Title     string    `json:"title"`
+	Message   string    `json:"message"`
+	SentBy    *Profile  `json:"sentBy"`
+	TimeStamp time.Time `json:"timeStamp"`
+}
+
+type Core struct {
+	ID        uuid.UUID `json:"id"`
+	Name      string    `json:"name"`
+	Creator   *Profile  `json:"creator"`
+	Nexus     []*Nexus  `json:"nexus,omitempty"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+type File struct {
+	ID        uuid.UUID `json:"id"`
+	Title     string    `json:"title"`
+	FileURL   string    `json:"fileUrl"`
+	SentBy    *Profile  `json:"sentBy"`
+	Nexus     *Nexus    `json:"nexus"`
+	TimeStamp time.Time `json:"timeStamp"`
+}
+
+type LoginData struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Nexus struct {
+	ID            uuid.UUID       `json:"id"`
+	Name          string          `json:"name"`
+	Core          *Core           `json:"core"`
+	Creator       *Profile        `json:"creator"`
+	Files         []*File         `json:"files,omitempty"`
+	Announcements []*Announcement `json:"announcements,omitempty"`
+	CreatedAt     time.Time       `json:"createdAt"`
+	UpdatedAt     time.Time       `json:"updatedAt"`
+}
+
+type Profile struct {
+	ID          uuid.UUID   `json:"id"`
+	FullName    string      `json:"fullName"`
+	Email       string      `json:"email"`
+	ProfileType ProfileType `json:"profileType"`
+	CreatedAt   time.Time   `json:"createdAt"`
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type SignUpData struct {
+	FullName string `json:"fullName"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type ProfileType string
+
+const (
+	ProfileTypeAdmin       ProfileType = "ADMIN"
+	ProfileTypePseudoadmin ProfileType = "PSEUDOADMIN"
+	ProfileTypeNormal      ProfileType = "NORMAL"
+)
+
+var AllProfileType = []ProfileType{
+	ProfileTypeAdmin,
+	ProfileTypePseudoadmin,
+	ProfileTypeNormal,
+}
+
+func (e ProfileType) IsValid() bool {
+	switch e {
+	case ProfileTypeAdmin, ProfileTypePseudoadmin, ProfileTypeNormal:
+		return true
+	}
+	return false
+}
+
+func (e ProfileType) String() string {
+	return string(e)
+}
+
+func (e *ProfileType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ProfileType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ProfileType", str)
+	}
+	return nil
+}
+
+func (e ProfileType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

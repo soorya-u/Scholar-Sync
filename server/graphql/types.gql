@@ -1,0 +1,54 @@
+scalar Time
+scalar UUID
+
+enum ProfileType {
+  ADMIN
+  PSEUDOADMIN
+  NORMAL
+}
+
+type Profile {
+  id: UUID!
+  fullName: String!
+  email: String!
+  profileType: ProfileType!
+  createdAt: Time!
+}
+
+type Core {
+  id: UUID!
+  name: String!
+  creator: Profile!
+  nexus: [Nexus]
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type Nexus {
+  id: UUID!
+  name: String!
+  core: Core!
+  creator: Profile!
+  files: [File]
+  announcements: [Announcement]
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type File {
+  id: UUID!
+  title: String!
+  fileUrl: String!
+  sentBy: Profile!
+  nexus: Nexus!
+  timeStamp: Time!
+}
+
+type Announcement {
+  id: UUID!
+  nexus: Nexus!
+  title: String!
+  message: String!
+  sentBy: Profile!
+  timeStamp: Time!
+}
