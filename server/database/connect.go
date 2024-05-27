@@ -2,6 +2,7 @@ package database
 
 import (
 	"log"
+	"os"
 
 	"github.com/surrealdb/surrealdb.go"
 )
@@ -27,6 +28,17 @@ func Connect() *DB {
 
 	if _, err := db.Use("test", "test"); err != nil {
 		log.Fatalf("failed to switch to specified database: %v", err)
+	}
+
+	dataBytes, err := os.ReadFile("./database/init.surql")
+	if err != nil {
+		log.Fatalf("Unable to read the File: %v", err)
+	}
+
+	query := string(dataBytes)
+	var params interface{}
+	if _, err := db.Query(query, params); err != nil {
+		log.Fatalf("Unable to initialize Database Schema: %v", err)
 	}
 
 	return &DB{
