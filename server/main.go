@@ -17,20 +17,8 @@ func main() {
 
 	server := gin.Default()
 
-	api := server.Group("/api")
-	{
-		api.GET("/test", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{
-				"data": "Gin is Working",
-			})
-		})
-	}
-
-	graphql := server.Group("/graphql")
-	{
-		graphql.POST("", routes.GraphQLHandler())
-		graphql.GET("/playground", routes.PlaygroundHandler())
-	}
+	routes.GraphQLRoutes(server)
+	routes.APIRoutes(server)
 
 	server.Run(":" + port)
 
