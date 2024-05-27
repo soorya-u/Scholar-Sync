@@ -6,26 +6,18 @@ package resolvers
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/models"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input models.NewTodo) (*models.Todo, error) {
-	return db.CreateTodo(input)
+// GetUser is the resolver for the getUser field.
+func (r *queryResolver) GetUser(ctx context.Context, input *models.LoginData) (*models.Profile, error) {
+	panic(fmt.Errorf("not implemented: GetUser - getUser"))
 }
-
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*models.Todo, error) {
-	return db.GetAllTodos()
-}
-
-// Mutation returns generated.MutationResolver implementation.
-func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }

@@ -1,0 +1,8 @@
+input LoginData {
+  email: String!
+  password: String!
+}
+
+type Query {
+  getUser(input: LoginData): Profile
+}

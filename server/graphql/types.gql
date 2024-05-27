@@ -1,0 +1,52 @@
+scalar Time
+scalar UUID
+
+enum ProfileType {
+  ADMIN
+  PSEUDOADMIN
+  NORMAL
+}
+
+type Profile {
+  id: UUID!
+  fullName: String!
+  email: String!
+  profileType: ProfileType!
+  createdAt: Time!
+}
+
+type Server {
+  id: UUID!
+  name: String!
+  creator: Profile!
+  groups: [Group]
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type Group {
+  id: UUID!
+  name: String!
+  server: Server!
+  creator: Profile!
+  files: [File]
+  announcements: [Announcement]
+  createdAt: Time!
+  updatedAt: Time!
+}
+
+type File {
+  id: UUID!
+  group: Group!
+  fileUrl: String!
+  sentBy: Profile!
+  timeStamp: Time!
+}
+
+type Announcement {
+  id: UUID!
+  group: Group!
+  message: String!
+  sentBy: Profile!
+  timeStamp: Time!
+}

@@ -2,25 +2,115 @@
 
 package models
 
+import (
+	"fmt"
+	"io"
+	"strconv"
+	"time"
+
+	"github.com/google/uuid"
+)
+
+type Announcement struct {
+	ID        uuid.UUID `json:"id"`
+	Group     *Group    `json:"group"`
+	Message   string    `json:"message"`
+	SentBy    *Profile  `json:"sentBy"`
+	TimeStamp time.Time `json:"timeStamp"`
+}
+
+type File struct {
+	ID        uuid.UUID `json:"id"`
+	Group     *Group    `json:"group"`
+	FileURL   string    `json:"fileUrl"`
+	SentBy    *Profile  `json:"sentBy"`
+	TimeStamp time.Time `json:"timeStamp"`
+}
+
+type Group struct {
+	ID            uuid.UUID       `json:"id"`
+	Name          string          `json:"name"`
+	Server        *Server         `json:"server"`
+	Creator       *Profile        `json:"creator"`
+	Files         []*File         `json:"files,omitempty"`
+	Announcements []*Announcement `json:"announcements,omitempty"`
+	CreatedAt     time.Time       `json:"createdAt"`
+	UpdatedAt     time.Time       `json:"updatedAt"`
+}
+
+type LoginData struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type Mutation struct {
 }
 
-type NewTodo struct {
-	Text   string `json:"text"`
-	UserID string `json:"userId"`
+type Profile struct {
+	ID          uuid.UUID   `json:"id"`
+	FullName    string      `json:"fullName"`
+	Email       string      `json:"email"`
+	ProfileType ProfileType `json:"profileType"`
+	CreatedAt   time.Time   `json:"createdAt"`
 }
 
 type Query struct {
 }
 
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-	User *User  `json:"user"`
+type Server struct {
+	ID        uuid.UUID `json:"id"`
+	Name      string    `json:"name"`
+	Creator   *Profile  `json:"creator"`
+	Groups    []*Group  `json:"groups,omitempty"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
-type User struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+type SignUpData struct {
+	FullName string `json:"fullName"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type ProfileType string
+
+const (
+	ProfileTypeAdmin       ProfileType = "ADMIN"
+	ProfileTypePseudoadmin ProfileType = "PSEUDOADMIN"
+	ProfileTypeNormal      ProfileType = "NORMAL"
+)
+
+var AllProfileType = []ProfileType{
+	ProfileTypeAdmin,
+	ProfileTypePseudoadmin,
+	ProfileTypeNormal,
+}
+
+func (e ProfileType) IsValid() bool {
+	switch e {
+	case ProfileTypeAdmin, ProfileTypePseudoadmin, ProfileTypeNormal:
+		return true
+	}
+	return false
+}
+
+func (e ProfileType) String() string {
+	return string(e)
+}
+
+func (e *ProfileType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ProfileType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ProfileType", str)
+	}
+	return nil
+}
+
+func (e ProfileType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

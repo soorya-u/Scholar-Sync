@@ -6,7 +6,7 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-const connectionString = "ws://0.0.0.0:8080/rpc"
+const connectionString = "ws://127.0.0.1:8080/rpc"
 
 type DB struct {
 	client *surrealdb.DB

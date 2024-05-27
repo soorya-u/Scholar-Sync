@@ -1,0 +1,9 @@
+input SignUpData {
+  fullName: String!
+  email: String!
+  password: String!
+}
+
+type Mutation {
+  createUser(input: SignUpData!): String!
+}

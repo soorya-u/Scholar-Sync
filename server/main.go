@@ -7,7 +7,7 @@ import (
 	"github.com/soorya-u/scholar-sync/routes"
 )
 
-const defaultPort = "8080"
+const defaultPort = "7000"
 
 func main() {
 	port := os.Getenv("PORT")
