@@ -14,7 +14,6 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	"github.com/google/uuid"
 	"github.com/soorya-u/scholar-sync/models"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
@@ -497,7 +496,6 @@ type Query {
 }
 `, BuiltIn: false},
 	{Name: "../graphql/types.gql", Input: `scalar Time
-scalar UUID
 
 enum ProfileType {
   ADMIN
@@ -506,7 +504,7 @@ enum ProfileType {
 }
 
 type Profile {
-  id: UUID!
+  id: String!
   fullName: String!
   email: String!
   profileType: ProfileType!
@@ -514,7 +512,7 @@ type Profile {
 }
 
 type Core {
-  id: UUID!
+  id: String!
   name: String!
   creator: Profile!
   nexus: [Nexus]
@@ -523,7 +521,7 @@ type Core {
 }
 
 type Nexus {
-  id: UUID!
+  id: String!
   name: String!
   core: Core!
   creator: Profile!
@@ -534,7 +532,7 @@ type Nexus {
 }
 
 type File {
-  id: UUID!
+  id: String!
   title: String!
   fileUrl: String!
   sentBy: Profile!
@@ -543,7 +541,7 @@ type File {
 }
 
 type Announcement {
-  id: UUID!
+  id: String!
   nexus: Nexus!
   title: String!
   message: String!
@@ -667,9 +665,9 @@ func (ec *executionContext) _Announcement_id(ctx context.Context, field graphql.
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Announcement_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -679,7 +677,7 @@ func (ec *executionContext) fieldContext_Announcement_id(_ context.Context, fiel
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -961,9 +959,9 @@ func (ec *executionContext) _Core_id(ctx context.Context, field graphql.Collecte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Core_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -973,7 +971,7 @@ func (ec *executionContext) fieldContext_Core_id(_ context.Context, field graphq
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1252,9 +1250,9 @@ func (ec *executionContext) _File_id(ctx context.Context, field graphql.Collecte
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_File_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1264,7 +1262,7 @@ func (ec *executionContext) fieldContext_File_id(_ context.Context, field graphq
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1601,9 +1599,9 @@ func (ec *executionContext) _Nexus_id(ctx context.Context, field graphql.Collect
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Nexus_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -1613,7 +1611,7 @@ func (ec *executionContext) fieldContext_Nexus_id(_ context.Context, field graph
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -2001,9 +1999,9 @@ func (ec *executionContext) _Profile_id(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(uuid.UUID)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Profile_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2013,7 +2011,7 @@ func (ec *executionContext) fieldContext_Profile_id(_ context.Context, field gra
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type UUID does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5086,21 +5084,6 @@ func (ec *executionContext) unmarshalNTime2timeᚐTime(ctx context.Context, v in
 
 func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel ast.SelectionSet, v time.Time) graphql.Marshaler {
 	res := graphql.MarshalTime(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, v interface{}) (uuid.UUID, error) {
-	res, err := graphql.UnmarshalUUID(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNUUID2githubᚗcomᚋgoogleᚋuuidᚐUUID(ctx context.Context, sel ast.SelectionSet, v uuid.UUID) graphql.Marshaler {
-	res := graphql.MarshalUUID(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

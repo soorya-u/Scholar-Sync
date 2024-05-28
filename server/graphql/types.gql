@@ -1,5 +1,4 @@
 scalar Time
-scalar UUID
 
 enum ProfileType {
   ADMIN
@@ -8,7 +7,7 @@ enum ProfileType {
 }
 
 type Profile {
-  id: UUID!
+  id: String!
   fullName: String!
   email: String!
   profileType: ProfileType!
@@ -16,7 +15,7 @@ type Profile {
 }
 
 type Core {
-  id: UUID!
+  id: String!
   name: String!
   creator: Profile!
   nexus: [Nexus]
@@ -25,7 +24,7 @@ type Core {
 }
 
 type Nexus {
-  id: UUID!
+  id: String!
   name: String!
   core: Core!
   creator: Profile!
@@ -36,7 +35,7 @@ type Nexus {
 }
 
 type File {
-  id: UUID!
+  id: String!
   title: String!
   fileUrl: String!
   sentBy: Profile!
@@ -45,7 +44,7 @@ type File {
 }
 
 type Announcement {
-  id: UUID!
+  id: String!
   nexus: Nexus!
   title: String!
   message: String!

@@ -10,7 +10,6 @@ import (
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpData) (string, error) {
-
 	// Check if User Already Exists
 
 	// Hash the Password
