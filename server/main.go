@@ -1,25 +1,30 @@
 package main
 
 import (
-	"os"
+	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/soorya-u/scholar-sync/helpers"
 	"github.com/soorya-u/scholar-sync/routes"
 )
 
-const defaultPort = "7000"
-
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		port = defaultPort
-	}
+
+	helpers.LoadEnv()
+
+	port := helpers.GetPort()
 
 	server := gin.Default()
+
+	helpers.EnableCors(server)
 
 	routes.GraphQLRoutes(server)
 	routes.APIRoutes(server)
 
-	server.Run(":" + port)
+	err := server.Run(":" + port)
+
+	if err != nil {
+		log.Fatalf("Unable to Start Server: %v", err)
+	}
 
 }
