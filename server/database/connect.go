@@ -7,7 +7,7 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-const connectionString = "ws://127.0.0.1:8080/rpc"
+var connectionString = os.Getenv("DATABASE_URL")
 
 type DB struct {
 	client *surrealdb.DB
