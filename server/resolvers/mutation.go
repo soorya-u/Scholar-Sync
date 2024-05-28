@@ -10,25 +10,30 @@ import (
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpData) (string, error) {
-	// Check if User Already Exists
 
-	// Hash the Password
+	// validation
+
+	isExistingUser := r.Db.FindUserByEmail(input.Email)
+	if isExistingUser {
+		return "", fmt.Errorf("user already exists")
+	}
+
 	hashedPassword, err := helpers.GetHashedPassword(input.Password)
-
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
 
-	res, err := r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
-
+	user, err := r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
 
-	// With User Model, Create a JWT Token
-	fmt.Println(res)
+	token, err := helpers.GenerateJWT(user.ID)
+	if err != nil {
+		return "", fmt.Errorf("%v", err)
+	}
 
-	return "JWT", nil
+	return token, nil
 }
 
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }

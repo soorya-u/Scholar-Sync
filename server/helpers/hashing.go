@@ -7,17 +7,14 @@ import (
 )
 
 func GetHashedPassword(password string) (string, error) {
-	passwordBytes := []byte(password)
-
-	hashedPasswordBytes, err := bcrypt.GenerateFromPassword(passwordBytes, bcrypt.MinCost)
+	hashedPasswordBytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
 
 	if err != nil {
 		return "", fmt.Errorf("unable to hash password: %v", err)
 	}
 
-	hashedPassword := string(hashedPasswordBytes)
+	return string(hashedPasswordBytes), nil
 
-	return hashedPassword, nil
 }
 
 func CompareHashedPassword(currentPassword, hashedPassword string) bool {
