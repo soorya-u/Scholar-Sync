@@ -8,5 +8,5 @@ func GetPort() string {
 	if port == "" {
 		port = "7000"
 	}
-	return port
+	return ":" + port
 }

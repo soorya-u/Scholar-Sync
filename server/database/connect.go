@@ -7,13 +7,13 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-var connectionString = os.Getenv("DATABASE_URL")
-
 type DB struct {
 	client *surrealdb.DB
 }
 
 func Connect() *DB {
+	connectionString := os.Getenv("DATABASE_URL")
+
 	db, err := surrealdb.New(connectionString)
 	if err != nil {
 		log.Fatalf("failed to connect to SurrealDB: %v", err)

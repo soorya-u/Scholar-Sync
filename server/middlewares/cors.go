@@ -1,4 +1,4 @@
-package helpers
+package middlewares
 
 import (
 	"os"
@@ -7,9 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var clientUrl = os.Getenv("CLIENT_URL")
+func GetCorsMiddleware() gin.HandlerFunc {
+	clientUrl := os.Getenv("CLIENT_URL")
 
-func EnableCors(s *gin.Engine) {
 	config := cors.Config{
 		AllowOrigins:     []string{clientUrl},
 		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
@@ -18,5 +18,7 @@ func EnableCors(s *gin.Engine) {
 		AllowCredentials: true,
 	}
 
-	s.Use(cors.New(config))
+	corsMiddleware := cors.New(config)
+	return corsMiddleware
+
 }
