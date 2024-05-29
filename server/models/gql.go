@@ -7,12 +7,10 @@ import (
 	"io"
 	"strconv"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Announcement struct {
-	ID        uuid.UUID `json:"id"`
+	ID        string    `json:"id"`
 	Nexus     *Nexus    `json:"nexus"`
 	Title     string    `json:"title"`
 	Message   string    `json:"message"`
@@ -21,7 +19,7 @@ type Announcement struct {
 }
 
 type Core struct {
-	ID        uuid.UUID `json:"id"`
+	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Creator   *Profile  `json:"creator"`
 	Nexus     []*Nexus  `json:"nexus,omitempty"`
@@ -30,7 +28,7 @@ type Core struct {
 }
 
 type File struct {
-	ID        uuid.UUID `json:"id"`
+	ID        string    `json:"id"`
 	Title     string    `json:"title"`
 	FileURL   string    `json:"fileUrl"`
 	SentBy    *Profile  `json:"sentBy"`
@@ -47,7 +45,7 @@ type Mutation struct {
 }
 
 type Nexus struct {
-	ID            uuid.UUID       `json:"id"`
+	ID            string          `json:"id"`
 	Name          string          `json:"name"`
 	Core          *Core           `json:"core"`
 	Creator       *Profile        `json:"creator"`
@@ -58,7 +56,7 @@ type Nexus struct {
 }
 
 type Profile struct {
-	ID          uuid.UUID   `json:"id"`
+	ID          string      `json:"id"`
 	FullName    string      `json:"fullName"`
 	Email       string      `json:"email"`
 	ProfileType ProfileType `json:"profileType"`
