@@ -13,8 +13,10 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpDa
 
 	// validation
 
-	isExistingUser := r.Db.FindUserByEmail(input.Email)
-	if isExistingUser {
+	isUserPresent, err := r.Db.IsUserRegisteredByEmail(input.Email)
+	if err != nil {
+		return "", fmt.Errorf("%v", err)
+	} else if isUserPresent {
 		return "", fmt.Errorf("user already exists")
 	}
 
