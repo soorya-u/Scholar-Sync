@@ -98,7 +98,7 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetUser func(childComplexity int, input *models.LoginData) int
+		GetUser func(childComplexity int, input models.LoginData) int
 	}
 }
 
@@ -106,7 +106,7 @@ type MutationResolver interface {
 	CreateUser(ctx context.Context, input models.SignUpData) (string, error)
 }
 type QueryResolver interface {
-	GetUser(ctx context.Context, input *models.LoginData) (*models.Profile, error)
+	GetUser(ctx context.Context, input models.LoginData) (string, error)
 }
 
 type executableSchema struct {
@@ -367,7 +367,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetUser(childComplexity, args["input"].(*models.LoginData)), true
+		return e.complexity.Query.GetUser(childComplexity, args["input"].(models.LoginData)), true
 
 	}
 	return 0, false
@@ -492,7 +492,7 @@ type Mutation {
 }
 
 type Query {
-  getUser(input: LoginData): Profile
+  getUser(input: LoginData!): String!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/types.gql", Input: `scalar Time
@@ -589,10 +589,10 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 func (ec *executionContext) field_Query_getUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *models.LoginData
+	var arg0 models.LoginData
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOLoginData2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐLoginData(ctx, tmp)
+		arg0, err = ec.unmarshalNLoginData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐLoginData(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2207,18 +2207,21 @@ func (ec *executionContext) _Query_getUser(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetUser(rctx, fc.Args["input"].(*models.LoginData))
+		return ec.resolvers.Query().GetUser(rctx, fc.Args["input"].(models.LoginData))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.Profile)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOProfile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2228,19 +2231,7 @@ func (ec *executionContext) fieldContext_Query_getUser(ctx context.Context, fiel
 		IsMethod:   true,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Profile_id(ctx, field)
-			case "fullName":
-				return ec.fieldContext_Profile_fullName(ctx, field)
-			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
-			case "profileType":
-				return ec.fieldContext_Profile_profileType(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Profile_createdAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	defer func() {
@@ -4629,13 +4620,16 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		case "getUser":
 			field := field
 
-			innerFunc := func(ctx context.Context, _ *graphql.FieldSet) (res graphql.Marshaler) {
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
 				defer func() {
 					if r := recover(); r != nil {
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
 				res = ec._Query_getUser(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -5025,6 +5019,11 @@ func (ec *executionContext) marshalNCore2ᚖgithubᚗcomᚋsooryaᚑuᚋscholar�
 		return graphql.Null
 	}
 	return ec._Core(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNLoginData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐLoginData(ctx context.Context, v interface{}) (models.LoginData, error) {
+	res, err := ec.unmarshalInputLoginData(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNNexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v *models.Nexus) graphql.Marshaler {
@@ -5467,14 +5466,6 @@ func (ec *executionContext) marshalOFile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholar�
 	return ec._File(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOLoginData2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐLoginData(ctx context.Context, v interface{}) (*models.LoginData, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputLoginData(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) marshalONexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v []*models.Nexus) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -5521,13 +5512,6 @@ func (ec *executionContext) marshalONexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholar
 		return graphql.Null
 	}
 	return ec._Nexus(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx context.Context, sel ast.SelectionSet, v *models.Profile) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Profile(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
