@@ -7,14 +7,14 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-func (db *DB) IsUserRegisteredByEmail(email string) (bool, error) {
+func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 
 	query := "SELECT * FROM user WHERE email = $email"
 	params := map[string]interface{}{"email": email}
 
 	rawData, err := db.client.Query(query, params)
 	if err != nil {
-		return true, fmt.Errorf("unable to fetch User: %v", err)
+		return nil, fmt.Errorf("unable to fetch User: %v", err)
 	}
 
 	type Res struct {
@@ -27,10 +27,14 @@ func (db *DB) IsUserRegisteredByEmail(email string) (bool, error) {
 
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
-		return true, fmt.Errorf("unable to unmarshal: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal: %v", err)
 	}
 
 	res := parsedData[0].Result
 
-	return len(res) != 0, nil
+	if len(res) == 0 {
+		return nil, nil
+	}
+
+	return &res[0], nil
 }
