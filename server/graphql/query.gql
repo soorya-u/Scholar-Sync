@@ -4,5 +4,5 @@ input LoginData {
 }
 
 type Query {
-  getUser(input: LoginData): Profile
+  getUser(input: LoginData!): String!
 }
