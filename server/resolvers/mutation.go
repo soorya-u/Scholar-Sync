@@ -7,11 +7,14 @@ import (
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/helpers"
 	"github.com/soorya-u/scholar-sync/models"
+	"github.com/soorya-u/scholar-sync/validators"
 )
 
 func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpData) (string, error) {
 
-	// validation
+	if isValid := validators.ValidateSignUpData(input); !isValid {
+		return "", fmt.Errorf("invalid credentials")
+	}
 
 	user, err := r.Db.GetUserByEmail(input.Email)
 	if err != nil {
