@@ -3,6 +3,9 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"net/http"
+	"os"
+	"time"
 
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/helpers"
@@ -10,17 +13,22 @@ import (
 	"github.com/soorya-u/scholar-sync/validators"
 )
 
-func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpData) (string, error) {
+func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpData) (string, error) {
+
+	cookie, ok := helpers.ForContext(ctx)
+	if !ok {
+		return "", fmt.Errorf("unable to get cookie access")
+	} else if cookie.IsLoggedIn || cookie.UserId != "" {
+		return cookie.UserId, fmt.Errorf("already logged in")
+	}
 
 	if isValid := validators.ValidateSignUpData(input); !isValid {
 		return "", fmt.Errorf("invalid credentials")
 	}
 
-	user, err := r.Db.GetUserByEmail(input.Email)
+	_, err := r.Db.GetUserByEmail(input.Email)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
-	} else if user != nil {
-		return "", fmt.Errorf("user already exists")
 	}
 
 	hashedPassword, err := helpers.GetHashedPassword(input.Password)
@@ -28,7 +36,7 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpDa
 		return "", fmt.Errorf("%v", err)
 	}
 
-	user, err = r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
+	user, err := r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
@@ -37,6 +45,15 @@ func (r *mutationResolver) CreateUser(ctx context.Context, input models.SignUpDa
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
+
+	http.SetCookie(cookie.Writer, &http.Cookie{
+		Name:     "authorization",
+		Value:    token,
+		Path:     "/",
+		Expires:  time.Now().Add(time.Hour * 24 * 30),
+		HttpOnly: true,
+		Secure:   os.Getenv("GIN_MODE") == "release",
+	})
 
 	return token, nil
 }

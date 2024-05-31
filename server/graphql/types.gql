@@ -7,7 +7,7 @@ enum ProfileType {
 }
 
 type Profile {
-  id: String!
+  id: ID!
   fullName: String!
   email: String!
   profileType: ProfileType!
@@ -15,27 +15,27 @@ type Profile {
 }
 
 type Core {
-  id: String!
+  id: ID!
   name: String!
   creator: Profile!
-  nexus: [Nexus]
+  nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
 }
 
 type Nexus {
-  id: String!
+  id: ID!
   name: String!
   core: Core!
   creator: Profile!
-  files: [File]
-  announcements: [Announcement]
+  files: [File]!
+  announcements: [Announcement]!
   createdAt: Time!
   updatedAt: Time!
 }
 
 type File {
-  id: String!
+  id: ID!
   title: String!
   fileUrl: String!
   sentBy: Profile!
@@ -44,7 +44,7 @@ type File {
 }
 
 type Announcement {
-  id: String!
+  id: ID!
   nexus: Nexus!
   title: String!
   message: String!
