@@ -7,11 +7,14 @@ import (
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/helpers"
 	"github.com/soorya-u/scholar-sync/models"
+	"github.com/soorya-u/scholar-sync/validators"
 )
 
 func (r *queryResolver) GetUser(ctx context.Context, input models.LoginData) (string, error) {
 
-	// Validation
+	if isValid := validators.ValidateLoginData(input); !isValid {
+		return "", fmt.Errorf("invalid credentials")
+	}
 
 	user, err := r.Db.GetUserByEmail(input.Email)
 	if err != nil {
