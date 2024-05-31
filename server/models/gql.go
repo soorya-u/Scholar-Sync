@@ -22,7 +22,7 @@ type Core struct {
 	ID        string    `json:"id"`
 	Name      string    `json:"name"`
 	Creator   *Profile  `json:"creator"`
-	Nexus     []*Nexus  `json:"nexus,omitempty"`
+	Nexus     []*Nexus  `json:"nexus"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
 }
@@ -49,8 +49,8 @@ type Nexus struct {
 	Name          string          `json:"name"`
 	Core          *Core           `json:"core"`
 	Creator       *Profile        `json:"creator"`
-	Files         []*File         `json:"files,omitempty"`
-	Announcements []*Announcement `json:"announcements,omitempty"`
+	Files         []*File         `json:"files"`
+	Announcements []*Announcement `json:"announcements"`
 	CreatedAt     time.Time       `json:"createdAt"`
 	UpdatedAt     time.Time       `json:"updatedAt"`
 }

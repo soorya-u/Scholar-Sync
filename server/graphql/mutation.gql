@@ -5,5 +5,5 @@ input SignUpData {
 }
 
 type Mutation {
-  createUser(input: SignUpData!): String!
+  signUpUser(input: SignUpData!): String!
 }
