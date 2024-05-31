@@ -6,7 +6,7 @@ import (
 	"github.com/soorya-u/scholar-sync/models"
 )
 
-func ForContext(ctx context.Context, name string) (*models.CookieAccess, bool) {
+func ForContext(ctx context.Context) (*models.CookieAccess, bool) {
 
 	ctxKey := models.ContextKey{Name: "cookie-access"}
 
