@@ -12,9 +12,6 @@ import (
 
 func GetCookieMiddleware() gin.HandlerFunc {
 
-	type CookieKey string
-	var ctxKey CookieKey = "cookie-access"
-
 	return func(ctx *gin.Context) {
 
 		cookieAccess := models.CookieAccess{
@@ -26,7 +23,7 @@ func GetCookieMiddleware() gin.HandlerFunc {
 		cookie, err := ctx.Request.Cookie("authorization")
 		if err != nil {
 			log.Printf("Error fetching cookie: %v", err)
-			newCtx := context.WithValue(ctx.Request.Context(), ctxKey, cookieAccess)
+			newCtx := context.WithValue(ctx.Request.Context(), "cookie-access", cookieAccess)
 			ctx.Request = ctx.Request.WithContext(newCtx)
 			ctx.Next()
 			return
@@ -43,7 +40,7 @@ func GetCookieMiddleware() gin.HandlerFunc {
 
 		cookieAccess.IsLoggedIn = true
 		cookieAccess.UserId = userId
-		newCtx := context.WithValue(ctx.Request.Context(), ctxKey, cookieAccess)
+		newCtx := context.WithValue(ctx.Request.Context(), "cookie-access", cookieAccess)
 		ctx.Request = ctx.Request.WithContext(newCtx)
 
 		ctx.Next()

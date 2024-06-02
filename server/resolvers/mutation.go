@@ -17,7 +17,7 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
-		return "", fmt.Errorf("unable to get cookie access")
+		return "", fmt.Errorf("unable to get cookie-access")
 	} else if cookie.IsLoggedIn || cookie.UserId != "" {
 		return cookie.UserId, fmt.Errorf("already logged in")
 	}
@@ -54,6 +54,7 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 		Expires:  time.Now().Add(time.Hour * 24 * 30),
 		HttpOnly: true,
 		Secure:   os.Getenv("GIN_MODE") == "release",
+		SameSite: http.SameSiteNoneMode,
 	})
 
 	return token, nil
