@@ -15,7 +15,7 @@ import (
 
 func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpData) (string, error) {
 
-	cookie, ok := helpers.ForContext(ctx)
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
 		return "", fmt.Errorf("unable to get cookie access")
 	} else if cookie.IsLoggedIn || cookie.UserId != "" {
@@ -25,10 +25,11 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 	if isValid := validators.ValidateSignUpData(input); !isValid {
 		return "", fmt.Errorf("invalid credentials")
 	}
-
-	_, err := r.Db.GetUserByEmail(input.Email)
+	user, err := r.Db.GetUserByEmail(input.Email)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
+	} else if user != nil {
+		return "", fmt.Errorf("user already exists")
 	}
 
 	hashedPassword, err := helpers.GetHashedPassword(input.Password)
@@ -36,7 +37,7 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 		return "", fmt.Errorf("%v", err)
 	}
 
-	user, err := r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
+	user, err = r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
