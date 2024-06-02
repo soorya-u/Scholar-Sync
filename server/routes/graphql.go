@@ -1,6 +1,8 @@
 package routes
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 	"github.com/soorya-u/scholar-sync/controllers"
 )
@@ -9,6 +11,8 @@ func GraphQLRoutes(r *gin.Engine) {
 	graphql := r.Group("/graphql")
 	{
 		graphql.POST("", controllers.GraphQLHandler())
-		graphql.GET("/playground", controllers.PlaygroundHandler())
+		if os.Getenv("GIN_MODE") == "debug" {
+			graphql.GET("/playground", controllers.PlaygroundHandler())
+		}
 	}
 }

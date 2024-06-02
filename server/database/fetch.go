@@ -33,7 +33,7 @@ func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 	res := parsedData[0].Result
 
 	if len(res) == 0 {
-		return nil, fmt.Errorf("user already exists")
+		return nil, nil
 	}
 
 	return &res[0], nil

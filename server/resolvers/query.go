@@ -15,9 +15,9 @@ import (
 
 func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (string, error) {
 
-	cookie, ok := helpers.ForContext(ctx)
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
-		return "", fmt.Errorf("unable to get cookie access")
+		return "", fmt.Errorf("unable to get cookie-access")
 	} else if cookie.IsLoggedIn || cookie.UserId != "" {
 		return cookie.UserId, fmt.Errorf("already logged in")
 	}
@@ -52,13 +52,14 @@ func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (
 		Expires:  time.Now().Add(time.Hour * 24 * 30),
 		HttpOnly: true,
 		Secure:   os.Getenv("GIN_MODE") == "release",
+		SameSite: http.SameSiteNoneMode,
 	})
 
 	return token, nil
 }
 
 func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
-	cookie, ok := helpers.ForContext(ctx)
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
 		return nil, fmt.Errorf("unable to get cookie access")
 	} else if !cookie.IsLoggedIn || cookie.UserId == "" {

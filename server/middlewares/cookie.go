@@ -22,7 +22,9 @@ func GetCookieMiddleware() gin.HandlerFunc {
 
 		cookie, err := ctx.Request.Cookie("authorization")
 		if err != nil {
-			log.Printf("Error fetching 'tokenKey' cookie: %v", err)
+			log.Printf("Error fetching cookie: %v", err)
+			newCtx := context.WithValue(ctx.Request.Context(), "cookie-access", cookieAccess)
+			ctx.Request = ctx.Request.WithContext(newCtx)
 			ctx.Next()
 			return
 		}
@@ -34,14 +36,11 @@ func GetCookieMiddleware() gin.HandlerFunc {
 			log.Printf("unable to parse token: %v", err)
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization token"})
 			return
-		} else {
-			cookieAccess.IsLoggedIn = true
-			cookieAccess.UserId = userId
 		}
 
-		ctxKey := models.ContextKey{Name: "cookie-access"}
-
-		newCtx := context.WithValue(ctx.Request.Context(), ctxKey, cookieAccess)
+		cookieAccess.IsLoggedIn = true
+		cookieAccess.UserId = userId
+		newCtx := context.WithValue(ctx.Request.Context(), "cookie-access", cookieAccess)
 		ctx.Request = ctx.Request.WithContext(newCtx)
 
 		ctx.Next()
