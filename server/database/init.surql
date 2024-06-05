@@ -28,6 +28,7 @@ DEFINE TABLE nexus SCHEMAFULL;
 DEFINE FIELD name ON nexus TYPE string;
 DEFINE FIELD creator ON nexus TYPE record(user);
 DEFINE FIELD core ON nexus TYPE record(core);
+DEFINE FIELD category ON nexus TYPE string;
 DEFINE FIELD files ON nexus TYPE array<record(file)>;
 DEFINE FIELD announcements ON nexus TYPE array<record(announcement)>;
 DEFINE FIELD createdAt ON nexus TYPE datetime DEFAULT time::now() READONLY;
@@ -38,6 +39,7 @@ DEFINE FIELD updatedAt ON nexus TYPE datetime DEFAULT time::now();
 DEFINE TABLE file SCHEMAFULL;
 
 DEFINE FIELD title ON file TYPE string;
+DEFINE FIELD description ON file TYPE string;
 DEFINE FIELD fileUrl ON file TYPE string;
 DEFINE FIELD sentBy ON file TYPE record(user);
 DEFINE FIELD nexus ON file TYPE record(nexus);

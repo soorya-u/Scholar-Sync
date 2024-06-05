@@ -27,6 +27,7 @@ type Nexus {
   id: ID!
   name: String!
   core: Core!
+  category: String!
   creator: Profile!
   files: [File]!
   announcements: [Announcement]!
@@ -37,6 +38,7 @@ type Nexus {
 type File {
   id: ID!
   title: String!
+  description: String
   fileUrl: String!
   sentBy: Profile!
   nexus: Nexus!

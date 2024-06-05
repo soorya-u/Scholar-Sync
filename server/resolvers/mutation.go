@@ -14,7 +14,6 @@ import (
 )
 
 func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpData) (string, error) {
-
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
 		return "", fmt.Errorf("unable to get cookie-access")

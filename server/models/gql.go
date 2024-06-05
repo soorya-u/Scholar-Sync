@@ -28,12 +28,13 @@ type Core struct {
 }
 
 type File struct {
-	ID        string    `json:"id"`
-	Title     string    `json:"title"`
-	FileURL   string    `json:"fileUrl"`
-	SentBy    *Profile  `json:"sentBy"`
-	Nexus     *Nexus    `json:"nexus"`
-	TimeStamp time.Time `json:"timeStamp"`
+	ID          string    `json:"id"`
+	Title       string    `json:"title"`
+	Description *string   `json:"description,omitempty"`
+	FileURL     string    `json:"fileUrl"`
+	SentBy      *Profile  `json:"sentBy"`
+	Nexus       *Nexus    `json:"nexus"`
+	TimeStamp   time.Time `json:"timeStamp"`
 }
 
 type LoginData struct {
@@ -48,6 +49,7 @@ type Nexus struct {
 	ID            string          `json:"id"`
 	Name          string          `json:"name"`
 	Core          *Core           `json:"core"`
+	Category      string          `json:"category"`
 	Creator       *Profile        `json:"creator"`
 	Files         []*File         `json:"files"`
 	Announcements []*Announcement `json:"announcements"`

@@ -66,12 +66,13 @@ type ComplexityRoot struct {
 	}
 
 	File struct {
-		FileURL   func(childComplexity int) int
-		ID        func(childComplexity int) int
-		Nexus     func(childComplexity int) int
-		SentBy    func(childComplexity int) int
-		TimeStamp func(childComplexity int) int
-		Title     func(childComplexity int) int
+		Description func(childComplexity int) int
+		FileURL     func(childComplexity int) int
+		ID          func(childComplexity int) int
+		Nexus       func(childComplexity int) int
+		SentBy      func(childComplexity int) int
+		TimeStamp   func(childComplexity int) int
+		Title       func(childComplexity int) int
 	}
 
 	Mutation struct {
@@ -80,6 +81,7 @@ type ComplexityRoot struct {
 
 	Nexus struct {
 		Announcements func(childComplexity int) int
+		Category      func(childComplexity int) int
 		Core          func(childComplexity int) int
 		CreatedAt     func(childComplexity int) int
 		Creator       func(childComplexity int) int
@@ -216,6 +218,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Core.UpdatedAt(childComplexity), true
 
+	case "File.description":
+		if e.complexity.File.Description == nil {
+			break
+		}
+
+		return e.complexity.File.Description(childComplexity), true
+
 	case "File.fileUrl":
 		if e.complexity.File.FileURL == nil {
 			break
@@ -276,6 +285,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Nexus.Announcements(childComplexity), true
+
+	case "Nexus.category":
+		if e.complexity.Nexus.Category == nil {
+			break
+		}
+
+		return e.complexity.Nexus.Category(childComplexity), true
 
 	case "Nexus.core":
 		if e.complexity.Nexus.Core == nil {
@@ -544,6 +560,7 @@ type Nexus {
   id: ID!
   name: String!
   core: Core!
+  category: String!
   creator: Profile!
   files: [File]!
   announcements: [Announcement]!
@@ -554,6 +571,7 @@ type Nexus {
 type File {
   id: ID!
   title: String!
+  description: String
   fileUrl: String!
   sentBy: Profile!
   nexus: Nexus!
@@ -748,6 +766,8 @@ func (ec *executionContext) fieldContext_Announcement_nexus(_ context.Context, f
 				return ec.fieldContext_Nexus_name(ctx, field)
 			case "core":
 				return ec.fieldContext_Nexus_core(ctx, field)
+			case "category":
+				return ec.fieldContext_Nexus_category(ctx, field)
 			case "creator":
 				return ec.fieldContext_Nexus_creator(ctx, field)
 			case "files":
@@ -1142,6 +1162,8 @@ func (ec *executionContext) fieldContext_Core_nexus(_ context.Context, field gra
 				return ec.fieldContext_Nexus_name(ctx, field)
 			case "core":
 				return ec.fieldContext_Nexus_core(ctx, field)
+			case "category":
+				return ec.fieldContext_Nexus_category(ctx, field)
 			case "creator":
 				return ec.fieldContext_Nexus_creator(ctx, field)
 			case "files":
@@ -1335,6 +1357,47 @@ func (ec *executionContext) fieldContext_File_title(_ context.Context, field gra
 	return fc, nil
 }
 
+func (ec *executionContext) _File_description(ctx context.Context, field graphql.CollectedField, obj *models.File) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_File_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_File_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "File",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _File_fileUrl(ctx context.Context, field graphql.CollectedField, obj *models.File) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_File_fileUrl(ctx, field)
 	if err != nil {
@@ -1480,6 +1543,8 @@ func (ec *executionContext) fieldContext_File_nexus(_ context.Context, field gra
 				return ec.fieldContext_Nexus_name(ctx, field)
 			case "core":
 				return ec.fieldContext_Nexus_core(ctx, field)
+			case "category":
+				return ec.fieldContext_Nexus_category(ctx, field)
 			case "creator":
 				return ec.fieldContext_Nexus_creator(ctx, field)
 			case "files":
@@ -1742,6 +1807,50 @@ func (ec *executionContext) fieldContext_Nexus_core(_ context.Context, field gra
 	return fc, nil
 }
 
+func (ec *executionContext) _Nexus_category(ctx context.Context, field graphql.CollectedField, obj *models.Nexus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Nexus_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Nexus_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Nexus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Nexus_creator(ctx context.Context, field graphql.CollectedField, obj *models.Nexus) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Nexus_creator(ctx, field)
 	if err != nil {
@@ -1841,6 +1950,8 @@ func (ec *executionContext) fieldContext_Nexus_files(_ context.Context, field gr
 				return ec.fieldContext_File_id(ctx, field)
 			case "title":
 				return ec.fieldContext_File_title(ctx, field)
+			case "description":
+				return ec.fieldContext_File_description(ctx, field)
 			case "fileUrl":
 				return ec.fieldContext_File_fileUrl(ctx, field)
 			case "sentBy":
@@ -4525,6 +4636,8 @@ func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "description":
+			out.Values[i] = ec._File_description(ctx, field, obj)
 		case "fileUrl":
 			out.Values[i] = ec._File_fileUrl(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -4640,6 +4753,11 @@ func (ec *executionContext) _Nexus(ctx context.Context, sel ast.SelectionSet, ob
 			}
 		case "core":
 			out.Values[i] = ec._Nexus_core(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "category":
+			out.Values[i] = ec._Nexus_category(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

@@ -14,7 +14,6 @@ import (
 )
 
 func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (string, error) {
-
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
 		return "", fmt.Errorf("unable to get cookie-access")
@@ -72,7 +71,6 @@ func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
 	}
 
 	return user, nil
-
 }
 
 func (r *queryResolver) GetCore(ctx context.Context) (*models.Core, error) {
