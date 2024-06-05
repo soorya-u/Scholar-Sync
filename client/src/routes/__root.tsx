@@ -23,6 +23,12 @@ export const Route = createRootRoute({
         <Link to="/auth/login" className="[&.active]:font-bold">
           Login
         </Link>{" "}
+        <Link to="/upload/file" className="[&.active]:font-bold">
+          File
+        </Link>{" "}
+        <Link to="/upload/announcement" className="[&.active]:font-bold">
+          Announcement
+        </Link>{" "}
       </div>
       <hr />
       <Outlet />
