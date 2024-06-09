@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/helpers"
 	"github.com/soorya-u/scholar-sync/models"
@@ -57,6 +58,11 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 	})
 
 	return token, nil
+}
+
+func (r *mutationResolver) SingleUpload(ctx context.Context, file graphql.Upload) (bool, error) {
+	fmt.Printf("%#v", file)
+	return true, nil
 }
 
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
