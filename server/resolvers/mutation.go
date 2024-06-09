@@ -3,15 +3,20 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"time"
 
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/helpers"
 	"github.com/soorya-u/scholar-sync/models"
 	"github.com/soorya-u/scholar-sync/validators"
 )
+
+const uploadDir string = "static"
 
 func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpData) (string, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
@@ -57,6 +62,32 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 	})
 
 	return token, nil
+}
+
+func (r *mutationResolver) SingleUpload(ctx context.Context, file graphql.Upload) (bool, error) {
+
+	workingDirectory, err := os.Getwd()
+	if err != nil {
+		return false, err
+	}
+
+	filePath := filepath.Join(workingDirectory, uploadDir, file.Filename)
+
+	outFile, err := os.Create(filePath)
+	if err != nil {
+		return false, err
+	}
+	defer outFile.Close()
+
+	if _, err := file.File.Seek(0, io.SeekStart); err != nil {
+		return false, err
+	}
+
+	if _, err := io.Copy(outFile, file.File); err != nil {
+		return false, err
+	}
+
+	return true, nil
 }
 
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }

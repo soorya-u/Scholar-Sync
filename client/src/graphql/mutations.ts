@@ -11,3 +11,9 @@ export const signUpMutation = (
     )
   }
 `;
+
+export const fileUploadMutation = () => gql`
+  mutation ($file: Upload!) {
+    singleUpload(file: $file)
+  }
+`;
