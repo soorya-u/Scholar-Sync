@@ -7,7 +7,10 @@ export const Route = createFileRoute("/upload/file")({
 });
 
 function FileUpload() {
-  const [mutate] = useMutation(fileUploadMutation());
+  const [mutate, { data, error }] = useMutation(fileUploadMutation());
+
+  console.log("Data", data);
+  console.log("Error", error);
   return (
     <div className="p-2">
       <h3>Welcome File!</h3>
