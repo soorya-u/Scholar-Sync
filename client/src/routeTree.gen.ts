@@ -14,6 +14,8 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
 import { Route as UploadFileImport } from './routes/upload/file'
 import { Route as UploadAnnouncementImport } from './routes/upload/announcement'
+import { Route as CreateNexusImport } from './routes/create/nexus'
+import { Route as CreateCoreImport } from './routes/create/core'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthLoginImport } from './routes/auth/login'
 
@@ -31,6 +33,16 @@ const UploadFileRoute = UploadFileImport.update({
 
 const UploadAnnouncementRoute = UploadAnnouncementImport.update({
   path: '/upload/announcement',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CreateNexusRoute = CreateNexusImport.update({
+  path: '/create/nexus',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const CreateCoreRoute = CreateCoreImport.update({
+  path: '/create/core',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -69,6 +81,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignUpImport
       parentRoute: typeof rootRoute
     }
+    '/create/core': {
+      id: '/create/core'
+      path: '/create/core'
+      fullPath: '/create/core'
+      preLoaderRoute: typeof CreateCoreImport
+      parentRoute: typeof rootRoute
+    }
+    '/create/nexus': {
+      id: '/create/nexus'
+      path: '/create/nexus'
+      fullPath: '/create/nexus'
+      preLoaderRoute: typeof CreateNexusImport
+      parentRoute: typeof rootRoute
+    }
     '/upload/announcement': {
       id: '/upload/announcement'
       path: '/upload/announcement'
@@ -92,6 +118,8 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AuthLoginRoute,
   AuthSignUpRoute,
+  CreateCoreRoute,
+  CreateNexusRoute,
   UploadAnnouncementRoute,
   UploadFileRoute,
 })
@@ -107,6 +135,8 @@ export const routeTree = rootRoute.addChildren({
         "/",
         "/auth/login",
         "/auth/sign-up",
+        "/create/core",
+        "/create/nexus",
         "/upload/announcement",
         "/upload/file"
       ]
@@ -119,6 +149,12 @@ export const routeTree = rootRoute.addChildren({
     },
     "/auth/sign-up": {
       "filePath": "auth/sign-up.tsx"
+    },
+    "/create/core": {
+      "filePath": "create/core.tsx"
+    },
+    "/create/nexus": {
+      "filePath": "create/nexus.tsx"
     },
     "/upload/announcement": {
       "filePath": "upload/announcement.tsx"
