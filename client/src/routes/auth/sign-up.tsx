@@ -12,56 +12,100 @@ import {
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
 
+import { useSignUp } from "@/hooks/use-auth";
+
 export const Route = createFileRoute("/auth/sign-up")({
   component: SignUp,
 });
 
 export function SignUp() {
+  const { errors, handleSubmit, isSubmitting, register } = useSignUp();
+
   return (
-    <div className="flex flex-1 justify-center items-center">
+    // TODO: Add a Header or Something
+    <div className="flex min-h-full justify-center items-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
-          <CardTitle className="text-xl">Sign Up</CardTitle>
+          <CardTitle className="text-xl font-lato">Sign Up</CardTitle>
           <CardDescription>
             Enter your information to create an account
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={handleSubmit} className="grid gap-4">
+            <div className="grid grid-cols-2 gap-y-2 gap-x-4">
               <div className="grid gap-2">
-                <Label htmlFor="first-name">First name</Label>
-                <Input id="first-name" placeholder="Max" required />
+                <Label className="font-lato font-bold" htmlFor="first-name">
+                  First name
+                </Label>
+                <Input
+                  disabled={isSubmitting}
+                  aria-disabled={isSubmitting}
+                  id="first-name"
+                  placeholder="John"
+                  {...register("firstName")}
+                />
               </div>
               <div className="grid gap-2">
-                <Label htmlFor="last-name">Last name</Label>
-                <Input id="last-name" placeholder="Robinson" required />
+                <Label className="font-lato font-bold" htmlFor="last-name">
+                  Last name
+                </Label>
+                <Input
+                  disabled={isSubmitting}
+                  aria-disabled={isSubmitting}
+                  id="last-name"
+                  placeholder="Doe"
+                  {...register("lastName")}
+                />
               </div>
+              <span className="text-red-500 text-xs px-2">
+                {errors && errors.firstName && errors.firstName.message}
+              </span>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
+              <Label className="font-lato font-bold" htmlFor="email">
+                Email
+              </Label>
               <Input
+                disabled={isSubmitting}
+                aria-disabled={isSubmitting}
                 id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
+                {...register("email")}
+                placeholder="john-doe@example.com"
               />
+              <span className="text-red-500 text-xs px-2">
+                {errors && errors.email && errors.email.message}
+              </span>
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" />
+              <Label className="font-lato font-bold" htmlFor="password">
+                Password
+              </Label>
+              <Input
+                disabled={isSubmitting}
+                aria-disabled={isSubmitting}
+                id="password"
+                {...register("password")}
+                placeholder={"********"}
+                type="password"
+              />
+              <span className="text-red-500 text-xs px-2">
+                {errors && errors.password && errors.password.message}
+              </span>
             </div>
-            <Button type="submit" className="w-full">
+            <Button
+              disabled={isSubmitting}
+              aria-disabled={isSubmitting}
+              type="submit"
+              className="w-full"
+            >
               Create an account
             </Button>
-            <Button variant="outline" className="w-full">
-              Sign up with GitHub
-            </Button>
-          </div>
+          </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="#" className="underline">
-              Sign in
+            <Link to="/auth/login" className="underline">
+              Sign In
             </Link>
           </div>
         </CardContent>
