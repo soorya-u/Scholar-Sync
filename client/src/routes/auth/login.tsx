@@ -1,47 +1,50 @@
-import { useLazyQuery } from "@apollo/client";
 import { createFileRoute } from "@tanstack/react-router";
 
-import { loginQuery } from "@/graphql/queries";
-import { useState } from "react";
+import { Label } from "@/components/primitives/label";
+import { Button } from "@/components/primitives/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/primitives/card";
+import { Input } from "@/components/primitives/input";
 
 export const Route = createFileRoute("/auth/login")({
   component: Login,
 });
 
 function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const query = loginQuery(email, password);
-
-  const [queryFn, { loading, data, error }] = useLazyQuery(query);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    queryFn({ fetchPolicy: "network-only" });
-  };
-
-  console.log(data);
-
   return (
-    <div className="p-2">
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <input
-          className="border border-black"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          className="border border-black"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button disabled={loading} type="submit">
-          Submit
-        </button>
-      </form>
-      <h1>{error?.message}</h1>
+    <div className="flex flex-1 justify-center items-center">
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>
+            Enter your email below to login to your account.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="grid gap-4">
+          <div className="grid gap-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="m@example.com"
+              required
+            />
+          </div>
+          <div className="grid gap-2">
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" type="password" required />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button className="w-full">Sign in</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

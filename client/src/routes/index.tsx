@@ -6,7 +6,7 @@ export const Route = createFileRoute("/")({
 
 function Dashboard() {
   return (
-    <div className="p-2">
+    <div className="flex-1">
       <h3>Welcome Home!</h3>
     </div>
   );
