@@ -1,5 +1,6 @@
 import React from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
+import { Toaster } from "@/components/primitives/toaster";
 
 const TanStackRouterDevtools =
   process.env.NODE_ENV === "production"
@@ -14,6 +15,7 @@ export const Route = createRootRoute({
   component: () => (
     <>
       <Outlet />
+      <Toaster />
       <React.Suspense>
         <TanStackRouterDevtools />
       </React.Suspense>
