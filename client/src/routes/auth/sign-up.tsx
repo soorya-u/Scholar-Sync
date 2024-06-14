@@ -1,7 +1,5 @@
 import { Link } from "@tanstack/react-router";
 import { createFileRoute } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -14,25 +12,17 @@ import {
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
 
-import { SignUpType, signUpSchema } from "@/schema/sign-up";
-import { useToast } from "@/components/primitives/use-toast";
+import { useSignUp } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/auth/sign-up")({
   component: SignUp,
 });
 
 export function SignUp() {
-  const {
-    register,
-    handleSubmit,
-    formState: { isSubmitting, errors },
-  } = useForm<SignUpType>({
-    resolver: zodResolver(signUpSchema),
-    defaultValues: { email: "", firstName: "", lastName: "", password: "" },
-  });
-  const { toast } = useToast();
+  const { errors, handleSubmit, isSubmitting, register } = useSignUp();
 
   return (
+    // TODO: Add a Header or Something
     <div className="flex min-h-full justify-center items-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
@@ -42,16 +32,7 @@ export function SignUp() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form
-            onSubmit={handleSubmit((val) =>
-              toast({
-                title: "Registration Successfull!",
-                description: JSON.stringify(val),
-                variant: "destructive",
-              })
-            )}
-            className="grid gap-4"
-          >
+          <form onSubmit={handleSubmit} className="grid gap-4">
             <div className="grid grid-cols-2 gap-y-2 gap-x-4">
               <div className="grid gap-2">
                 <Label className="font-lato font-bold" htmlFor="first-name">

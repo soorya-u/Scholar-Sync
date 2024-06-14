@@ -1,6 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { LoaderCircle } from "lucide-react";
 
 import { Label } from "@/components/primitives/label";
@@ -15,23 +13,14 @@ import {
 } from "@/components/primitives/card";
 import { Input } from "@/components/primitives/input";
 
-import { loginSchema, LoginType } from "@/schema/login";
-import { useToast } from "@/components/primitives/use-toast";
+import { useLogin } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/auth/login")({
   component: Login,
 });
 
 function Login() {
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginType>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
-  });
-  const { toast } = useToast();
+  const { errors, handleSubmit, isSubmitting, register } = useLogin();
 
   return (
     // TODO: Add a Header or Something
@@ -43,15 +32,7 @@ function Login() {
             Enter your email below to login to your account.
           </CardDescription>
         </CardHeader>
-        <form
-          onSubmit={handleSubmit((val) =>
-            toast({
-              title: "Registration Successfull!",
-              description: JSON.stringify(val),
-              variant: "destructive",
-            })
-          )}
-        >
+        <form onSubmit={handleSubmit}>
           <CardContent className="grid gap-4">
             <div className="grid gap-2">
               <Label className="font-lato font-bold" htmlFor="email">
@@ -63,7 +44,6 @@ function Login() {
                 {...register("email")}
                 id="email"
                 placeholder="john-doe@example.com"
-                required
               />
               <span className="text-red-500 text-xs px-2">
                 {errors && errors.email && errors.email.message}
