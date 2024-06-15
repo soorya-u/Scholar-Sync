@@ -1,7 +1,7 @@
 import { Button } from "@/components/primitives/button";
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
-import { useCoreCreate } from "@/hooks/use.create";
+import { useCoreCreate } from "@/hooks/use-create";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/create/core")({

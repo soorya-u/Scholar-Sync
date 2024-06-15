@@ -17,18 +17,13 @@ export default function NavBar() {
     // TODO: Check if User is Admin or PseudoAdmin
     <div
       className={cn(
-        "relative h-screen flex flex-col items-center gap-2 py-4 bg-primary rounded-tr-xl transition-all",
-        isDrawerOpen ? "w-52" : "w-24"
+        "relative flex flex-col items-center gap-2 py-4 bg-primary rounded-tr-xl transition-all",
+        isDrawerOpen ? "w-48" : "w-24"
       )}
     >
       {/* TODO: Logo */}
-      <CoreIcons
-        handleClick={() => setIsDrawerOpen((prev) => !prev)}
-        heading="Scholar Sync"
-        src="https://www.svgrepo.com/show/303500/react-1-logo.svg"
-      />
-      <hr className="w-3/4 border border-foreground" />
-      <div className="flex-1 overflow-y-scroll size-full flex flex-col px-4 gap-4">
+
+      <div className="flex-1 overflow-y-auto size-full flex flex-col px-4 gap-4">
         {[
           ...cores,
           ...cores,
@@ -46,6 +41,11 @@ export default function NavBar() {
             key={idx}
           />
         ))}
+        <CoreIcons
+          isDrawerOpen={isDrawerOpen}
+          heading="Add New Core"
+          src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
+        />
       </div>
     </div>
   );
@@ -65,20 +65,22 @@ const CoreIcons = ({
   isDrawerOpen?: boolean;
 }) => (
   <Link onClick={handleClick}>
-    <div className={cn("flex gap-2 items-center", className)}>
+    <div
+      className={cn("flex gap-3 group justify-center items-center", className)}
+    >
       <img
-        className="size-14 rounded-full hover:rounded-2xl transition-all"
+        className="size-14 rounded-full transition-all duration-300 group-hover:rounded-2xl"
         src={src}
         alt="core"
       />
-      <h3
+      <p
         className={cn(
-          "text-base flex-1 text-center transition-all text-wrap",
-          isDrawerOpen ? "inline" : "hidden"
+          "text-base text-center text-balance",
+          isDrawerOpen ? "block" : "hidden"
         )}
       >
         {heading}
-      </h3>
+      </p>
     </div>
   </Link>
 );
