@@ -1,10 +1,13 @@
 import TanstackRouterProvider from "./TanstackRouter";
 import ApolloGraphQLProvider from "./ApolloGraphQL";
+import ReduxProvider from "./Redux";
 
 export default function Providers() {
   return (
     <ApolloGraphQLProvider>
-      <TanstackRouterProvider />
+      <ReduxProvider>
+        <TanstackRouterProvider />
+      </ReduxProvider>
     </ApolloGraphQLProvider>
   );
 }
