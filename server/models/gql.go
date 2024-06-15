@@ -19,12 +19,17 @@ type Announcement struct {
 }
 
 type Core struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	Creator   *Profile  `json:"creator"`
-	Nexus     []*Nexus  `json:"nexus"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID          string     `json:"id"`
+	Name        string     `json:"name"`
+	Creator     *Profile   `json:"creator"`
+	Psuedoadmin []*Profile `json:"psuedoadmin"`
+	Nexus       []*Nexus   `json:"nexus"`
+	CreatedAt   time.Time  `json:"createdAt"`
+	UpdatedAt   time.Time  `json:"updatedAt"`
+}
+
+type CoreData struct {
+	Name string `json:"name"`
 }
 
 type File struct {
@@ -51,6 +56,7 @@ type Nexus struct {
 	Core          *Core           `json:"core"`
 	Category      string          `json:"category"`
 	Creator       *Profile        `json:"creator"`
+	User          []*Profile      `json:"user"`
 	Files         []*File         `json:"files"`
 	Announcements []*Announcement `json:"announcements"`
 	CreatedAt     time.Time       `json:"createdAt"`

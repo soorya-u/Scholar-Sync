@@ -16,8 +16,6 @@ import (
 	"github.com/soorya-u/scholar-sync/validators"
 )
 
-const uploadDir string = "static"
-
 func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpData) (string, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
@@ -58,13 +56,14 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 		Expires:  time.Now().Add(time.Hour * 24 * 30),
 		HttpOnly: true,
 		Secure:   os.Getenv("GIN_MODE") == "release",
-		SameSite: http.SameSiteNoneMode,
+		// SameSite: http.SameSiteNoneMode,
 	})
 
 	return token, nil
 }
 
 func (r *mutationResolver) SingleUpload(ctx context.Context, file graphql.Upload) (bool, error) {
+	const uploadDir string = "static"
 
 	workingDirectory, err := os.Getwd()
 	if err != nil {
@@ -88,6 +87,23 @@ func (r *mutationResolver) SingleUpload(ctx context.Context, file graphql.Upload
 	}
 
 	return true, nil
+}
+
+func (r *mutationResolver) CreateCore(ctx context.Context, input models.CoreData) (string, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return "", fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return "", fmt.Errorf("cookie not found")
+	}
+
+	coreId, err := r.Db.CreateCore(input.Name, cookie.UserId)
+	if err != nil {
+		return "", fmt.Errorf("%v", err)
+	}
+
+	return coreId, nil
+
 }
 
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }

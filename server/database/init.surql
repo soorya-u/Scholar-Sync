@@ -17,7 +17,8 @@ DEFINE TABLE core SCHEMAFULL;
 
 DEFINE FIELD name ON core TYPE string;
 DEFINE FIELD creator ON core TYPE record(user);
-DEFINE FIELD nexus ON core TYPE array<record(nexus)>;
+DEFINE FIELD pseudoAdmin ON core TYPE array<record(user)> DEFAULT [];
+DEFINE FIELD nexus ON core TYPE array<record(nexus)> DEFAULT [];
 DEFINE FIELD createdAt ON core TYPE datetime DEFAULT time::now() READONLY;
 DEFINE FIELD updatedAt ON core TYPE datetime DEFAULT time::now();
 
@@ -27,10 +28,11 @@ DEFINE TABLE nexus SCHEMAFULL;
 
 DEFINE FIELD name ON nexus TYPE string;
 DEFINE FIELD creator ON nexus TYPE record(user);
+DEFINE FIELD users ON nexus TYPE array<record(user)> DEFAULT [];
 DEFINE FIELD core ON nexus TYPE record(core);
 DEFINE FIELD category ON nexus TYPE string;
-DEFINE FIELD files ON nexus TYPE array<record(file)>;
-DEFINE FIELD announcements ON nexus TYPE array<record(announcement)>;
+DEFINE FIELD files ON nexus TYPE array<record(file)> DEFAULT [];
+DEFINE FIELD announcements ON nexus TYPE array<record(announcement)> DEFAULT [];
 DEFINE FIELD createdAt ON nexus TYPE datetime DEFAULT time::now() READONLY;
 DEFINE FIELD updatedAt ON nexus TYPE datetime DEFAULT time::now();
 
@@ -44,8 +46,6 @@ DEFINE FIELD fileUrl ON file TYPE string;
 DEFINE FIELD sentBy ON file TYPE record(user);
 DEFINE FIELD nexus ON file TYPE record(nexus);
 DEFINE FIELD timeStamp ON file TYPE datetime DEFAULT time::now() READONLY;
-
-
 
 -- Announcement Schema
 

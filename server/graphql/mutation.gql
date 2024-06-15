@@ -6,7 +6,12 @@ input SignUpData {
   password: String!
 }
 
+input CoreData {
+  name: String!
+}
+
 type Mutation {
   signUpUser(input: SignUpData!): String!
   singleUpload(file: Upload!): Boolean!
+  createCore(input: CoreData!): ID!
 }

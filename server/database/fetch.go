@@ -39,7 +39,7 @@ func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 	return &res[0], nil
 }
 
-func (db *DB) GetUserByID(id string) (*models.Profile, error) {
+func (db *DB) GetProfileByID(id string) (*models.Profile, error) {
 	rawData, err := db.client.Select(id)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch User: %v", err)
@@ -59,3 +59,24 @@ func (db *DB) GetUserByID(id string) (*models.Profile, error) {
 	return &user[0], nil
 
 }
+
+// func (db *DB) GetUserByID(id string) (*models.User, error) {
+// 	rawData, err := db.client.Select(id)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("unable to fetch User: %v", err)
+// 	}
+
+// 	var user []models.Profile
+
+// 	err = surrealdb.Unmarshal(rawData, &user)
+// 	if err != nil {
+// 		return nil, fmt.Errorf("unable to unmarshal: %v", err)
+// 	}
+
+// 	if len(user) == 0 {
+// 		return nil, fmt.Errorf("user not found")
+// 	}
+
+// 	return &user[0], nil
+
+// }
