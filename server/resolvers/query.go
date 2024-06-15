@@ -65,7 +65,7 @@ func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
 		return nil, fmt.Errorf("cookie not found")
 	}
 
-	user, err := r.Db.GetUserByID(cookie.UserId)
+	user, err := r.Db.GetProfileByID(cookie.UserId)
 	if err != nil {
 		return nil, fmt.Errorf("%v", err)
 	}
