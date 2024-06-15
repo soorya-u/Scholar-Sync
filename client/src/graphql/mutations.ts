@@ -13,3 +13,9 @@ export const fileUploadMutation = gql`
     singleUpload(file: $file)
   }
 `;
+
+export const createCoreMutatuion = gql`
+  mutation ($name: String!) {
+    createCore(input: { name: $name })
+  }
+`;
