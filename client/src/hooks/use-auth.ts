@@ -1,13 +1,14 @@
-import { useToast } from "@/components/primitives/use-toast";
-import { signUpMutation } from "@/graphql/mutations";
-import { loginQuery } from "@/graphql/queries";
+import { useEffect } from "react";
+import { useNavigate } from "@tanstack/react-router";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useLazyQuery, useMutation } from "@apollo/client";
+
 import { LoginType, loginSchema } from "@/schema/login";
 import { SignUpType, signUpSchema } from "@/schema/sign-up";
-import { useLazyQuery, useMutation } from "@apollo/client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "@tanstack/react-router";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { signUpMutation } from "@/graphql/mutations";
+import { loginQuery } from "@/graphql/queries";
+import { useToast } from "@/components/primitives/use-toast";
 
 export const useSignUp = () => {
   const {
