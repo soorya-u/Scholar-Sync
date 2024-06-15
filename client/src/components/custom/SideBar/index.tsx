@@ -1,9 +1,11 @@
-import { cn } from "@/utils/cn";
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
+
+import { useSidebar } from "@/hooks/use-sidebar";
+import { cn } from "@/utils/cn";
+import { Separator } from "@/components/primitives/separator";
 
 export default function NavBar() {
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const { isSidebarOpen } = useSidebar();
 
   // TODO: Fetch All User Cores
 
@@ -17,11 +19,17 @@ export default function NavBar() {
     // TODO: Check if User is Admin or PseudoAdmin
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 py-4 bg-primary rounded-tr-xl transition-all",
-        isDrawerOpen ? "w-48" : "w-24"
+        "relative flex flex-col items-center gap-2 py-4 bg-primary transition-all border-r border-white px-1",
+        isSidebarOpen ? "w-48" : "w-24"
       )}
     >
-      {/* TODO: Logo */}
+      <CoreIcons
+        isDrawerOpen={isSidebarOpen}
+        heading="Add New Core"
+        src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
+      />
+
+      <Separator className="h-[3px] w-[77%] bg-white rounded-full border" />
 
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-4 gap-4">
         {[
@@ -35,17 +43,12 @@ export default function NavBar() {
           ...cores,
         ].map((src, idx) => (
           <CoreIcons
-            isDrawerOpen={isDrawerOpen}
+            isDrawerOpen={isSidebarOpen}
             heading={`Batch ${idx + 2021}-${idx + 2025}`}
             src={src}
             key={idx}
           />
         ))}
-        <CoreIcons
-          isDrawerOpen={isDrawerOpen}
-          heading="Add New Core"
-          src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
-        />
       </div>
     </div>
   );
