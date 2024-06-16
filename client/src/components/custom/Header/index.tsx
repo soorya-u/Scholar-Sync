@@ -17,7 +17,7 @@ import { useSidebar } from "@/hooks/use-sidebar";
 export default function Header() {
   const { toggleSidebar } = useSidebar();
   return (
-    <div className="min-h-[8%] border-b border-b-white bg-secondary/40 flex justify-between px-8 items-center gap-4 w-full">
+    <div className="min-h-[8%] border-b border-b-white bg-primary flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
         <button className="cursor-pointer" onClick={toggleSidebar}>
           <AlignLeft />

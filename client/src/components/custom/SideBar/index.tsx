@@ -76,14 +76,14 @@ const CoreIcons = ({
         src={src}
         alt="core"
       />
-      <p
+      <span
         className={cn(
           "text-base text-center text-balance",
           isDrawerOpen ? "block" : "hidden"
         )}
       >
         {heading}
-      </p>
+      </span>
     </div>
   </Link>
 );
