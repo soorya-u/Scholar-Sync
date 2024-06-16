@@ -7,8 +7,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/primitives/breadcrumb";
+import { useUserList } from "@/hooks/use-userlist";
 
 export default function NavBar() {
+  const { toggleUserList } = useUserList();
+
   return (
     <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-8 border-b border-white">
       <div className="flex justify-center items-center">
@@ -32,8 +35,9 @@ export default function NavBar() {
         </Breadcrumb>
       </div>
       <div className="flex justify-center items-center gap-6">
-        {/* TODO: Add a Redux Slice */}
-        <Users className="size-6" />
+        <button onClick={toggleUserList}>
+          <Users className="size-6" />
+        </button>
         {/* Generate Link using Core and Nexus */}
         <Share2 className="size-6" />
         {/* To Exit from Nexus: Normal Users */}

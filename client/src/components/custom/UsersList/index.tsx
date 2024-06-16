@@ -1,6 +1,16 @@
+import { useUserList } from "@/hooks/use-userlist";
+import { cn } from "@/utils/cn";
+
 export default function UsersList() {
+  const { isUserListOpen } = useUserList();
+
   return (
-    <div className="flex flex-col bg-secondary p-4 h-full w-[15rem] overflow-y-auto border-l border-white">
+    <div
+      className={cn(
+        " flex-col bg-secondary p-4 h-full w-[15rem] overflow-y-auto border-l border-white transition-all",
+        isUserListOpen ? "translate-x-60 absolute right-0" : "translate-x-0 relative"
+      )}
+    >
       {/* Display PsuedoAdmin */}
       <div className="flex flex-col justify-center">
         <h2 className="text-lg">Creator - 1</h2>

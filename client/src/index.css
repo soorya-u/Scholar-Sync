@@ -73,7 +73,7 @@
     @apply border-border;
   }
   body {
-    @apply h-screen bg-background text-foreground;
+    @apply overflow-x-hidden h-screen bg-background text-foreground;
   }
 }
 
