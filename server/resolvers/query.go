@@ -73,8 +73,24 @@ func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
 	return user, nil
 }
 
-func (r *queryResolver) GetCore(ctx context.Context) (*models.Core, error) {
-	panic(fmt.Errorf("not implemented: GetCore - getCore"))
+func (r *queryResolver) GetCores(ctx context.Context) ([]*models.Core, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return nil, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return nil, fmt.Errorf("cookie not found")
+	}
+
+	cores, err := r.Db.GetCores(cookie.UserId)
+	if err != nil {
+		return nil, fmt.Errorf("%v", err)
+	}
+
+	return cores, nil
+}
+
+func (r *queryResolver) GetNexus(ctx context.Context, input *models.GetNexusData) ([]*models.Nexus, error) {
+	panic(fmt.Errorf("not implemented: GetNexus - getNexus"))
 }
 
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }

@@ -21,7 +21,7 @@ type Announcement struct {
 type Core struct {
 	ID           string     `json:"id"`
 	Name         string     `json:"name"`
-	ImageURL     string     `json:"imageURl"`
+	ImageURL     string     `json:"imageUrl"`
 	Creator      *Profile   `json:"creator"`
 	PseudoAdmins []*Profile `json:"pseudoAdmins"`
 	Nexus        []*Nexus   `json:"nexus"`
@@ -42,6 +42,10 @@ type File struct {
 	SentBy      *Profile  `json:"sentBy"`
 	Nexus       *Nexus    `json:"nexus"`
 	TimeStamp   time.Time `json:"timeStamp"`
+}
+
+type GetNexusData struct {
+	Core string `json:"core"`
 }
 
 type LoginData struct {
@@ -66,11 +70,11 @@ type Nexus struct {
 }
 
 type Profile struct {
-	ID          string      `json:"id"`
-	FullName    string      `json:"fullName"`
-	Email       string      `json:"email"`
-	ProfileType ProfileType `json:"profileType"`
-	CreatedAt   time.Time   `json:"createdAt"`
+	ID        string      `json:"id"`
+	FullName  string      `json:"fullName"`
+	Email     string      `json:"email"`
+	UserType  ProfileType `json:"userType"`
+	CreatedAt time.Time   `json:"createdAt"`
 }
 
 type Query struct {

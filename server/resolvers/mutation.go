@@ -97,7 +97,9 @@ func (r *mutationResolver) CreateCore(ctx context.Context, input models.CoreData
 		return "", fmt.Errorf("cookie not found")
 	}
 
-	coreId, err := r.Db.CreateCore(input.Name, cookie.UserId)
+	// TODO: Add Admin Check
+
+	coreId, err := r.Db.CreateCore(input.Name, input.ImageURL, cookie.UserId)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
