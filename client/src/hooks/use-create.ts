@@ -7,6 +7,7 @@ import { createCoreMutation, createNexusMutation } from "@/graphql/mutations";
 import { useToast } from "@/components/primitives/use-toast";
 import { CoreType, coreSchema } from "@/schema/core";
 import { NexusType, nexusSchema } from "@/schema/nexus";
+import { useFetchCores } from "./use-fetch";
 
 export const useCoreCreate = () => {
   const {
@@ -19,6 +20,8 @@ export const useCoreCreate = () => {
   });
   const { toast } = useToast();
   const [mutate, { data, error }] = useMutation(createCoreMutation);
+
+  const { refetch } = useFetchCores();
 
   const onSubmitFunc = async (val: CoreType) => {
     // TODO: Add Core Image String
@@ -52,7 +55,7 @@ export const useCoreCreate = () => {
         description: "Core has been Successfully Created.",
       });
 
-      // Add to redux
+      refetch();
     }
   }, [data, error]);
 
@@ -104,7 +107,7 @@ export const useNexusCreate = () => {
         description: "Nexus has been Successfully Created.",
       });
 
-      // Add to redux
+      // TODO: Refetch Nexus
     }
   }, [data, error]);
 
