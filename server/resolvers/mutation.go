@@ -103,7 +103,6 @@ func (r *mutationResolver) CreateCore(ctx context.Context, input models.CoreData
 	}
 
 	return coreId, nil
-
 }
 
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }

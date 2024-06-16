@@ -18,7 +18,7 @@ type Core {
   id: ID!
   name: String!
   creator: Profile!
-  psuedoadmin: [Profile]!
+  pseudoAdmins: [Profile]!
   nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
@@ -30,7 +30,7 @@ type Nexus {
   core: Core!
   category: String!
   creator: Profile!
-  user: [Profile]!
+  users: [Profile]!
   files: [File]!
   announcements: [Announcement]!
   createdAt: Time!
