@@ -13,24 +13,18 @@ export default function NavBar() {
     <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-8 border-b border-white">
       <div className="flex justify-center items-center">
         <Breadcrumb>
-          <BreadcrumbList>
+          <BreadcrumbList className="flex items-center">
             <MapPin />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-base cursor-pointer">
-                Dashboard
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
               {/* TODO: Add Respective */}
-              <BreadcrumbPage className="text-base cursor-pointer">
+              <BreadcrumbPage className="text-xl cursor-pointer">
                 Core[0]
               </BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               {/* TODO: Add Respective */}
-              <BreadcrumbPage className="text-base cursor-pointer">
+              <BreadcrumbPage className="text-xl cursor-pointer">
                 Nexus[0]
               </BreadcrumbPage>
             </BreadcrumbItem>

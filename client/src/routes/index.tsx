@@ -9,12 +9,13 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/primitives/resizable";
+import Dashboard from "@/components/custom/Dashboard";
 
 export const Route = createFileRoute("/")({
-  component: Dashboard,
+  component: HomePage,
 });
 
-function Dashboard() {
+function HomePage() {
   return (
     <div className="flex h-screen flex-col bg-secondary">
       <Header />
@@ -28,9 +29,10 @@ function Dashboard() {
               className="flex flex-col h-full flex-1"
               direction="vertical"
             >
-              <ResizablePanel className="flex-1 w-full">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+              <ResizablePanel className="flex-1 h-full w-full">
+                <Dashboard />
               </ResizablePanel>
+              {/* TODO: Add ADmin Check */}
               <Uploader />
             </ResizablePanelGroup>
             <UsersList />
