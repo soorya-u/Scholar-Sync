@@ -21,6 +21,7 @@ type Announcement struct {
 type Core struct {
 	ID           string     `json:"id"`
 	Name         string     `json:"name"`
+	ImageURL     string     `json:"imageURl"`
 	Creator      *Profile   `json:"creator"`
 	PseudoAdmins []*Profile `json:"pseudoAdmins"`
 	Nexus        []*Nexus   `json:"nexus"`
@@ -29,7 +30,8 @@ type Core struct {
 }
 
 type CoreData struct {
-	Name string `json:"name"`
+	Name     string `json:"name"`
+	ImageURL string `json:"imageUrl"`
 }
 
 type File struct {

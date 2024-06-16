@@ -17,6 +17,7 @@ type Profile {
 type Core {
   id: ID!
   name: String!
+  imageURl: String!
   creator: Profile!
   pseudoAdmins: [Profile]!
   nexus: [Nexus]!

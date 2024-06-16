@@ -18,6 +18,7 @@ DEFINE TABLE core SCHEMAFULL;
 DEFINE FIELD name ON core TYPE string;
 DEFINE FIELD creator ON core TYPE record(user);
 DEFINE FIELD pseudoAdmins ON core TYPE array<record(user)> DEFAULT [];
+DEFINE FIELD imageUrl ON core TYPE string;
 DEFINE FIELD nexus ON core TYPE array<record(nexus)> DEFAULT [];
 DEFINE FIELD createdAt ON core TYPE datetime DEFAULT time::now() READONLY;
 DEFINE FIELD updatedAt ON core TYPE datetime DEFAULT time::now();

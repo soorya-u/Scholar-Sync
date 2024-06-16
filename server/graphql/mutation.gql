@@ -8,6 +8,7 @@ input SignUpData {
 
 input CoreData {
   name: String!
+  imageUrl: String!
 }
 
 type Mutation {
