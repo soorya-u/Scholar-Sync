@@ -14,8 +14,14 @@ export const fileUploadMutation = gql`
   }
 `;
 
-export const createCoreMutatuion = gql`
-  mutation ($name: String!) {
-    createCore(input: { name: $name })
+export const createCoreMutation = gql`
+  mutation ($name: String!, $imageUrl: String!) {
+    createCore(input: { name: $name, imageUrl: $imageUrl })
+  }
+`;
+
+export const createNexusMutation = gql`
+  mutation ($name: String!, $category: String!) {
+    createNexus(input: { name: $name, category: $category })
   }
 `;
