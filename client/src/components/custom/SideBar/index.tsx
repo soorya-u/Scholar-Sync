@@ -1,10 +1,10 @@
-import { Link } from "@tanstack/react-router";
-
 import { useSidebar } from "@/hooks/use-sidebar";
-import { cn } from "@/utils/cn";
 import { Separator } from "@/components/primitives/separator";
+import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
+import { cn } from "@/utils/cn";
+import CreateCore from "../CreateCore";
 
-export default function NavBar() {
+export default function SideBar() {
   const { isSidebarOpen } = useSidebar();
 
   // TODO: Fetch All User Cores
@@ -19,15 +19,22 @@ export default function NavBar() {
     // TODO: Check if User is Admin or PseudoAdmin
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 py-4 bg-primary transition-all border-r border-white px-1",
+        "relative flex flex-col items-center gap-2 border-r border-white py-4 bg-gradient-to-r from-primary to-primary via-primary transition-all px-1",
         isSidebarOpen ? "w-48" : "w-24"
       )}
     >
-      <CoreIcons
-        isDrawerOpen={isSidebarOpen}
-        heading="Add New Core"
-        src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
-      />
+      <Dialog>
+        <DialogTrigger asChild>
+          <button>
+            <CoreIcons
+              isDrawerOpen={isSidebarOpen}
+              heading="Add New Core"
+              src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
+            />
+          </button>
+        </DialogTrigger>
+        <CreateCore />
+      </Dialog>
 
       <Separator className="h-[3px] w-[77%] bg-white rounded-full border" />
 
@@ -58,32 +65,28 @@ const CoreIcons = ({
   className,
   src,
   heading,
-  handleClick,
   isDrawerOpen,
 }: {
   className?: string;
   src: string;
   heading: string;
-  handleClick?: () => void;
   isDrawerOpen?: boolean;
 }) => (
-  <Link onClick={handleClick}>
-    <div
-      className={cn("flex gap-3 group justify-center items-center", className)}
+  <button
+    className={cn("flex gap-3 group justify-center items-center", className)}
+  >
+    <img
+      className="size-14 rounded-full transition-all duration-300 group-hover:rounded-2xl"
+      src={src}
+      alt="core"
+    />
+    <span
+      className={cn(
+        "text-base text-center text-balance",
+        isDrawerOpen ? "block" : "hidden"
+      )}
     >
-      <img
-        className="size-14 rounded-full transition-all duration-300 group-hover:rounded-2xl"
-        src={src}
-        alt="core"
-      />
-      <span
-        className={cn(
-          "text-base text-center text-balance",
-          isDrawerOpen ? "block" : "hidden"
-        )}
-      >
-        {heading}
-      </span>
-    </div>
-  </Link>
+      {heading}
+    </span>
+  </button>
 );

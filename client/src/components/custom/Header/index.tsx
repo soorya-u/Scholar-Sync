@@ -3,13 +3,7 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/primitives/avatar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/primitives/breadcrumb";
+
 import { AlignLeft } from "lucide-react";
 
 import { useSidebar } from "@/hooks/use-sidebar";
@@ -30,30 +24,8 @@ export default function Header() {
             />
             <AvatarFallback>Logo</AvatarFallback>
           </Avatar>
-          <h1 className="text-2xl"></h1>
-          <Breadcrumb>
-            <BreadcrumbList>
-              <BreadcrumbItem>
-                <BreadcrumbPage className="text-base cursor-pointer">
-                  Scholar Sync
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {/* TODO: Add Respective */}
-                <BreadcrumbPage className="text-base cursor-pointer">
-                  Core
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-              <BreadcrumbSeparator />
-              <BreadcrumbItem>
-                {/* TODO: Add Respective */}
-                <BreadcrumbPage className="text-base cursor-pointer">
-                  Nexus
-                </BreadcrumbPage>
-              </BreadcrumbItem>
-            </BreadcrumbList>
-          </Breadcrumb>
+          <h1 className="text-2xl">Scholar Sync</h1>
+         
         </div>
       </div>
       <div></div>
