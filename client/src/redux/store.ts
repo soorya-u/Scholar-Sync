@@ -1,9 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import sidebarSlice from "./slices/sidebar";
+import toggler from "./slices/toggler";
 
 export const store = configureStore({
   reducer: {
-    sidebar: sidebarSlice,
+    toggler,
   },
 });
 

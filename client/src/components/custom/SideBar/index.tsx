@@ -1,11 +1,11 @@
-import { useSidebar } from "@/hooks/use-sidebar";
+import { useToggler } from "@/hooks/use-toggler";
 import { Separator } from "@/components/primitives/separator";
 import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
 import { cn } from "@/utils/cn";
 import CreateCore from "../CreateCore";
 
 export default function SideBar() {
-  const { isSidebarOpen } = useSidebar();
+  const { isSidebarOpen } = useToggler();
 
   // TODO: Fetch All User Cores
 
