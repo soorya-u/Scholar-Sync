@@ -3,35 +3,32 @@ import { Separator } from "@/components/primitives/separator";
 import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
 import { cn } from "@/utils/cn";
 import CreateCore from "../CreateCore";
+import { useUser } from "@/hooks/use-user";
+import { useFetchCores } from "@/hooks/use-fetch";
 
 export default function SideBar() {
   const { isSidebarOpen } = useToggler();
 
-  // TODO: Fetch All User Cores
-
-  // TODO: Delete Later
-  const cores = [
-    "https://shiftart.com/wp-content/uploads/2017/04/RC-Profile-Square.jpg",
-    "https://assets.mobileworldlive.com/wp-content/uploads/2015/10/16130048/Dorsey-iamge.png",
-  ];
+  const { user } = useUser();
+  const { core } = useFetchCores();
+  if (user.userType === "NORMAL") return;
 
   return (
-    // TODO: Check if User is Admin or PseudoAdmin
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 border-r border-white py-4 bg-gradient-to-r from-primary to-primary via-primary transition-all px-1",
-        isSidebarOpen ? "w-48" : "w-24"
+        "relative flex flex-col items-center gap-2 border-r border-white py-4 bg-gradient-to-r from-primary transition-all duration-300 px-1 z-10",
+        isSidebarOpen
+          ? "w-48  via-primary to-primary"
+          : "w-24  via-secondary to-secondary"
       )}
     >
       <Dialog>
-        <DialogTrigger asChild>
-          <button>
-            <CoreIcons
-              isDrawerOpen={isSidebarOpen}
-              heading="Add New Core"
-              src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
-            />
-          </button>
+        <DialogTrigger>
+          <CoreIcons
+            isDrawerOpen={isSidebarOpen}
+            heading="Add New Core"
+            src="https://t4.ftcdn.net/jpg/01/26/10/59/360_F_126105961_6vHCTRX2cPOnQTBvx9OSAwRUapYTEmYA.jpg"
+          />
         </DialogTrigger>
         <CreateCore />
       </Dialog>
@@ -39,21 +36,12 @@ export default function SideBar() {
       <Separator className="h-[3px] w-[77%] bg-white rounded-full border" />
 
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-4 gap-4">
-        {[
-          ...cores,
-          ...cores,
-          ...cores,
-          ...cores,
-          ...cores,
-          ...cores,
-          ...cores,
-          ...cores,
-        ].map((src, idx) => (
+        {core.allCores.map((c) => (
           <CoreIcons
             isDrawerOpen={isSidebarOpen}
-            heading={`Batch ${idx + 2021}-${idx + 2025}`}
-            src={src}
-            key={idx}
+            heading={c.name}
+            src={c.imageUrl}
+            key={c.id}
           />
         ))}
       </div>
@@ -72,7 +60,7 @@ const CoreIcons = ({
   heading: string;
   isDrawerOpen?: boolean;
 }) => (
-  <button
+  <div
     className={cn("flex gap-3 group justify-center items-center", className)}
   >
     <img
@@ -82,11 +70,11 @@ const CoreIcons = ({
     />
     <span
       className={cn(
-        "text-base text-center text-balance",
+        "text-base text-center text-balance transition-all duration-300",
         isDrawerOpen ? "block" : "hidden"
       )}
     >
       {heading}
     </span>
-  </button>
+  </div>
 );

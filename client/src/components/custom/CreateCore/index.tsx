@@ -11,7 +11,8 @@ import { Label } from "@/components/primitives/label";
 import { useCoreCreate } from "@/hooks/use-create";
 
 export default function CreateCore() {
-  const { errors, handleSubmit, isSubmitting, register } = useCoreCreate();
+  const { errors, handleSubmit, isSubmitting, register } =
+    useCoreCreate();
 
   return (
     <DialogContent className="sm:max-w-[425px]">
@@ -38,7 +39,7 @@ export default function CreateCore() {
                 placeholder="Core Name..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balance self-center">
+            <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
               {errors && errors.name && errors.name.message}
             </span>
           </div>
@@ -51,14 +52,17 @@ export default function CreateCore() {
                 </span>
               </Label>
               <Input
-                {...register("imageUrl")}
+                {...register("imageUrl", { required: false })}
                 disabled={isSubmitting}
                 className="col-span-3"
                 placeholder="Image Link..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balanc self-center">
-              {errors && errors.name && errors.name.message}
+            <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
+              {
+                errors &&
+                errors.imageUrl &&
+                errors.imageUrl.message}
             </span>
           </div>
         </div>

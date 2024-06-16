@@ -23,11 +23,13 @@ import {
   ResizablePanel,
 } from "@/components/primitives/resizable";
 import { ImperativePanelHandle } from "react-resizable-panels";
+import { useUser } from "@/hooks/use-user";
 
 type UploaderType = "Announcement" | "File";
 const uploaders: UploaderType[] = ["Announcement", "File"];
 
 export default function Uploader() {
+  const { user } = useUser();
   const [isUploaderOpen, setIsUploaderOpen] = useState(false);
   const [uploader, setUploader] = useState<UploaderType>("Announcement");
   const resizalePanelRef = useRef<ImperativePanelHandle | null>(null);
@@ -37,6 +39,7 @@ export default function Uploader() {
     setIsUploaderOpen((prev) => !prev);
   };
 
+  if (user.userType === "NORMAL") return;
   return (
     <>
       <ResizableHandle
