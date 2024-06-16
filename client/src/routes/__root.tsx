@@ -12,7 +12,11 @@ const TanStackRouterDevtools =
       );
 
 export const Route = createRootRoute({
-  component: () => (
+  component: RootPage,
+});
+
+function RootPage() {
+  return (
     <>
       <Outlet />
       <Toaster />
@@ -20,5 +24,5 @@ export const Route = createRootRoute({
         <TanStackRouterDevtools />
       </React.Suspense>
     </>
-  ),
-});
+  );
+}
