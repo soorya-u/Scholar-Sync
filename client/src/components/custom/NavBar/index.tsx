@@ -7,10 +7,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/primitives/breadcrumb";
-import { useUserList } from "@/hooks/use-userlist";
+import { useToggler } from "@/hooks/use-toggler";
 
 export default function NavBar() {
-  const { toggleUserList } = useUserList();
+  const { toggleUserList } = useToggler();
 
   return (
     <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-8 border-b border-white">
