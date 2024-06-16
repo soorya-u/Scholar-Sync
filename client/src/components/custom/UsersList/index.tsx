@@ -7,7 +7,7 @@ export default function UsersList() {
   return (
     <div
       className={cn(
-        " flex-col bg-secondary p-4 h-full w-[15rem] overflow-y-auto border-l border-white transition-all",
+        " flex-col bg-secondary p-4 h-full w-[12rem] overflow-y-auto border-l border-white transition-all",
         isUserListOpen
           ? "translate-x-60 absolute right-0"
           : "translate-x-0 relative"

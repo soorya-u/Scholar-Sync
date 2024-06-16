@@ -6,20 +6,20 @@
 
 @layer base {
   :root {
-    --background: 140 60% 92.7%;
-    --foreground: 192 8% 27%;
+    --background: 213 94% 96%;
+    --foreground: 195 9% 26%;
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 3.9%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 192 8% 27%;
+    --popover-foreground: 195 9% 26%;
 
-    --primary: 144 90% 62%;
-    --primary-foreground: 192 8% 27%;
+    --primary: 217 100% 63%;
+    --primary-foreground: 195 9% 26%;
 
-    --secondary: 144 90% 72.5%;
-    --secondary-foreground: 192 8% 27%;
+    --secondary: 214 99% 70%;
+    --secondary-foreground: 195 9% 26%;
 
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
@@ -73,7 +73,7 @@
     @apply border-border;
   }
   body {
-    @apply overflow-x-hidden h-screen bg-background text-foreground;
+    @apply overflow-hidden h-screen bg-background text-foreground;
   }
 }
 

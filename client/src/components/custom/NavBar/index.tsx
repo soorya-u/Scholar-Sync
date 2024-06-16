@@ -13,21 +13,27 @@ export default function NavBar() {
   const { toggleUserList } = useToggler();
 
   return (
-    <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-8 border-b border-white">
+    <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-5  border-b border-white">
       <div className="flex justify-center items-center">
         <Breadcrumb>
           <BreadcrumbList className="flex items-center">
-            <MapPin />
             <BreadcrumbItem>
               {/* TODO: Add Respective */}
-              <BreadcrumbPage className="text-xl cursor-pointer">
+              <BreadcrumbPage className="text-lg cursor-pointer">
                 Core[0]
               </BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               {/* TODO: Add Respective */}
-              <BreadcrumbPage className="text-xl cursor-pointer">
+              <BreadcrumbPage className="text-lg cursor-pointer">
+                Semester[0]
+              </BreadcrumbPage>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              {/* TODO: Add Respective */}
+              <BreadcrumbPage className="text-lg cursor-pointer">
                 Nexus[0]
               </BreadcrumbPage>
             </BreadcrumbItem>
