@@ -88,3 +88,35 @@ models:
   UUID:
     model:
       - github.com/99designs/gqlgen/graphql.UUID
+  Core:
+    fields:
+      creator:
+        resolver: true
+      pseudoAdmins:
+        resolver: true
+      nexus:
+        resolver: true
+  Nuxus:
+    fields:
+      core:
+        resolver: true
+      creator:
+        resolver: true
+      users:
+        resolver: true
+      files:
+        resolver: true
+      announcements:
+        resolver: true
+  File:
+    fields:
+      sentBy:
+        resolver: true
+      nexus:
+        resolver: true
+  Announcement:
+    fields:
+      sentBy:
+        resolver: true
+      nexus:
+        resolver: true
