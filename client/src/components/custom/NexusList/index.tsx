@@ -1,3 +1,4 @@
+import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
 import {
   Select,
   SelectContent,
@@ -7,6 +8,10 @@ import {
   SelectValue,
 } from "@/components/primitives/select";
 import { useState } from "react";
+import CreateNexus from "../CreateNexus";
+import { Button } from "@/components/primitives/button";
+import { Separator } from "@/components/primitives/separator";
+import { cn } from "@/utils/cn";
 
 export default function NexusList() {
   const categories = [
@@ -22,7 +27,11 @@ export default function NexusList() {
   const routes = ["Data Structure and Algorithms", "Computer Organization"];
 
   return (
-    <div className="relative flex bg-secondary py-4 flex-col gap-3 items-center px-2">
+    <div
+      className={cn(
+        "relative flex bg-gradient-to-r from-primary to-secondary via-primary py-4 flex-col gap-3 items-center px-2 border-r border-white"
+      )}
+    >
       {/* Render Catergoies */}
       <Select onValueChange={(v) => setCategory(v)}>
         <SelectTrigger className="w-[90%]">
@@ -57,6 +66,17 @@ export default function NexusList() {
           </h3>
         ))}
       </div>
+
+      {/* TODO: Add ADMIN and PSEUDOADMIN Check */}
+      <Dialog>
+        <Separator className="border-border h-[2px] w-[90%]" />
+        <DialogTrigger asChild>
+          <Button variant="outline" className="w-[90%]">
+            Create a Nexus
+          </Button>
+        </DialogTrigger>
+        <CreateNexus />
+      </Dialog>
     </div>
   );
 }

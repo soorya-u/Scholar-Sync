@@ -73,7 +73,7 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply h-screen bg-background text-foreground;
   }
 }
 
@@ -90,5 +90,5 @@
 }
 
 .h-calculated {
-  height: calc(100vh - 30rem);
+  height: calc((82% * 100vh)-4rem);
 }

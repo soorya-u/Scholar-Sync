@@ -63,6 +63,7 @@ type ComplexityRoot struct {
 		CreatedAt    func(childComplexity int) int
 		Creator      func(childComplexity int) int
 		ID           func(childComplexity int) int
+		ImageURL     func(childComplexity int) int
 		Name         func(childComplexity int) int
 		Nexus        func(childComplexity int) int
 		PseudoAdmins func(childComplexity int) int
@@ -219,6 +220,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Core.ID(childComplexity), true
+
+	case "Core.imageURl":
+		if e.complexity.Core.ImageURL == nil {
+			break
+		}
+
+		return e.complexity.Core.ImageURL(childComplexity), true
 
 	case "Core.name":
 		if e.complexity.Core.Name == nil {
@@ -582,6 +590,7 @@ input SignUpData {
 
 input CoreData {
   name: String!
+  imageUrl: String!
 }
 
 type Mutation {
@@ -620,6 +629,7 @@ type Profile {
 type Core {
   id: ID!
   name: String!
+  imageURl: String!
   creator: Profile!
   pseudoAdmins: [Profile]!
   nexus: [Nexus]!
@@ -1153,6 +1163,50 @@ func (ec *executionContext) _Core_name(ctx context.Context, field graphql.Collec
 }
 
 func (ec *executionContext) fieldContext_Core_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Core",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Core_imageURl(ctx context.Context, field graphql.CollectedField, obj *models.Core) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Core_imageURl(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ImageURL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Core_imageURl(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Core",
 		Field:      field,
@@ -2066,6 +2120,8 @@ func (ec *executionContext) fieldContext_Nexus_core(_ context.Context, field gra
 				return ec.fieldContext_Core_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Core_name(ctx, field)
+			case "imageURl":
+				return ec.fieldContext_Core_imageURl(ctx, field)
 			case "creator":
 				return ec.fieldContext_Core_creator(ctx, field)
 			case "pseudoAdmins":
@@ -2819,6 +2875,8 @@ func (ec *executionContext) fieldContext_Query_getCore(_ context.Context, field 
 				return ec.fieldContext_Core_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Core_name(ctx, field)
+			case "imageURl":
+				return ec.fieldContext_Core_imageURl(ctx, field)
 			case "creator":
 				return ec.fieldContext_Core_creator(ctx, field)
 			case "pseudoAdmins":
@@ -4745,7 +4803,7 @@ func (ec *executionContext) unmarshalInputCoreData(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"name"}
+	fieldsInOrder := [...]string{"name", "imageUrl"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -4759,6 +4817,13 @@ func (ec *executionContext) unmarshalInputCoreData(ctx context.Context, obj inte
 				return it, err
 			}
 			it.Name = data
+		case "imageUrl":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("imageUrl"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.ImageURL = data
 		}
 	}
 
@@ -4992,6 +5057,11 @@ func (ec *executionContext) _Core(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "name":
 			out.Values[i] = ec._Core_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "imageURl":
+			out.Values[i] = ec._Core_imageURl(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
