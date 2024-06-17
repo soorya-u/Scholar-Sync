@@ -10,14 +10,14 @@ type Profile {
   id: ID!
   fullName: String!
   email: String!
-  profileType: ProfileType!
+  userType: ProfileType!
   createdAt: Time!
 }
 
 type Core {
   id: ID!
   name: String!
-  imageURl: String!
+  imageUrl: String!
   creator: Profile!
   pseudoAdmins: [Profile]!
   nexus: [Nexus]!

@@ -4,12 +4,14 @@ import {
   AvatarImage,
 } from "@/components/primitives/avatar";
 
-import { AlignLeft } from "lucide-react";
+import { AlignLeft, LogOut } from "lucide-react";
 
 import { useToggler } from "@/hooks/use-toggler";
+import { useUser } from "@/hooks/use-user";
 
 export default function Header() {
   const { toggleSidebar } = useToggler();
+  const { user } = useUser();
   return (
     <div className="h-[8%] border-b border-b-white bg-primary flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
@@ -27,7 +29,14 @@ export default function Header() {
           <h1 className="text-2xl">Scholar Sync</h1>
         </div>
       </div>
-      <div></div>
+      <div className="flex justify-center items-center gap-4">
+        <div className="size-10 rounded-full flex justify-center items-center bg-purple-600">
+          <span className="text-lg font-extrabold">{user.fullName[0]}</span>
+        </div>
+        <p className="text-base font-bold">{user.fullName}</p>
+        {/* TODO: Add function to Logout */}
+        <LogOut className="size-5 [&>path]:text-red-500 [&>line]:text-red-500 [&>polyline]:text-red-500" />
+      </div>
     </div>
   );
 }

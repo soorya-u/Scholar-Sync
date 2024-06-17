@@ -3,8 +3,14 @@ input LoginData {
   password: String!
 }
 
+input GetNexusData {
+  core: String!
+}
+
 type Query {
   loginUser(input: LoginData!): String!
   getUser: Profile!
-  getCore: Core!
+  getUserData: [Core]!
+  getCores: [Core]!
+  getNexus(input: GetNexusData): [Nexus]!
 }

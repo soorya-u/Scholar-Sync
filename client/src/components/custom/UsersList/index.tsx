@@ -28,7 +28,7 @@ export default function UsersList() {
         {Array(69)
           .fill(0)
           .map((_, idx) => (
-            <div className="flex pl-3 items-center gap-2 py-2">
+            <div key={idx} className="flex pl-3 items-center gap-2 py-2">
               <div className="size-8 flex justify-center items-center rounded-full bg-purple-400">
                 <span>A</span>
               </div>

@@ -12,6 +12,8 @@ import CreateNexus from "../CreateNexus";
 import { Button } from "@/components/primitives/button";
 import { Separator } from "@/components/primitives/separator";
 import { cn } from "@/utils/cn";
+import { useToggler } from "@/hooks/use-toggler";
+import { useUser } from "@/hooks/use-user";
 
 export default function NexusList() {
   const categories = [
@@ -23,13 +25,16 @@ export default function NexusList() {
     "Sixth Semester",
   ];
   const [category, setCategory] = useState(categories[0]);
+  const { isSidebarOpen } = useToggler();
+  const { user } = useUser();
 
   const routes = ["Data Structure and Algorithms", "Computer Organization"];
 
   return (
     <div
       className={cn(
-        "relative flex bg-gradient-to-r from-primary to-secondary via-primary py-4 flex-col gap-3 items-center px-2 border-r border-white"
+        "relative flex bg-gradient-to-r from-primary to-secondary via-primary py-4 flex-col gap-3 items-center px-2 border-r border-white transition-all duration-300",
+        isSidebarOpen ? "translate-x-0 relative" : "-translate-x-[25rem] absolute"
       )}
     >
       {/* Render Catergoies */}
@@ -67,16 +72,17 @@ export default function NexusList() {
         ))}
       </div>
 
-      {/* TODO: Add ADMIN and PSEUDOADMIN Check */}
-      <Dialog>
-        <Separator className="border-border h-[2px] w-[90%]" />
-        <DialogTrigger asChild>
-          <Button variant="outline" className="w-[90%]">
-            Create a Nexus
-          </Button>
-        </DialogTrigger>
-        <CreateNexus />
-      </Dialog>
+      {user.userType !== "NORMAL" && (
+        <Dialog>
+          <Separator className="border-border h-[2px] w-[90%]" />
+          <DialogTrigger asChild>
+            <Button variant="outline" className="w-[90%]">
+              Create a Nexus
+            </Button>
+          </DialogTrigger>
+          <CreateNexus />
+        </Dialog>
+      )}
     </div>
   );
 }

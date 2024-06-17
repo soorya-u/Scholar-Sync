@@ -5,6 +5,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/primitives/dialog";
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
@@ -38,7 +39,7 @@ export default function CreateCore() {
                 placeholder="Core Name..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balance self-center">
+            <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
               {errors && errors.name && errors.name.message}
             </span>
           </div>
@@ -51,25 +52,27 @@ export default function CreateCore() {
                 </span>
               </Label>
               <Input
-                {...register("imageUrl")}
+                {...register("imageUrl", { required: false })}
                 disabled={isSubmitting}
                 className="col-span-3"
                 placeholder="Image Link..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balanc self-center">
-              {errors && errors.name && errors.name.message}
+            <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
+              {errors && errors.imageUrl && errors.imageUrl.message}
             </span>
           </div>
         </div>
         <DialogFooter>
-          <Button
-            disabled={isSubmitting}
-            aria-disabled={isSubmitting}
-            type="submit"
-          >
-            Create Core
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              disabled={isSubmitting}
+              aria-disabled={isSubmitting}
+              type="submit"
+            >
+              Create Core
+            </Button>
+          </DialogTrigger>
         </DialogFooter>
       </form>
     </DialogContent>

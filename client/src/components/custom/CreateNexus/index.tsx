@@ -5,13 +5,35 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/primitives/dialog";
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/primitives/select";
+
 import { useNexusCreate } from "@/hooks/use-create";
 
+const categories = [
+  "First",
+  "Second",
+  "Third",
+  "Fourth",
+  "Fifth",
+  "Sixth",
+  "Seventh",
+  "Eighth",
+] as const;
+
 export default function CreateNexus() {
-  const { errors, handleSubmit, isSubmitting, register } = useNexusCreate();
+  const { errors, handleSubmit, isSubmitting, register, category } =
+    useNexusCreate();
 
   return (
     <DialogContent className="sm:max-w-[425px]">
@@ -50,26 +72,36 @@ export default function CreateNexus() {
                   *
                 </span>
               </Label>
-              <Input
-                {...register("category")}
-                disabled={isSubmitting}
-                className="col-span-3"
-                placeholder="Nexus Category..."
-              />
+              <Select onValueChange={category.onChange}>
+                <SelectTrigger className="w-full col-span-3">
+                  <SelectValue placeholder={`${category.value} Semester`} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {categories.map((c, idx) => (
+                      <SelectItem value={c} key={idx}>
+                        {c} Semester
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
             </div>
             <span className="text-sm text-red-500 text-balance self-center">
-              {errors && errors.name && errors.name.message}
+              {errors && errors.category && errors.category.message}
             </span>
           </div>
         </div>
         <DialogFooter>
-          <Button
-            disabled={isSubmitting}
-            aria-disabled={isSubmitting}
-            type="submit"
-          >
-            Create Nexus
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              disabled={isSubmitting}
+              aria-disabled={isSubmitting}
+              type="submit"
+            >
+              Create Nexus
+            </Button>
+          </DialogTrigger>
         </DialogFooter>
       </form>
     </DialogContent>

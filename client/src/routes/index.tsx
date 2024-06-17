@@ -10,12 +10,14 @@ import {
   ResizablePanelGroup,
 } from "@/components/primitives/resizable";
 import Dashboard from "@/components/custom/Dashboard";
+import { useInit } from "@/hooks/use-init";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
 });
 
 function HomePage() {
+  useInit();
   return (
     <div className="flex h-screen flex-col bg-secondary">
       <Header />
