@@ -46,6 +46,7 @@ type File struct {
 
 type GetNexusData struct {
 	Core string `json:"core"`
+	User string `json:"user"`
 }
 
 type LoginData struct {
@@ -60,13 +61,19 @@ type Nexus struct {
 	ID            string          `json:"id"`
 	Name          string          `json:"name"`
 	Core          *Core           `json:"core"`
-	Category      string          `json:"category"`
+	Category      int             `json:"category"`
 	Creator       *Profile        `json:"creator"`
 	Users         []*Profile      `json:"users"`
 	Files         []*File         `json:"files"`
 	Announcements []*Announcement `json:"announcements"`
 	CreatedAt     time.Time       `json:"createdAt"`
 	UpdatedAt     time.Time       `json:"updatedAt"`
+}
+
+type NexusData struct {
+	Core     string `json:"core"`
+	Name     string `json:"name"`
+	Category int    `json:"category"`
 }
 
 type Profile struct {

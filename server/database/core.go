@@ -8,7 +8,7 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-func (db *DB) CreateCore(name string, imageUrl, userId string) (string, error) {
+func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 
 	params := map[string]interface{}{
 		"name":      name,

@@ -7,7 +7,7 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-func (db *DB) AddNewUser(fullName string, email string, hashedPassword string) (*models.User, error) {
+func (db *DB) AddNewUser(fullName, email, hashedPassword string) (*models.User, error) {
 
 	params := map[string]interface{}{
 		"fullName": fullName,
