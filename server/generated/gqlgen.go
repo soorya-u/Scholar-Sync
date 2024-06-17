@@ -626,7 +626,7 @@ input CoreData {
 input NexusData {
   core: String!
   name: String!
-  category: Int!
+  category: String!
 }
 
 type Mutation {
@@ -643,7 +643,6 @@ type Mutation {
 
 input GetNexusData {
   core: String!
-  user: String!
 }
 
 type Query {
@@ -684,7 +683,7 @@ type Nexus {
   id: ID!
   name: String!
   core: Core!
-  category: Int!
+  category: String!
   creator: Profile!
   users: [Profile]!
   files: [File]!
@@ -2293,9 +2292,9 @@ func (ec *executionContext) _Nexus_category(ctx context.Context, field graphql.C
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Nexus_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2305,7 +2304,7 @@ func (ec *executionContext) fieldContext_Nexus_category(_ context.Context, field
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -5042,7 +5041,7 @@ func (ec *executionContext) unmarshalInputGetNexusData(ctx context.Context, obj 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"core", "user"}
+	fieldsInOrder := [...]string{"core"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5056,13 +5055,6 @@ func (ec *executionContext) unmarshalInputGetNexusData(ctx context.Context, obj 
 				return it, err
 			}
 			it.Core = data
-		case "user":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("user"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.User = data
 		}
 	}
 
@@ -5133,7 +5125,7 @@ func (ec *executionContext) unmarshalInputNexusData(ctx context.Context, obj int
 			it.Name = data
 		case "category":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("category"))
-			data, err := ec.unmarshalNInt2int(ctx, v)
+			data, err := ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -6442,21 +6434,6 @@ func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface
 
 func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	res := graphql.MarshalID(v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
-func (ec *executionContext) unmarshalNInt2int(ctx context.Context, v interface{}) (int, error) {
-	res, err := graphql.UnmarshalInt(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.SelectionSet, v int) graphql.Marshaler {
-	res := graphql.MarshalInt(v)
 	if res == graphql.Null {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")

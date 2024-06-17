@@ -24,7 +24,7 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 	}
 
 	type CoreID struct {
-		id string
+		Id string
 	}
 
 	var coreId []CoreID
@@ -34,12 +34,12 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 		return "", fmt.Errorf("unable to parse data from database: %v", err)
 	}
 
-	return coreId[0].id, nil
+	return coreId[0].Id, nil
 
 }
 
 func (db *DB) GetCores(userId string) ([]*models.Core, error) {
-	query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId in pseudoAdmins;"
+	query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId IN pseudoAdmins;"
 	params := map[string]interface{}{"userId": userId}
 
 	rawData, err := db.client.Query(query, params)

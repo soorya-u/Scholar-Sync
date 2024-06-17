@@ -5,12 +5,12 @@ input LoginData {
 
 input GetNexusData {
   core: String!
-  user: String!
 }
 
 type Query {
   loginUser(input: LoginData!): String!
   getUser: Profile!
+  getUserData: [Core]!
   getCores: [Core]!
   getNexus(input: GetNexusData): [Nexus]!
 }

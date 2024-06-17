@@ -14,7 +14,7 @@ input CoreData {
 input NexusData {
   core: String!
   name: String!
-  category: Int!
+  category: String!
 }
 
 type Mutation {

@@ -29,7 +29,7 @@ type Nexus {
   id: ID!
   name: String!
   core: Core!
-  category: Int!
+  category: String!
   creator: Profile!
   users: [Profile]!
   files: [File]!
