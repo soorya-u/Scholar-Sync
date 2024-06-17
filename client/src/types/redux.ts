@@ -10,18 +10,12 @@ export type CoreType = {
   name: string;
 };
 
-export type CoreReduxType = {
-  allCores: CoreType[];
-  activeCore: CoreType;
-};
-
 export type NexusType = {
   id: string;
   category: string;
   name: string;
 };
 
-export type NexusReduxType = {
-  allNexus: NexusType[];
-  activeNexus: NexusType;
+export type ApiDataType = CoreType & {
+  nexus: NexusType[];
 };

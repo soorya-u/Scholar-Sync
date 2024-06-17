@@ -19,7 +19,6 @@ type Core {
   name: String!
   imageUrl: String!
   creator: Profile!
-  pseudoAdmins: [Profile]!
   nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
@@ -28,7 +27,6 @@ type Core {
 type Nexus {
   id: ID!
   name: String!
-  core: Core!
   category: String!
   creator: Profile!
   users: [Profile]!
@@ -44,13 +42,11 @@ type File {
   description: String
   fileUrl: String!
   sentBy: Profile!
-  nexus: Nexus!
   timeStamp: Time!
 }
 
 type Announcement {
   id: ID!
-  nexus: Nexus!
   title: String!
   message: String!
   sentBy: Profile!

@@ -1,7 +1,7 @@
 import { CirclePlus } from "lucide-react";
 
 import { useUser } from "@/hooks/use-user";
-import { useFetchCores } from "@/hooks/use-fetch";
+import { useApiData } from "@/hooks/use-api-data";
 import { useCore } from "@/hooks/use-core";
 
 import { Separator } from "@/components/primitives/separator";
@@ -12,8 +12,9 @@ import { cn } from "@/utils/cn";
 
 export default function SideBar() {
   const { user } = useUser();
-  const { core } = useFetchCores();
-  const { setActiveCore } = useCore();
+  const { apiData } = useApiData();
+  const { setCore } = useCore();
+
   if (user.userType === "NORMAL") return;
 
   return (
@@ -35,14 +36,14 @@ export default function SideBar() {
       <Separator className="h-[3px] w-[77%] bg-white rounded-full border my-1" />
 
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-2 gap-4">
-        {core.allCores.length === 0 ? (
+        {apiData.length === 0 ? (
           <span className="text-sm w-full font-lato text-center text-balance transition-all duration-300 leading-[1.15]">
             No Cores Available
           </span>
         ) : (
-          core.allCores.map((c) => (
+          apiData.map(({ nexus, ...c }) => (
             <CoreIcons
-              handleClick={() => setActiveCore(c)}
+              handleClick={() => setCore(c)}
               key={c.id}
               heading={c.name}
               src={c.imageUrl}

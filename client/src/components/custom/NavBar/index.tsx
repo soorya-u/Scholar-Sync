@@ -24,7 +24,7 @@ export default function NavBar() {
           <BreadcrumbList className="flex items-center">
             <BreadcrumbItem>
               <BreadcrumbPage className="text-lg cursor-pointer">
-                {core.activeCore.name}
+                {core.name}
               </BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />

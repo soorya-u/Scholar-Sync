@@ -6,12 +6,22 @@ export const loginQuery = gql`
   }
 `;
 
-export const getUserQuery = gql`
+export const getInitDataQuery = gql`
   query {
     getUser {
       id
       userType
       fullName
+    }
+    getCores {
+      id
+      name
+      imageUrl
+      nexus {
+        id
+        name
+        category
+      }
     }
   }
 `;

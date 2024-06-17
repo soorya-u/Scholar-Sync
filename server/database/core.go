@@ -39,7 +39,8 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 }
 
 func (db *DB) GetCores(userId string) ([]*models.Core, error) {
-	query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId IN pseudoAdmins;"
+	// query := "SELECT *, creator.*, nexus[*].*, nexus[*].*.creator.*, nexus[*].*, nexus[*].announcements[*].*, nexus[*].files[*].*, nexus[*].users[*].* FROM core WHERE creator = $userId OR $userId IN pseudoAdmins;"
+	query := "SELECT *, creator.*, nexus[*].* FROM core WHERE creator = $userId OR $userId IN nexus[*].creator OR $userId IN nexus[*].users;"
 	params := map[string]interface{}{"userId": userId}
 
 	rawData, err := db.client.Query(query, params)
@@ -53,7 +54,9 @@ func (db *DB) GetCores(userId string) ([]*models.Core, error) {
 		Time   string         `json:"time"`
 	}
 	var parsedData []Res
+	// var d []*models.Core
 
+	fmt.Printf("%#v\n\n", rawData)
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal: %v", err)

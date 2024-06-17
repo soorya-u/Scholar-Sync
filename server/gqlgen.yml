@@ -92,14 +92,10 @@ models:
     fields:
       creator:
         resolver: true
-      pseudoAdmins:
-        resolver: true
       nexus:
         resolver: true
-  Nuxus:
+  Nexus:
     fields:
-      core:
-        resolver: true
       creator:
         resolver: true
       users:
@@ -112,11 +108,8 @@ models:
     fields:
       sentBy:
         resolver: true
-      nexus:
-        resolver: true
+
   Announcement:
     fields:
       sentBy:
-        resolver: true
-      nexus:
         resolver: true

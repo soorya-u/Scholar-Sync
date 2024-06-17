@@ -17,7 +17,6 @@ DEFINE TABLE core SCHEMAFULL;
 
 DEFINE FIELD name ON core TYPE string;
 DEFINE FIELD creator ON core TYPE record(user);
-DEFINE FIELD pseudoAdmins ON core TYPE array<record(user)> DEFAULT [];
 DEFINE FIELD imageUrl ON core TYPE string;
 DEFINE FIELD nexus ON core TYPE array<record(nexus)> DEFAULT [];
 DEFINE FIELD createdAt ON core TYPE datetime DEFAULT time::now() READONLY;
@@ -30,7 +29,6 @@ DEFINE TABLE nexus SCHEMAFULL;
 DEFINE FIELD name ON nexus TYPE string;
 DEFINE FIELD creator ON nexus TYPE record(user);
 DEFINE FIELD users ON nexus TYPE array<record(user)> DEFAULT [];
-DEFINE FIELD core ON nexus TYPE record(core);
 DEFINE FIELD category ON nexus TYPE string ASSERT $value IN ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"];
 DEFINE FIELD files ON nexus TYPE array<record(file)> DEFAULT [];
 DEFINE FIELD announcements ON nexus TYPE array<record(announcement)> DEFAULT [];
@@ -45,7 +43,6 @@ DEFINE FIELD title ON file TYPE string;
 DEFINE FIELD description ON file TYPE string;
 DEFINE FIELD fileUrl ON file TYPE string;
 DEFINE FIELD sentBy ON file TYPE record(user);
-DEFINE FIELD nexus ON file TYPE record(nexus);
 DEFINE FIELD timeStamp ON file TYPE datetime DEFAULT time::now() READONLY;
 
 -- Announcement Schema
@@ -55,6 +52,5 @@ DEFINE TABLE announcement SCHEMAFULL;
 DEFINE FIELD title ON announcement TYPE string;
 DEFINE FIELD message ON announcement TYPE string;
 DEFINE FIELD sentBy ON announcement TYPE record(user);
-DEFINE FIELD nexus ON announcement TYPE record(nexus);
 DEFINE FIELD timeStamp ON announcement TYPE datetime DEFAULT time::now() READONLY;
 
