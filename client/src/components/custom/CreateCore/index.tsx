@@ -5,14 +5,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
+  DialogTrigger,
 } from "@/components/primitives/dialog";
 import { Input } from "@/components/primitives/input";
 import { Label } from "@/components/primitives/label";
 import { useCoreCreate } from "@/hooks/use-create";
 
 export default function CreateCore() {
-  const { errors, handleSubmit, isSubmitting, register } =
-    useCoreCreate();
+  const { errors, handleSubmit, isSubmitting, register } = useCoreCreate();
 
   return (
     <DialogContent className="sm:max-w-[425px]">
@@ -59,21 +59,20 @@ export default function CreateCore() {
               />
             </div>
             <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
-              {
-                errors &&
-                errors.imageUrl &&
-                errors.imageUrl.message}
+              {errors && errors.imageUrl && errors.imageUrl.message}
             </span>
           </div>
         </div>
         <DialogFooter>
-          <Button
-            disabled={isSubmitting}
-            aria-disabled={isSubmitting}
-            type="submit"
-          >
-            Create Core
-          </Button>
+          <DialogTrigger asChild>
+            <Button
+              disabled={isSubmitting}
+              aria-disabled={isSubmitting}
+              type="submit"
+            >
+              Create Core
+            </Button>
+          </DialogTrigger>
         </DialogFooter>
       </form>
     </DialogContent>

@@ -33,8 +33,8 @@ export default function NexusList() {
   return (
     <div
       className={cn(
-        "relative flex bg-gradient-to-r from-primary to-secondary via-primary py-4 flex-col gap-3 items-center px-2 border-r border-white transition-transform duration-300",
-        isSidebarOpen ? "translate-x-0 relative" : "-translate-x-96 absolute"
+        "relative flex bg-gradient-to-r from-primary to-secondary via-primary py-4 flex-col gap-3 items-center px-2 border-r border-white transition-all duration-300",
+        isSidebarOpen ? "translate-x-0 relative" : "-translate-x-[25rem] absolute"
       )}
     >
       {/* Render Catergoies */}
