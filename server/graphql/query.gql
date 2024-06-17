@@ -5,6 +5,7 @@ input LoginData {
 
 input GetNexusData {
   core: String!
+  user: String!
 }
 
 type Query {

@@ -11,8 +11,15 @@ input CoreData {
   imageUrl: String!
 }
 
+input NexusData {
+  core: String!
+  name: String!
+  category: Int!
+}
+
 type Mutation {
   signUpUser(input: SignUpData!): String!
   singleUpload(file: Upload!): Boolean!
   createCore(input: CoreData!): ID!
+  createNexus(input: NexusData): ID!
 }
