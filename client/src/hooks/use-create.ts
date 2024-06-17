@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useForm } from "react-hook-form";
+import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client";
 
@@ -8,6 +8,7 @@ import { useToast } from "@/components/primitives/use-toast";
 import { CoreType, coreSchema } from "@/schema/core";
 import { NexusType, nexusSchema } from "@/schema/nexus";
 import { useFetchCores } from "./use-fetch";
+import { useCore } from "./use-core";
 
 export const useCoreCreate = () => {
   const {
@@ -71,18 +72,27 @@ export const useNexusCreate = () => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { isSubmitting, errors },
   } = useForm<NexusType>({
     resolver: zodResolver(nexusSchema),
-    defaultValues: { name: "", category: "" },
+    defaultValues: { name: "", category: "First" },
   });
+
+  const { field } = useController<NexusType>({
+    control,
+    name: "category",
+  });
+
   const { toast } = useToast();
+  const { core } = useCore();
   const [mutate, { data, error }] = useMutation(createNexusMutation);
 
   const onSubmitFunc = async (val: NexusType) => {
     await mutate({
       variables: {
         ...val,
+        core: core.activeCore.id,
       },
     });
   };
@@ -116,5 +126,10 @@ export const useNexusCreate = () => {
     handleSubmit: handleSubmit(onSubmitFunc),
     isSubmitting,
     errors,
+    category: {
+      value: field.value,
+      onChange: field.onChange,
+      onBlur: field.onBlur,
+    },
   };
 };

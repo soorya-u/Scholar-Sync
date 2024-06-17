@@ -21,7 +21,7 @@ export const createCoreMutation = gql`
 `;
 
 export const createNexusMutation = gql`
-  mutation ($name: String!, $category: String!) {
-    createNexus(input: { name: $name, category: $category })
+  mutation ($name: String!, $category: String!, $core: String!) {
+    createNexus(input: { name: $name, category: $category, core: $core })
   }
 `;

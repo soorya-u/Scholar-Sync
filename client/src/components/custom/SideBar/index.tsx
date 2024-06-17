@@ -23,7 +23,7 @@ export default function SideBar() {
       )}
     >
       <Dialog>
-        <DialogTrigger className="flex flex-col justify-center items-center px-2 gap-1">
+        <DialogTrigger className="flex flex-col justify-center cursor-pointer items-center px-2 gap-1">
           <CirclePlus className="size-10 [&>*]:text-black" />
           <span className="text-sm leading-[1.15] text-black">
             Create a Core
@@ -35,14 +35,20 @@ export default function SideBar() {
       <Separator className="h-[3px] w-[77%] bg-white rounded-full border my-1" />
 
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-2 gap-4">
-        {core.allCores.map((c) => (
-          <CoreIcons
-            handleClick={() => setActiveCore(c)}
-            key={c.id}
-            heading={c.name}
-            src={c.imageUrl}
-          />
-        ))}
+        {core.allCores.length === 0 ? (
+          <span className="text-sm w-full font-lato text-center text-balance transition-all duration-300 leading-[1.15]">
+            No Cores Available
+          </span>
+        ) : (
+          core.allCores.map((c) => (
+            <CoreIcons
+              handleClick={() => setActiveCore(c)}
+              key={c.id}
+              heading={c.name}
+              src={c.imageUrl}
+            />
+          ))
+        )}
       </div>
     </div>
   );

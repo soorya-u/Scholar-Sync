@@ -22,6 +22,7 @@ export const coreSlice = createSlice({
       };
     },
     setAllCores: (state, action: PayloadAction<CoreType[]>) => {
+      if (action.payload.length === 0) return state;
       return state.activeCore.id === ""
         ? {
             activeCore: action.payload[0],

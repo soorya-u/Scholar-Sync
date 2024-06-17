@@ -19,10 +19,10 @@ export default function NavBar() {
   return (
     <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-5  border-b border-white">
       <div className="flex justify-center items-center">
+        {/* TODO: Add core, nexus, category check */}
         <Breadcrumb>
           <BreadcrumbList className="flex items-center">
             <BreadcrumbItem>
-              {/* TODO: Add Respective */}
               <BreadcrumbPage className="text-lg cursor-pointer">
                 {core.activeCore.name}
               </BreadcrumbPage>
