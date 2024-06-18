@@ -5,7 +5,7 @@ import { useQuery } from "@apollo/client";
 import { getInitDataQuery } from "@/graphql/queries";
 import { useToast } from "@/components/primitives/use-toast";
 import { useUser } from "./use-user";
-import { ApiDataType, UserType } from "@/types/redux";
+import { CoreType, UserType } from "@/types/api";
 import { useApiData } from "./use-api-data";
 import { useCore } from "./use-core";
 import { useNexus } from "./use-nexus";
@@ -17,10 +17,8 @@ export const useInitData = () => {
 
   const { setUser } = useUser();
   const { apiData, setApiData } = useApiData();
-  const { core, setCore } = useCore();
-  const { nexus, setNexus } = useNexus();
-  console.log(data);
-  console.log(error?.message);
+  const { setCore } = useCore();
+  const { setNexus } = useNexus();
 
   useEffect(() => {
     if (loading) return;
@@ -34,14 +32,19 @@ export const useInitData = () => {
     }
 
     setUser(data.getUser as UserType);
-    setApiData(data.getCores as ApiDataType[]);
+    setApiData(data.getCores as CoreType[]);
 
     if (apiData.length === 0) return;
-    const { nexus: n, ...rest } = apiData[0];
-    if (core.id === "") setCore(rest);
-
-    if (n.length === 0) return;
-    if (nexus.id === "") setNexus(n[0]);
+    const selectedCores = apiData.filter((c) => c.nexus && c.nexus?.length > 0);
+    const { id, imageUrl, name, nexus } =
+      selectedCores.length > 0 ? selectedCores[0] : apiData[0];
+    setCore({ id, imageUrl, name, nexus });
+    nexus.length > 0 &&
+      setNexus({
+        category: nexus[0].category,
+        id: nexus[0].id,
+        name: nexus[0].name,
+      });
   }, [data, error, loading]);
 
   return {

@@ -41,12 +41,12 @@ export default function SideBar() {
             No Cores Available
           </span>
         ) : (
-          apiData.map(({ nexus, ...c }) => (
+          apiData.map(({ id, imageUrl, name, nexus }) => (
             <CoreIcons
-              handleClick={() => setCore(c)}
-              key={c.id}
-              heading={c.name}
-              src={c.imageUrl}
+              handleClick={() => setCore({ id, imageUrl, name, nexus })}
+              key={id}
+              heading={name}
+              src={imageUrl}
             />
           ))
         )}

@@ -1,21 +1,12 @@
-export type UserType = {
+export type CoreReduxType = {
   id: string;
-  userType: "NORMAL" | "PSEUDOADMIN" | "ADMIN";
-  fullName: string;
-};
-
-export type CoreType = {
-  id: string;
+  name: string;
   imageUrl: string;
-  name: string;
+  nexus: NexusReduxType[];
 };
 
-export type NexusType = {
+export type NexusReduxType = {
   id: string;
-  category: string;
   name: string;
-};
-
-export type ApiDataType = CoreType & {
-  nexus: NexusType[];
+  category: string;
 };

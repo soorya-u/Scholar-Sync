@@ -10,11 +10,13 @@ import {
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
+import { useNexus } from "@/hooks/use-nexus";
 
 export default function NavBar() {
   const { toggleUserList } = useToggler();
   const { user } = useUser();
   const { core } = useCore();
+  const { nexus } = useNexus();
 
   return (
     <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-5  border-b border-white">
@@ -29,16 +31,14 @@ export default function NavBar() {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              {/* TODO: Add Respective */}
               <BreadcrumbPage className="text-lg cursor-pointer">
-                Semester[0]
+                {nexus.category}
               </BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              {/* TODO: Add Respective */}
               <BreadcrumbPage className="text-lg cursor-pointer">
-                Nexus[0]
+                {nexus.name}
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>

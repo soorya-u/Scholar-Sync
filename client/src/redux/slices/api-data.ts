@@ -1,14 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { ApiDataType } from "@/types/redux";
+import { CoreType } from "@/types/api";
 
-const initialState: ApiDataType[] = [];
+const initialState: CoreType[] = [];
 
 export const apiDataSlice = createSlice({
   name: "apiData",
   initialState,
   reducers: {
-    setApiData: (state, { payload }: PayloadAction<ApiDataType[]>) => {
+    setApiData: (state, { payload }: PayloadAction<CoreType[]>) => {
       if (payload.length === 0) return state;
       return payload;
     },

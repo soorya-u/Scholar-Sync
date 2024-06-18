@@ -1,18 +1,19 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { CoreType } from "@/types/redux";
+import { CoreReduxType } from "@/types/redux";
 
-const initialState: CoreType = {
+const initialState: CoreReduxType = {
   id: "",
-  imageUrl: "",
   name: "",
+  imageUrl: "",
+  nexus: [],
 };
 
 export const coreSlice = createSlice({
   name: "core",
   initialState,
   reducers: {
-    setCore: (state, { payload }: PayloadAction<CoreType>) => {
+    setCore: (state, { payload }: PayloadAction<CoreReduxType>) => {
       return {
         ...state,
         ...payload,
