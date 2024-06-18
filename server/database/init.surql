@@ -27,7 +27,7 @@ DEFINE FIELD updatedAt ON core TYPE datetime DEFAULT time::now();
 DEFINE TABLE nexus SCHEMAFULL;
 
 DEFINE FIELD name ON nexus TYPE string;
-DEFINE FIELD creator ON nexus TYPE record(user);
+DEFINE FIELD creator ON nexus TYPE array<record(user)>;
 DEFINE FIELD users ON nexus TYPE array<record(user)> DEFAULT [];
 DEFINE FIELD category ON nexus TYPE string ASSERT $value IN ["First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth"];
 DEFINE FIELD files ON nexus TYPE array<record(file)> DEFAULT [];

@@ -57,7 +57,7 @@ type Nexus struct {
 	ID            string          `json:"id"`
 	Name          string          `json:"name"`
 	Category      string          `json:"category"`
-	Creator       *Profile        `json:"creator"`
+	Creator       []*Profile      `json:"creator"`
 	Users         []*Profile      `json:"users"`
 	Files         []*File         `json:"files"`
 	Announcements []*Announcement `json:"announcements"`

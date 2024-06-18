@@ -27,7 +27,7 @@ func (r *fileResolver) SentBy(ctx context.Context, obj *models.File) (*models.Pr
 	return obj.SentBy, nil
 }
 
-func (r *nexusResolver) Creator(ctx context.Context, obj *models.Nexus) (*models.Profile, error) {
+func (r *nexusResolver) Creator(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error) {
 	return obj.Creator, nil
 }
 

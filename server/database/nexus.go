@@ -12,7 +12,7 @@ func (db *DB) CreateNexus(name, userId, coreId, category string) (string, error)
 	params := map[string]interface{}{
 		"category":  category,
 		"name":      name,
-		"creator":   userId,
+		"creator":   []string{userId},
 		"createdAt": time.Now(),
 		"updatedAt": time.Now(),
 	}

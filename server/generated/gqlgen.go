@@ -129,7 +129,7 @@ type MutationResolver interface {
 	CreateNexus(ctx context.Context, input *models.NexusData) (string, error)
 }
 type NexusResolver interface {
-	Creator(ctx context.Context, obj *models.Nexus) (*models.Profile, error)
+	Creator(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
 	Users(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
 	Files(ctx context.Context, obj *models.Nexus) ([]*models.File, error)
 	Announcements(ctx context.Context, obj *models.Nexus) ([]*models.Announcement, error)
@@ -638,7 +638,7 @@ type Nexus {
   id: ID!
   name: String!
   category: String!
-  creator: Profile!
+  creator: [Profile]!
   users: [Profile]!
   files: [File]!
   announcements: [Announcement]!
@@ -2021,9 +2021,9 @@ func (ec *executionContext) _Nexus_creator(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.Profile)
+	res := resTmp.([]*models.Profile)
 	fc.Result = res
-	return ec.marshalNProfile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
+	return ec.marshalNProfile2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Nexus_creator(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {

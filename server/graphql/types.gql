@@ -28,7 +28,7 @@ type Nexus {
   id: ID!
   name: String!
   category: String!
-  creator: Profile!
+  creator: [Profile]!
   users: [Profile]!
   files: [File]!
   announcements: [Announcement]!
