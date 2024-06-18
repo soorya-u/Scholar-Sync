@@ -43,6 +43,7 @@ type ResolverRoot interface {
 	Core() CoreResolver
 	File() FileResolver
 	Mutation() MutationResolver
+	Nexus() NexusResolver
 	Query() QueryResolver
 }
 
@@ -53,28 +54,25 @@ type ComplexityRoot struct {
 	Announcement struct {
 		ID        func(childComplexity int) int
 		Message   func(childComplexity int) int
-		Nexus     func(childComplexity int) int
 		SentBy    func(childComplexity int) int
 		TimeStamp func(childComplexity int) int
 		Title     func(childComplexity int) int
 	}
 
 	Core struct {
-		CreatedAt    func(childComplexity int) int
-		Creator      func(childComplexity int) int
-		ID           func(childComplexity int) int
-		ImageURL     func(childComplexity int) int
-		Name         func(childComplexity int) int
-		Nexus        func(childComplexity int) int
-		PseudoAdmins func(childComplexity int) int
-		UpdatedAt    func(childComplexity int) int
+		CreatedAt func(childComplexity int) int
+		Creator   func(childComplexity int) int
+		ID        func(childComplexity int) int
+		ImageURL  func(childComplexity int) int
+		Name      func(childComplexity int) int
+		Nexus     func(childComplexity int) int
+		UpdatedAt func(childComplexity int) int
 	}
 
 	File struct {
 		Description func(childComplexity int) int
 		FileURL     func(childComplexity int) int
 		ID          func(childComplexity int) int
-		Nexus       func(childComplexity int) int
 		SentBy      func(childComplexity int) int
 		TimeStamp   func(childComplexity int) int
 		Title       func(childComplexity int) int
@@ -90,7 +88,6 @@ type ComplexityRoot struct {
 	Nexus struct {
 		Announcements func(childComplexity int) int
 		Category      func(childComplexity int) int
-		Core          func(childComplexity int) int
 		CreatedAt     func(childComplexity int) int
 		Creator       func(childComplexity int) int
 		Files         func(childComplexity int) int
@@ -110,25 +107,20 @@ type ComplexityRoot struct {
 
 	Query struct {
 		GetCores  func(childComplexity int) int
-		GetNexus  func(childComplexity int, input *models.GetNexusData) int
 		GetUser   func(childComplexity int) int
 		LoginUser func(childComplexity int, input models.LoginData) int
 	}
 }
 
 type AnnouncementResolver interface {
-	Nexus(ctx context.Context, obj *models.Announcement) (*models.Nexus, error)
-
 	SentBy(ctx context.Context, obj *models.Announcement) (*models.Profile, error)
 }
 type CoreResolver interface {
 	Creator(ctx context.Context, obj *models.Core) (*models.Profile, error)
-	PseudoAdmins(ctx context.Context, obj *models.Core) ([]*models.Profile, error)
 	Nexus(ctx context.Context, obj *models.Core) ([]*models.Nexus, error)
 }
 type FileResolver interface {
 	SentBy(ctx context.Context, obj *models.File) (*models.Profile, error)
-	Nexus(ctx context.Context, obj *models.File) (*models.Nexus, error)
 }
 type MutationResolver interface {
 	SignUpUser(ctx context.Context, input models.SignUpData) (string, error)
@@ -136,11 +128,16 @@ type MutationResolver interface {
 	CreateCore(ctx context.Context, input models.CoreData) (string, error)
 	CreateNexus(ctx context.Context, input *models.NexusData) (string, error)
 }
+type NexusResolver interface {
+	Creator(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
+	Users(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
+	Files(ctx context.Context, obj *models.Nexus) ([]*models.File, error)
+	Announcements(ctx context.Context, obj *models.Nexus) ([]*models.Announcement, error)
+}
 type QueryResolver interface {
 	LoginUser(ctx context.Context, input models.LoginData) (string, error)
 	GetUser(ctx context.Context) (*models.Profile, error)
 	GetCores(ctx context.Context) ([]*models.Core, error)
-	GetNexus(ctx context.Context, input *models.GetNexusData) ([]*models.Nexus, error)
 }
 
 type executableSchema struct {
@@ -175,13 +172,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Announcement.Message(childComplexity), true
-
-	case "Announcement.nexus":
-		if e.complexity.Announcement.Nexus == nil {
-			break
-		}
-
-		return e.complexity.Announcement.Nexus(childComplexity), true
 
 	case "Announcement.sentBy":
 		if e.complexity.Announcement.SentBy == nil {
@@ -246,13 +236,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Core.Nexus(childComplexity), true
 
-	case "Core.pseudoAdmins":
-		if e.complexity.Core.PseudoAdmins == nil {
-			break
-		}
-
-		return e.complexity.Core.PseudoAdmins(childComplexity), true
-
 	case "Core.updatedAt":
 		if e.complexity.Core.UpdatedAt == nil {
 			break
@@ -280,13 +263,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.File.ID(childComplexity), true
-
-	case "File.nexus":
-		if e.complexity.File.Nexus == nil {
-			break
-		}
-
-		return e.complexity.File.Nexus(childComplexity), true
 
 	case "File.sentBy":
 		if e.complexity.File.SentBy == nil {
@@ -370,13 +346,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Nexus.Category(childComplexity), true
-
-	case "Nexus.core":
-		if e.complexity.Nexus.Core == nil {
-			break
-		}
-
-		return e.complexity.Nexus.Core(childComplexity), true
 
 	case "Nexus.createdAt":
 		if e.complexity.Nexus.CreatedAt == nil {
@@ -468,18 +437,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.GetCores(childComplexity), true
-
-	case "Query.getNexus":
-		if e.complexity.Query.GetNexus == nil {
-			break
-		}
-
-		args, err := ec.field_Query_getNexus_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Query.GetNexus(childComplexity, args["input"].(*models.GetNexusData)), true
 
 	case "Query.getUser":
 		if e.complexity.Query.GetUser == nil {
@@ -649,7 +606,6 @@ type Query {
   loginUser(input: LoginData!): String!
   getUser: Profile!
   getCores: [Core]!
-  getNexus(input: GetNexusData): [Nexus]!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/types.gql", Input: `scalar Time
@@ -673,7 +629,6 @@ type Core {
   name: String!
   imageUrl: String!
   creator: Profile!
-  pseudoAdmins: [Profile]!
   nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
@@ -682,9 +637,8 @@ type Core {
 type Nexus {
   id: ID!
   name: String!
-  core: Core!
   category: String!
-  creator: Profile!
+  creator: [Profile]!
   users: [Profile]!
   files: [File]!
   announcements: [Announcement]!
@@ -698,13 +652,11 @@ type File {
   description: String
   fileUrl: String!
   sentBy: Profile!
-  nexus: Nexus!
   timeStamp: Time!
 }
 
 type Announcement {
   id: ID!
-  nexus: Nexus!
   title: String!
   message: String!
   sentBy: Profile!
@@ -790,21 +742,6 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
-	return args, nil
-}
-
-func (ec *executionContext) field_Query_getNexus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
-	var err error
-	args := map[string]interface{}{}
-	var arg0 *models.GetNexusData
-	if tmp, ok := rawArgs["input"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalOGetNexusData2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐGetNexusData(ctx, tmp)
-		if err != nil {
-			return nil, err
-		}
-	}
-	args["input"] = arg0
 	return args, nil
 }
 
@@ -900,72 +837,6 @@ func (ec *executionContext) fieldContext_Announcement_id(_ context.Context, fiel
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type ID does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Announcement_nexus(ctx context.Context, field graphql.CollectedField, obj *models.Announcement) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Announcement_nexus(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Announcement().Nexus(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.Nexus)
-	fc.Result = res
-	return ec.marshalNNexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Announcement_nexus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Announcement",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Nexus_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Nexus_name(ctx, field)
-			case "core":
-				return ec.fieldContext_Nexus_core(ctx, field)
-			case "category":
-				return ec.fieldContext_Nexus_category(ctx, field)
-			case "creator":
-				return ec.fieldContext_Nexus_creator(ctx, field)
-			case "users":
-				return ec.fieldContext_Nexus_users(ctx, field)
-			case "files":
-				return ec.fieldContext_Nexus_files(ctx, field)
-			case "announcements":
-				return ec.fieldContext_Nexus_announcements(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Nexus_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Nexus_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Nexus", field.Name)
 		},
 	}
 	return fc, nil
@@ -1347,62 +1218,6 @@ func (ec *executionContext) fieldContext_Core_creator(_ context.Context, field g
 	return fc, nil
 }
 
-func (ec *executionContext) _Core_pseudoAdmins(ctx context.Context, field graphql.CollectedField, obj *models.Core) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Core_pseudoAdmins(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Core().PseudoAdmins(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.Profile)
-	fc.Result = res
-	return ec.marshalNProfile2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Core_pseudoAdmins(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Core",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Profile_id(ctx, field)
-			case "fullName":
-				return ec.fieldContext_Profile_fullName(ctx, field)
-			case "email":
-				return ec.fieldContext_Profile_email(ctx, field)
-			case "userType":
-				return ec.fieldContext_Profile_userType(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Profile_createdAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Core_nexus(ctx context.Context, field graphql.CollectedField, obj *models.Core) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Core_nexus(ctx, field)
 	if err != nil {
@@ -1446,8 +1261,6 @@ func (ec *executionContext) fieldContext_Core_nexus(_ context.Context, field gra
 				return ec.fieldContext_Nexus_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Nexus_name(ctx, field)
-			case "core":
-				return ec.fieldContext_Nexus_core(ctx, field)
 			case "category":
 				return ec.fieldContext_Nexus_category(ctx, field)
 			case "creator":
@@ -1781,72 +1594,6 @@ func (ec *executionContext) fieldContext_File_sentBy(_ context.Context, field gr
 				return ec.fieldContext_Profile_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _File_nexus(ctx context.Context, field graphql.CollectedField, obj *models.File) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_File_nexus(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.File().Nexus(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.Nexus)
-	fc.Result = res
-	return ec.marshalNNexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_File_nexus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "File",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Nexus_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Nexus_name(ctx, field)
-			case "core":
-				return ec.fieldContext_Nexus_core(ctx, field)
-			case "category":
-				return ec.fieldContext_Nexus_category(ctx, field)
-			case "creator":
-				return ec.fieldContext_Nexus_creator(ctx, field)
-			case "users":
-				return ec.fieldContext_Nexus_users(ctx, field)
-			case "files":
-				return ec.fieldContext_Nexus_files(ctx, field)
-			case "announcements":
-				return ec.fieldContext_Nexus_announcements(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Nexus_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Nexus_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Nexus", field.Name)
 		},
 	}
 	return fc, nil
@@ -2204,68 +1951,6 @@ func (ec *executionContext) fieldContext_Nexus_name(_ context.Context, field gra
 	return fc, nil
 }
 
-func (ec *executionContext) _Nexus_core(ctx context.Context, field graphql.CollectedField, obj *models.Nexus) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Nexus_core(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Core, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(*models.Core)
-	fc.Result = res
-	return ec.marshalNCore2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Nexus_core(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Nexus",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Core_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Core_name(ctx, field)
-			case "imageUrl":
-				return ec.fieldContext_Core_imageUrl(ctx, field)
-			case "creator":
-				return ec.fieldContext_Core_creator(ctx, field)
-			case "pseudoAdmins":
-				return ec.fieldContext_Core_pseudoAdmins(ctx, field)
-			case "nexus":
-				return ec.fieldContext_Core_nexus(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Core_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Core_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Core", field.Name)
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Nexus_category(ctx context.Context, field graphql.CollectedField, obj *models.Nexus) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Nexus_category(ctx, field)
 	if err != nil {
@@ -2324,7 +2009,7 @@ func (ec *executionContext) _Nexus_creator(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Creator, nil
+		return ec.resolvers.Nexus().Creator(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2336,17 +2021,17 @@ func (ec *executionContext) _Nexus_creator(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*models.Profile)
+	res := resTmp.([]*models.Profile)
 	fc.Result = res
-	return ec.marshalNProfile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
+	return ec.marshalNProfile2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Nexus_creator(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Nexus",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -2380,7 +2065,7 @@ func (ec *executionContext) _Nexus_users(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Users, nil
+		return ec.resolvers.Nexus().Users(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2401,8 +2086,8 @@ func (ec *executionContext) fieldContext_Nexus_users(_ context.Context, field gr
 	fc = &graphql.FieldContext{
 		Object:     "Nexus",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -2436,7 +2121,7 @@ func (ec *executionContext) _Nexus_files(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Files, nil
+		return ec.resolvers.Nexus().Files(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2457,8 +2142,8 @@ func (ec *executionContext) fieldContext_Nexus_files(_ context.Context, field gr
 	fc = &graphql.FieldContext{
 		Object:     "Nexus",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -2471,8 +2156,6 @@ func (ec *executionContext) fieldContext_Nexus_files(_ context.Context, field gr
 				return ec.fieldContext_File_fileUrl(ctx, field)
 			case "sentBy":
 				return ec.fieldContext_File_sentBy(ctx, field)
-			case "nexus":
-				return ec.fieldContext_File_nexus(ctx, field)
 			case "timeStamp":
 				return ec.fieldContext_File_timeStamp(ctx, field)
 			}
@@ -2496,7 +2179,7 @@ func (ec *executionContext) _Nexus_announcements(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Announcements, nil
+		return ec.resolvers.Nexus().Announcements(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2517,14 +2200,12 @@ func (ec *executionContext) fieldContext_Nexus_announcements(_ context.Context, 
 	fc = &graphql.FieldContext{
 		Object:     "Nexus",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
 				return ec.fieldContext_Announcement_id(ctx, field)
-			case "nexus":
-				return ec.fieldContext_Announcement_nexus(ctx, field)
 			case "title":
 				return ec.fieldContext_Announcement_title(ctx, field)
 			case "message":
@@ -3006,8 +2687,6 @@ func (ec *executionContext) fieldContext_Query_getCores(_ context.Context, field
 				return ec.fieldContext_Core_imageUrl(ctx, field)
 			case "creator":
 				return ec.fieldContext_Core_creator(ctx, field)
-			case "pseudoAdmins":
-				return ec.fieldContext_Core_pseudoAdmins(ctx, field)
 			case "nexus":
 				return ec.fieldContext_Core_nexus(ctx, field)
 			case "createdAt":
@@ -3017,83 +2696,6 @@ func (ec *executionContext) fieldContext_Query_getCores(_ context.Context, field
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Core", field.Name)
 		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_getNexus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_getNexus(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetNexus(rctx, fc.Args["input"].(*models.GetNexusData))
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.Nexus)
-	fc.Result = res
-	return ec.marshalNNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_getNexus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Nexus_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Nexus_name(ctx, field)
-			case "core":
-				return ec.fieldContext_Nexus_core(ctx, field)
-			case "category":
-				return ec.fieldContext_Nexus_category(ctx, field)
-			case "creator":
-				return ec.fieldContext_Nexus_creator(ctx, field)
-			case "users":
-				return ec.fieldContext_Nexus_users(ctx, field)
-			case "files":
-				return ec.fieldContext_Nexus_files(ctx, field)
-			case "announcements":
-				return ec.fieldContext_Nexus_announcements(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Nexus_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Nexus_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Nexus", field.Name)
-		},
-	}
-	defer func() {
-		if r := recover(); r != nil {
-			err = ec.Recover(ctx, r)
-			ec.Error(ctx, err)
-		}
-	}()
-	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_getNexus_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
-		ec.Error(ctx, err)
-		return fc, err
 	}
 	return fc, nil
 }
@@ -5201,42 +4803,6 @@ func (ec *executionContext) _Announcement(ctx context.Context, sel ast.Selection
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
-		case "nexus":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Announcement_nexus(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "title":
 			out.Values[i] = ec._Announcement_title(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -5347,42 +4913,6 @@ func (ec *executionContext) _Core(ctx context.Context, sel ast.SelectionSet, obj
 					}
 				}()
 				res = ec._Core_creator(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "pseudoAdmins":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Core_pseudoAdmins(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -5542,42 +5072,6 @@ func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-		case "nexus":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._File_nexus(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			if field.Deferrable != nil {
-				dfs, ok := deferred[field.Deferrable.Label]
-				di := 0
-				if ok {
-					dfs.AddField(field)
-					di = len(dfs.Values) - 1
-				} else {
-					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
-					deferred[field.Deferrable.Label] = dfs
-				}
-				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
-					return innerFunc(ctx, dfs)
-				})
-
-				// don't run the out.Concurrently() call below
-				out.Values[i] = graphql.Null
-				continue
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "timeStamp":
 			out.Values[i] = ec._File_timeStamp(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -5690,52 +5184,171 @@ func (ec *executionContext) _Nexus(ctx context.Context, sel ast.SelectionSet, ob
 		case "id":
 			out.Values[i] = ec._Nexus_id(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "name":
 			out.Values[i] = ec._Nexus_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
-		case "core":
-			out.Values[i] = ec._Nexus_core(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "category":
 			out.Values[i] = ec._Nexus_category(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "creator":
-			out.Values[i] = ec._Nexus_creator(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Nexus_creator(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "users":
-			out.Values[i] = ec._Nexus_users(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Nexus_users(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "files":
-			out.Values[i] = ec._Nexus_files(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Nexus_files(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "announcements":
-			out.Values[i] = ec._Nexus_announcements(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Nexus_announcements(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "createdAt":
 			out.Values[i] = ec._Nexus_createdAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "updatedAt":
 			out.Values[i] = ec._Nexus_updatedAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
-				out.Invalids++
+				atomic.AddUint32(&out.Invalids, 1)
 			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5892,28 +5505,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getCores(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "getNexus":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_getNexus(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -6374,16 +5965,6 @@ func (ec *executionContext) marshalNCore2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋschol
 	return ret
 }
 
-func (ec *executionContext) marshalNCore2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx context.Context, sel ast.SelectionSet, v *models.Core) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._Core(ctx, sel, v)
-}
-
 func (ec *executionContext) unmarshalNCoreData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCoreData(ctx context.Context, v interface{}) (models.CoreData, error) {
 	res, err := ec.unmarshalInputCoreData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6447,10 +6028,6 @@ func (ec *executionContext) unmarshalNLoginData2githubᚗcomᚋsooryaᚑuᚋscho
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNNexus2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v models.Nexus) graphql.Marshaler {
-	return ec._Nexus(ctx, sel, &v)
-}
-
 func (ec *executionContext) marshalNNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v []*models.Nexus) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -6487,16 +6064,6 @@ func (ec *executionContext) marshalNNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscho
 	wg.Wait()
 
 	return ret
-}
-
-func (ec *executionContext) marshalNNexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v *models.Nexus) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._Nexus(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNProfile2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx context.Context, sel ast.SelectionSet, v models.Profile) graphql.Marshaler {
@@ -6909,14 +6476,6 @@ func (ec *executionContext) marshalOFile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholar�
 		return graphql.Null
 	}
 	return ec._File(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalOGetNexusData2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐGetNexusData(ctx context.Context, v interface{}) (*models.GetNexusData, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputGetNexusData(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalONexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v *models.Nexus) graphql.Marshaler {

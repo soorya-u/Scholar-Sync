@@ -11,7 +11,6 @@ import (
 
 type Announcement struct {
 	ID        string    `json:"id"`
-	Nexus     *Nexus    `json:"nexus"`
 	Title     string    `json:"title"`
 	Message   string    `json:"message"`
 	SentBy    *Profile  `json:"sentBy"`
@@ -19,14 +18,13 @@ type Announcement struct {
 }
 
 type Core struct {
-	ID           string     `json:"id"`
-	Name         string     `json:"name"`
-	ImageURL     string     `json:"imageUrl"`
-	Creator      *Profile   `json:"creator"`
-	PseudoAdmins []*Profile `json:"pseudoAdmins"`
-	Nexus        []*Nexus   `json:"nexus"`
-	CreatedAt    time.Time  `json:"createdAt"`
-	UpdatedAt    time.Time  `json:"updatedAt"`
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	ImageURL  string    `json:"imageUrl"`
+	Creator   *Profile  `json:"creator"`
+	Nexus     []*Nexus  `json:"nexus"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type CoreData struct {
@@ -40,7 +38,6 @@ type File struct {
 	Description *string   `json:"description,omitempty"`
 	FileURL     string    `json:"fileUrl"`
 	SentBy      *Profile  `json:"sentBy"`
-	Nexus       *Nexus    `json:"nexus"`
 	TimeStamp   time.Time `json:"timeStamp"`
 }
 
@@ -59,9 +56,8 @@ type Mutation struct {
 type Nexus struct {
 	ID            string          `json:"id"`
 	Name          string          `json:"name"`
-	Core          *Core           `json:"core"`
 	Category      string          `json:"category"`
-	Creator       *Profile        `json:"creator"`
+	Creator       []*Profile      `json:"creator"`
 	Users         []*Profile      `json:"users"`
 	Files         []*File         `json:"files"`
 	Announcements []*Announcement `json:"announcements"`

@@ -1,40 +1,26 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { NexusReduxType, NexusType } from "@/types/redux";
+import { NexusReduxType } from "@/types/redux";
 
 const initialState: NexusReduxType = {
-  activeNexus: {
-    id: "",
-    category: "",
-    name: "",
-  },
-  allNexus: [],
+  id: "",
+  name: "",
+  category: "",
 };
 
 export const nexusSlice = createSlice({
   name: "nexus",
   initialState,
   reducers: {
-    setActiveNexus: (state, action: PayloadAction<NexusType>) => {
+    setNexus: (state, { payload }: PayloadAction<NexusReduxType>) => {
       return {
         ...state,
-        activeNexus: action.payload,
+        ...payload,
       };
-    },
-    setAllNexus: (state, action: PayloadAction<NexusType[]>) => {
-      return state.activeNexus.id === ""
-        ? {
-            activeNexus: action.payload[0],
-            allNexus: action.payload,
-          }
-        : {
-            ...state,
-            allNexus: action.payload,
-          };
     },
   },
 });
 
-export const { setActiveNexus, setAllNexus } = nexusSlice.actions;
+export const { setNexus } = nexusSlice.actions;
 
 export default nexusSlice.reducer;

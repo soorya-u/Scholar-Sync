@@ -93,22 +93,6 @@ func (r *queryResolver) GetCores(ctx context.Context) ([]*models.Core, error) {
 	return cores, nil
 }
 
-func (r *queryResolver) GetNexus(ctx context.Context, input *models.GetNexusData) ([]*models.Nexus, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return nil, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return nil, fmt.Errorf("cookie not found")
-	}
-
-	nexus, err := r.Db.GetNexus(input.Core, cookie.UserId)
-	if err != nil {
-		return nil, fmt.Errorf("%v", err)
-	}
-
-	return nexus, nil
-}
-
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }
