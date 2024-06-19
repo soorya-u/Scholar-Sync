@@ -1,16 +1,14 @@
+import { createFileRoute } from "@tanstack/react-router";
+
+import { useInitData } from "@/hooks/use-init";
+
 import Header from "@/components/custom/Header";
 import SideBar from "@/components/custom/SideBar";
 import NexusList from "@/components/custom/NexusList";
-import { createFileRoute } from "@tanstack/react-router";
 import NavBar from "@/components/custom/NavBar";
 import UsersList from "@/components/custom/UsersList";
 import Uploader from "@/components/custom/Uploader";
-import {
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/primitives/resizable";
 import Dashboard from "@/components/custom/Dashboard";
-import { useInitData } from "@/hooks/use-init";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -27,16 +25,12 @@ function HomePage() {
         <div className="flex-1 bg-background w-full h-full">
           <NavBar />
           <div className="flex h-[91%] flex-1">
-            <ResizablePanelGroup
-              className="flex flex-col h-full flex-1"
-              direction="vertical"
-            >
-              <ResizablePanel className="flex-1 h-full w-full">
+            <div className="flex flex-col flex-1">
+              <div className="flex-1">
                 <Dashboard />
-              </ResizablePanel>
-              {/* TODO: Add ADmin Check */}
+              </div>
               <Uploader />
-            </ResizablePanelGroup>
+            </div>
             <UsersList />
           </div>
         </div>

@@ -25,3 +25,34 @@ export const createNexusMutation = gql`
     createNexus(input: { name: $name, category: $category, core: $core })
   }
 `;
+
+export const createFileMutation = gql`
+  mutation (
+    $title: String!
+    $description: String!
+    $file: Upload!
+    $nexus: String!
+  ) {
+    createFile(
+      input: {
+        title: $title
+        description: $description
+        file: $file
+        core: $core
+        nexus: $nexus
+      }
+    )
+  }
+`;
+
+export const createAnnouncementMutation = gql`
+  mutation (
+    $title: String!
+    $message: String!
+    $nexus: String!
+  ) {
+    createAnnouncement(
+      input: { title: $title, message: $message, core: $core, nexus: $nexus }
+    )
+  }
+`;
