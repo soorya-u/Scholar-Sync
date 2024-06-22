@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 
 import type { RootState } from "@/redux/store";
 import { setUser as setUserFn } from "@/redux/slices/user";
-import { UserType } from "@/types/redux";
+import { UserType } from "@/types/api";
 
 export const useUser = () => {
   const user = useSelector((state: RootState) => state.user);
