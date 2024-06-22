@@ -23,11 +23,9 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 		return "", fmt.Errorf("unable to create Core in database: %v", err)
 	}
 
-	type CoreID struct {
+	var coreId []struct {
 		Id string
 	}
-
-	var coreId []CoreID
 
 	err = surrealdb.Unmarshal(rawData, &coreId)
 	if err != nil {
@@ -48,15 +46,12 @@ func (db *DB) GetCores(userId string) ([]*models.Core, error) {
 		return nil, fmt.Errorf("unable to fetch Cores: %v", err)
 	}
 
-	type Res struct {
+	var parsedData []struct {
 		Result []*models.Core `json:"result"`
 		Status string         `json:"status"`
 		Time   string         `json:"time"`
 	}
-	var parsedData []Res
-	// var d []*models.Core
 
-	fmt.Printf("%#v\n\n", rawData)
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal: %v", err)

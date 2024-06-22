@@ -30,15 +30,14 @@ export const createFileMutation = gql`
   mutation (
     $title: String!
     $description: String!
-    $file: Upload!
+    $upload: Upload!
     $nexus: String!
   ) {
     createFile(
       input: {
         title: $title
         description: $description
-        file: $file
-        core: $core
+        upload: $upload
         nexus: $nexus
       }
     )
@@ -46,13 +45,9 @@ export const createFileMutation = gql`
 `;
 
 export const createAnnouncementMutation = gql`
-  mutation (
-    $title: String!
-    $message: String!
-    $nexus: String!
-  ) {
+  mutation ($title: String!, $description: String!, $nexus: String!) {
     createAnnouncement(
-      input: { title: $title, message: $message, core: $core, nexus: $nexus }
+      input: { title: $title, message: $description, nexus: $nexus }
     )
   }
 `;

@@ -40,13 +40,11 @@ func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 		return nil, fmt.Errorf("unable to fetch User: %v", err)
 	}
 
-	type Res struct {
+	var parsedData []struct {
 		Result []models.User `json:"result"`
 		Status string        `json:"status"`
 		Time   string        `json:"time"`
 	}
-
-	var parsedData []Res
 
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
