@@ -20,6 +20,7 @@ export const useInitData = () => {
   const { setCore } = useCore();
   const { setNexus } = useNexus();
 
+  console.log(error?.message);
   useEffect(() => {
     if (loading) return;
     if (error || !data || !data.getUser || !data.getCores) {

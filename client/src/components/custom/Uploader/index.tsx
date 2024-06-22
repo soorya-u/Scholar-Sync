@@ -5,6 +5,8 @@ import {
   MessageSquarePlus,
   FilePlus,
   FilePlus2,
+  File,
+  X,
 } from "lucide-react";
 
 import { Input } from "@/components/primitives/input";
@@ -31,8 +33,10 @@ export default function Uploader() {
   const { user } = useUser();
   const [isUploaderOpen, setIsUploaderOpen] = useState(false);
   const [uploader, setUploader] = useState<UploaderType>("Announcement");
+  const [isFileExists, setIsFileExists] = useState(false);
 
-  const { register, handleSubmit, isSubmitting } = useUploader(uploader);
+  const { register, handleSubmit, isSubmitting, getValues, setValue } =
+    useUploader(uploader);
 
   if (user.userType === "NORMAL") return;
   return (
@@ -65,11 +69,6 @@ export default function Uploader() {
             {...register("title")}
             placeholder={`Enter the ${uploader === "Announcement" ? "Announcement Title" : "File Name"}`}
           />
-          {/* {isUploaderOpen && (
-            <span className="text-sm text-red-500 font-lato">
-              {errors && errors.title && errors.title.message}
-            </span>
-          )} */}
         </div>
         <Select onValueChange={(v) => setUploader(v as UploaderType)}>
           <SelectTrigger className="w-[40%]">
@@ -111,30 +110,47 @@ export default function Uploader() {
               className="flex-1 size-full resize-none"
               placeholder={`Enter the description about ${uploader.toLowerCase()}...`}
             />
-            {/* <span className="font-lato text-red-500 text-sm">
-              {errors && errors.description && errors.description.message}
-            </span> */}
           </div>
           {uploader === "File" && (
             <div className="w-[30%] h-full flex flex-col gap-1">
               <div
                 className={cn(
                   "w-full gap-2 flex-col h-full flex justify-center items-center relative border-2 border-dashed border-white rounded-md cursor-pointer",
-                  isSubmitting && "opacity-60"
+                  isSubmitting && "opacity-60",
+                  isFileExists && "cursor-default"
                 )}
               >
                 <Input
-                  disabled={isSubmitting}
-                  {...register("file")}
+                  disabled={isSubmitting || isFileExists}
+                  {...register("upload", {
+                    onChange: () => setIsFileExists(true),
+                  })}
                   type="file"
-                  className="absolute flex-1 opacity-0 size-full cursor-pointer"
+                  className="absolute flex-1 opacity-0 size-full cursor-pointer disabled:hidden"
                 />
-                <FilePlus2 className="[&>path]:text-white" />
-                <span className="text-white">Choose a File</span>
+                {getValues("upload") && getValues("upload").length > 0 ? (
+                  <div className="relative flex flex-col items-center justify-center">
+                    <File className="[&>path]:text-white size-8" />
+                    <span className="text-white text-lg">
+                      {getValues("upload")[0].name}
+                    </span>
+                    <button
+                      className="absolute -top-3 -right-5 hover:opacity-65"
+                      onClick={() => {
+                        setValue("upload", []);
+                        setIsFileExists(false);
+                      }}
+                    >
+                      <X className="[&>path]:text-white size-4" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex gap-3">
+                    <FilePlus2 className="[&>path]:text-white" />
+                    <span className="text-white">Choose a File</span>
+                  </div>
+                )}
               </div>
-              {/* <span className="font-lato text-sm text-red-500">
-                {errors && errors.description && errors.description.message}
-              </span> */}
             </div>
           )}
         </div>

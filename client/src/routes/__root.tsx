@@ -21,7 +21,7 @@ function RootPage() {
       <Outlet />
       <Toaster />
       <React.Suspense>
-        <TanStackRouterDevtools />
+        <TanStackRouterDevtools position="bottom-right" />
       </React.Suspense>
     </>
   );
