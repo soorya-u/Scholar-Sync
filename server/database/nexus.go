@@ -22,11 +22,9 @@ func (db *DB) CreateNexus(name, userId, coreId, category string) (string, error)
 		return "", fmt.Errorf("unable to add to database: %v", err)
 	}
 
-	type NexusID struct {
+	var nexusId []struct {
 		Id string
 	}
-
-	var nexusId []NexusID
 
 	err = surrealdb.Unmarshal(rawData, &nexusId)
 	if err != nil {
