@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/99designs/gqlgen/graphql"
@@ -138,21 +140,29 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData
 
 	// TODO: Add Admin or PseudoAdmin Check
 
+	splitter := strings.Split(input.Upload.Filename, ".")
+	fileExtention := splitter[len(splitter)-1]
+	title := strings.Join(strings.Split(strings.ToLower(input.Title), " "), "-")
+	nexusId := strings.Replace(input.Nexus, ":", "_", -1)
+	userId := strings.Replace(cookie.UserId, ":", "_", -1)
+
 	baseDir, err := os.Getwd()
 	if err != nil {
 		return "", err
 	}
 
-	filePath := filepath.Join(
-		baseDir,
-		staticDir,
-		fmt.Sprintf("%v-%v", input.Nexus, cookie.UserId),
-		fmt.Sprintf("%v-%v", input.Title, time.Now().GoString()),
-	)
+	dirPath := filepath.Join(baseDir, staticDir, nexusId, userId)
+	err = os.MkdirAll(dirPath, os.ModePerm)
+	if err != nil {
+		return "", fmt.Errorf("unable to create directory: %v", err)
+	}
+	fileName := fmt.Sprintf("%s-%d.%s", title, time.Now().UnixMilli(), fileExtention)
+
+	filePath := filepath.Join(dirPath, fileName)
 
 	outFile, err := os.Create(filePath)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("unable to create file: %v", err)
 	}
 	defer outFile.Close()
 
@@ -164,7 +174,12 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData
 		return "", err
 	}
 
-	fileID, err := r.Db.CreateFile(input.Title, input.Description, filePath, input.Nexus, cookie.UserId)
+	url, err := url.JoinPath(os.Getenv("BACKEND_URL"), staticDir, nexusId, userId, fileName)
+	if err != nil {
+		return "", fmt.Errorf("unable to create URl path: %v", err)
+	}
+
+	fileID, err := r.Db.CreateFile(input.Title, input.Description, url, input.Nexus, cookie.UserId)
 	if err != nil {
 		return "", err
 	}

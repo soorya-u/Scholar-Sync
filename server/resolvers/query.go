@@ -51,7 +51,7 @@ func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (
 		Expires:  time.Now().Add(time.Hour * 24 * 30),
 		HttpOnly: true,
 		Secure:   os.Getenv("GIN_MODE") == "release",
-		SameSite: http.SameSiteNoneMode,
+		// SameSite: http.SameSiteNoneMode,
 	})
 
 	return token, nil

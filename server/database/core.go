@@ -52,7 +52,6 @@ func (db *DB) GetCores(userId string) ([]*models.Core, error) {
 		Time   string         `json:"time"`
 	}
 
-	fmt.Printf("%#v\n\n", rawData)
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshal: %v", err)
