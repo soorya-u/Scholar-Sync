@@ -39,7 +39,7 @@ type Nexus {
 type File {
   id: ID!
   title: String!
-  description: String
+  description: String!
   fileUrl: String!
   sentBy: Profile!
   timeStamp: Time!
