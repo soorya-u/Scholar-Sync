@@ -79,10 +79,12 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CreateCore   func(childComplexity int, input models.CoreData) int
-		CreateNexus  func(childComplexity int, input *models.NexusData) int
-		SignUpUser   func(childComplexity int, input models.SignUpData) int
-		SingleUpload func(childComplexity int, file graphql.Upload) int
+		CreateAnnouncement func(childComplexity int, input models.AnnouncementData) int
+		CreateCore         func(childComplexity int, input models.CoreData) int
+		CreateFile         func(childComplexity int, input models.FileData) int
+		CreateNexus        func(childComplexity int, input models.NexusData) int
+		SignUpUser         func(childComplexity int, input models.SignUpData) int
+		SingleUpload       func(childComplexity int, file graphql.Upload) int
 	}
 
 	Nexus struct {
@@ -126,7 +128,9 @@ type MutationResolver interface {
 	SignUpUser(ctx context.Context, input models.SignUpData) (string, error)
 	SingleUpload(ctx context.Context, file graphql.Upload) (bool, error)
 	CreateCore(ctx context.Context, input models.CoreData) (string, error)
-	CreateNexus(ctx context.Context, input *models.NexusData) (string, error)
+	CreateNexus(ctx context.Context, input models.NexusData) (string, error)
+	CreateFile(ctx context.Context, input models.FileData) (string, error)
+	CreateAnnouncement(ctx context.Context, input models.AnnouncementData) (string, error)
 }
 type NexusResolver interface {
 	Creator(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
@@ -285,6 +289,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.File.Title(childComplexity), true
 
+	case "Mutation.createAnnouncement":
+		if e.complexity.Mutation.CreateAnnouncement == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createAnnouncement_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateAnnouncement(childComplexity, args["input"].(models.AnnouncementData)), true
+
 	case "Mutation.createCore":
 		if e.complexity.Mutation.CreateCore == nil {
 			break
@@ -297,6 +313,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.CreateCore(childComplexity, args["input"].(models.CoreData)), true
 
+	case "Mutation.createFile":
+		if e.complexity.Mutation.CreateFile == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createFile_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateFile(childComplexity, args["input"].(models.FileData)), true
+
 	case "Mutation.createNexus":
 		if e.complexity.Mutation.CreateNexus == nil {
 			break
@@ -307,7 +335,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.CreateNexus(childComplexity, args["input"].(*models.NexusData)), true
+		return e.complexity.Mutation.CreateNexus(childComplexity, args["input"].(models.NexusData)), true
 
 	case "Mutation.signUpUser":
 		if e.complexity.Mutation.SignUpUser == nil {
@@ -465,7 +493,9 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	rc := graphql.GetOperationContext(ctx)
 	ec := executionContext{rc, e, 0, 0, make(chan graphql.DeferredResult)}
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
+		ec.unmarshalInputAnnouncementData,
 		ec.unmarshalInputCoreData,
+		ec.unmarshalInputFileData,
 		ec.unmarshalInputGetNexusData,
 		ec.unmarshalInputLoginData,
 		ec.unmarshalInputNexusData,
@@ -586,11 +616,26 @@ input NexusData {
   category: String!
 }
 
+input FileData {
+  nexus: String!
+  title: String!
+  description: String!
+  upload: Upload!
+}
+
+input AnnouncementData {
+  title: String!
+  message: String!
+  nexus: String!
+}
+
 type Mutation {
   signUpUser(input: SignUpData!): String!
   singleUpload(file: Upload!): Boolean!
   createCore(input: CoreData!): ID!
-  createNexus(input: NexusData): ID!
+  createNexus(input: NexusData!): ID!
+  createFile(input: FileData!): ID!
+  createAnnouncement(input: AnnouncementData!): ID!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/query.gql", Input: `input LoginData {
@@ -670,6 +715,21 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
+func (ec *executionContext) field_Mutation_createAnnouncement_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.AnnouncementData
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNAnnouncementData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐAnnouncementData(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createCore_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -685,13 +745,28 @@ func (ec *executionContext) field_Mutation_createCore_args(ctx context.Context, 
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createFile_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.FileData
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNFileData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐFileData(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_createNexus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *models.NexusData
+	var arg0 models.NexusData
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalONexusData2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexusData(ctx, tmp)
+		arg0, err = ec.unmarshalNNexusData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexusData(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -1822,7 +1897,7 @@ func (ec *executionContext) _Mutation_createNexus(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CreateNexus(rctx, fc.Args["input"].(*models.NexusData))
+		return ec.resolvers.Mutation().CreateNexus(rctx, fc.Args["input"].(models.NexusData))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1857,6 +1932,116 @@ func (ec *executionContext) fieldContext_Mutation_createNexus(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_createNexus_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createFile(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createFile(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateFile(rctx, fc.Args["input"].(models.FileData))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createFile(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createFile_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createAnnouncement(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createAnnouncement(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateAnnouncement(rctx, fc.Args["input"].(models.AnnouncementData))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createAnnouncement(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createAnnouncement_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -4602,6 +4787,47 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(_ context.Context
 
 // region    **************************** input.gotpl *****************************
 
+func (ec *executionContext) unmarshalInputAnnouncementData(ctx context.Context, obj interface{}) (models.AnnouncementData, error) {
+	var it models.AnnouncementData
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"title", "message", "nexus"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "message":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("message"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Message = data
+		case "nexus":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexus"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Nexus = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputCoreData(ctx context.Context, obj interface{}) (models.CoreData, error) {
 	var it models.CoreData
 	asMap := map[string]interface{}{}
@@ -4630,6 +4856,54 @@ func (ec *executionContext) unmarshalInputCoreData(ctx context.Context, obj inte
 				return it, err
 			}
 			it.ImageURL = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputFileData(ctx context.Context, obj interface{}) (models.FileData, error) {
+	var it models.FileData
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"nexus", "title", "description", "upload"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "nexus":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexus"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Nexus = data
+		case "title":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Title = data
+		case "description":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Description = data
+		case "upload":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("upload"))
+			data, err := ec.unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Upload = data
 		}
 	}
 
@@ -5143,6 +5417,20 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "createNexus":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_createNexus(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createFile":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createFile(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "createAnnouncement":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createAnnouncement(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -5912,6 +6200,11 @@ func (ec *executionContext) marshalNAnnouncement2ᚕᚖgithubᚗcomᚋsooryaᚑu
 	return ret
 }
 
+func (ec *executionContext) unmarshalNAnnouncementData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐAnnouncementData(ctx context.Context, v interface{}) (models.AnnouncementData, error) {
+	res, err := ec.unmarshalInputAnnouncementData(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6008,6 +6301,11 @@ func (ec *executionContext) marshalNFile2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋschol
 	return ret
 }
 
+func (ec *executionContext) unmarshalNFileData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐFileData(ctx context.Context, v interface{}) (models.FileData, error) {
+	res, err := ec.unmarshalInputFileData(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNID2string(ctx context.Context, v interface{}) (string, error) {
 	res, err := graphql.UnmarshalID(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -6064,6 +6362,11 @@ func (ec *executionContext) marshalNNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscho
 	wg.Wait()
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNNexusData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexusData(ctx context.Context, v interface{}) (models.NexusData, error) {
+	res, err := ec.unmarshalInputNexusData(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNProfile2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx context.Context, sel ast.SelectionSet, v models.Profile) graphql.Marshaler {
@@ -6483,14 +6786,6 @@ func (ec *executionContext) marshalONexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholar
 		return graphql.Null
 	}
 	return ec._Nexus(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalONexusData2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexusData(ctx context.Context, v interface{}) (*models.NexusData, error) {
-	if v == nil {
-		return nil, nil
-	}
-	res, err := ec.unmarshalInputNexusData(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalOProfile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx context.Context, sel ast.SelectionSet, v *models.Profile) graphql.Marshaler {

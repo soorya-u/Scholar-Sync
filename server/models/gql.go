@@ -7,6 +7,8 @@ import (
 	"io"
 	"strconv"
 	"time"
+
+	"github.com/99designs/gqlgen/graphql"
 )
 
 type Announcement struct {
@@ -15,6 +17,12 @@ type Announcement struct {
 	Message   string    `json:"message"`
 	SentBy    *Profile  `json:"sentBy"`
 	TimeStamp time.Time `json:"timeStamp"`
+}
+
+type AnnouncementData struct {
+	Title   string `json:"title"`
+	Message string `json:"message"`
+	Nexus   string `json:"nexus"`
 }
 
 type Core struct {
@@ -39,6 +47,13 @@ type File struct {
 	FileURL     string    `json:"fileUrl"`
 	SentBy      *Profile  `json:"sentBy"`
 	TimeStamp   time.Time `json:"timeStamp"`
+}
+
+type FileData struct {
+	Nexus       string         `json:"nexus"`
+	Title       string         `json:"title"`
+	Description string         `json:"description"`
+	Upload      graphql.Upload `json:"upload"`
 }
 
 type GetNexusData struct {
