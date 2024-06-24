@@ -73,7 +73,7 @@ func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
 	return user, nil
 }
 
-func (r *queryResolver) GetCores(ctx context.Context) ([]*models.Core, error) {
+func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
 		return nil, fmt.Errorf("unable to get cookie access")
@@ -81,12 +81,86 @@ func (r *queryResolver) GetCores(ctx context.Context) ([]*models.Core, error) {
 		return nil, fmt.Errorf("cookie not found")
 	}
 
-	cores, err := r.Db.GetCores(cookie.UserId)
+	dbCores, err := r.Db.GetDBCores(cookie.UserId)
 	if err != nil {
-		return nil, fmt.Errorf("%v", err)
+		return nil, err
 	}
 
-	return cores, nil
+	coreData := make([]*models.Core, len(dbCores))
+
+	for cIdx, c := range dbCores {
+		coreData[cIdx] = &models.Core{
+			ID:        c.ID,
+			Name:      c.Name,
+			ImageURL:  c.ImageURL,
+			CreatedAt: c.CreatedAt,
+			UpdatedAt: c.UpdatedAt,
+			Creator:   c.Creator,
+		}
+
+		dbNexus, err := r.Db.GetDBNexus(c.Nexus)
+		if err != nil {
+			return nil, err
+		}
+
+		nexusData := make([]*models.Nexus, len(dbNexus))
+
+		for nIdx, n := range dbNexus {
+			nexusData[nIdx] = &models.Nexus{
+				ID:        n.ID,
+				Name:      n.Name,
+				Category:  n.Category,
+				Creator:   n.Creator,
+				Users:     n.Users,
+				CreatedAt: n.CreatedAt,
+				UpdatedAt: n.UpdatedAt,
+			}
+
+			dbFiles, err := r.Db.GetFiles(n.Files)
+			if err != nil {
+				return nil, err
+			}
+
+			fileData := make([]*models.File, len(dbFiles))
+
+			for fIdx, f := range fileData {
+				fileData[fIdx] = &models.File{
+					ID:          f.ID,
+					Title:       f.Title,
+					Description: f.Description,
+					FileURL:     f.FileURL,
+					SentBy:      f.SentBy,
+					TimeStamp:   f.TimeStamp,
+				}
+			}
+
+			nexusData[nIdx].Files = fileData
+
+			dbAnnouncements, err := r.Db.GetAnnouncements(n.Announcements)
+			if err != nil {
+				return nil, err
+			}
+
+			announcementsData := make([]*models.Announcement, len(dbAnnouncements))
+
+			for aIdx, a := range announcementsData {
+				announcementsData[aIdx] = &models.Announcement{
+					ID:        a.ID,
+					Title:     a.Title,
+					Message:   a.Message,
+					SentBy:    a.SentBy,
+					TimeStamp: a.TimeStamp,
+				}
+			}
+
+			nexusData[nIdx].Announcements = announcementsData
+
+		}
+
+		coreData[cIdx].Nexus = nexusData
+	}
+
+	return coreData, nil
 }
 
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
