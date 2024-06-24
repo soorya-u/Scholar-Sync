@@ -108,9 +108,9 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetCores  func(childComplexity int) int
-		GetUser   func(childComplexity int) int
-		LoginUser func(childComplexity int, input models.LoginData) int
+		GetUser     func(childComplexity int) int
+		GetUserData func(childComplexity int) int
+		LoginUser   func(childComplexity int, input models.LoginData) int
 	}
 }
 
@@ -133,7 +133,7 @@ type MutationResolver interface {
 	CreateAnnouncement(ctx context.Context, input models.AnnouncementData) (string, error)
 }
 type NexusResolver interface {
-	Creator(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
+	Creator(ctx context.Context, obj *models.Nexus) (*models.Profile, error)
 	Users(ctx context.Context, obj *models.Nexus) ([]*models.Profile, error)
 	Files(ctx context.Context, obj *models.Nexus) ([]*models.File, error)
 	Announcements(ctx context.Context, obj *models.Nexus) ([]*models.Announcement, error)
@@ -141,7 +141,7 @@ type NexusResolver interface {
 type QueryResolver interface {
 	LoginUser(ctx context.Context, input models.LoginData) (string, error)
 	GetUser(ctx context.Context) (*models.Profile, error)
-	GetCores(ctx context.Context) ([]*models.Core, error)
+	GetUserData(ctx context.Context) ([]*models.Core, error)
 }
 
 type executableSchema struct {
@@ -459,19 +459,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Profile.UserType(childComplexity), true
 
-	case "Query.getCores":
-		if e.complexity.Query.GetCores == nil {
-			break
-		}
-
-		return e.complexity.Query.GetCores(childComplexity), true
-
 	case "Query.getUser":
 		if e.complexity.Query.GetUser == nil {
 			break
 		}
 
 		return e.complexity.Query.GetUser(childComplexity), true
+
+	case "Query.getUserData":
+		if e.complexity.Query.GetUserData == nil {
+			break
+		}
+
+		return e.complexity.Query.GetUserData(childComplexity), true
 
 	case "Query.loginUser":
 		if e.complexity.Query.LoginUser == nil {
@@ -617,10 +617,10 @@ input NexusData {
 }
 
 input FileData {
-  nexus: String!
   title: String!
   description: String!
   upload: Upload!
+  nexus: String!
 }
 
 input AnnouncementData {
@@ -650,7 +650,7 @@ input GetNexusData {
 type Query {
   loginUser(input: LoginData!): String!
   getUser: Profile!
-  getCores: [Core]!
+  getUserData: [Core]!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/types.gql", Input: `scalar Time
@@ -683,7 +683,7 @@ type Nexus {
   id: ID!
   name: String!
   category: String!
-  creator: [Profile]!
+  creator: Profile!
   users: [Profile]!
   files: [File]!
   announcements: [Announcement]!
@@ -694,7 +694,7 @@ type Nexus {
 type File {
   id: ID!
   title: String!
-  description: String
+  description: String!
   fileUrl: String!
   sentBy: Profile!
   timeStamp: Time!
@@ -1554,11 +1554,14 @@ func (ec *executionContext) _File_description(ctx context.Context, field graphql
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_File_description(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2206,9 +2209,9 @@ func (ec *executionContext) _Nexus_creator(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*models.Profile)
+	res := resTmp.(*models.Profile)
 	fc.Result = res
-	return ec.marshalNProfile2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
+	return ec.marshalNProfile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfile(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Nexus_creator(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2825,8 +2828,8 @@ func (ec *executionContext) fieldContext_Query_getUser(_ context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_getCores(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_getCores(ctx, field)
+func (ec *executionContext) _Query_getUserData(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_getUserData(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2839,7 +2842,7 @@ func (ec *executionContext) _Query_getCores(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetCores(rctx)
+		return ec.resolvers.Query().GetUserData(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2856,7 +2859,7 @@ func (ec *executionContext) _Query_getCores(ctx context.Context, field graphql.C
 	return ec.marshalNCore2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_getCores(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_getUserData(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -4869,20 +4872,13 @@ func (ec *executionContext) unmarshalInputFileData(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"nexus", "title", "description", "upload"}
+	fieldsInOrder := [...]string{"title", "description", "upload", "nexus"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
 			continue
 		}
 		switch k {
-		case "nexus":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexus"))
-			data, err := ec.unmarshalNString2string(ctx, v)
-			if err != nil {
-				return it, err
-			}
-			it.Nexus = data
 		case "title":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("title"))
 			data, err := ec.unmarshalNString2string(ctx, v)
@@ -4904,6 +4900,13 @@ func (ec *executionContext) unmarshalInputFileData(ctx context.Context, obj inte
 				return it, err
 			}
 			it.Upload = data
+		case "nexus":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexus"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Nexus = data
 		}
 	}
 
@@ -5305,6 +5308,9 @@ func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "description":
 			out.Values[i] = ec._File_description(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
 		case "fileUrl":
 			out.Values[i] = ec._File_fileUrl(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
@@ -5783,7 +5789,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "getCores":
+		case "getUserData":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -5792,7 +5798,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_getCores(ctx, field)
+				res = ec._Query_getUserData(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

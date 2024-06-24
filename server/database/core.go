@@ -36,9 +36,8 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 
 }
 
-func (db *DB) GetCores(userId string) ([]*models.Core, error) {
-	// query := "SELECT *, creator.*, nexus[*].*, nexus[*].*.creator.*, nexus[*].*, nexus[*].announcements[*].*, nexus[*].files[*].*, nexus[*].users[*].* FROM core WHERE creator = $userId OR $userId IN nexus[*].users;"
-	query := "SELECT *, creator.*, nexus[*].*, nexus[*].creator[0].* FROM core WHERE creator = $userId OR $userId IN nexus[*].creator OR $userId IN nexus[*].users;"
+func (db *DB) GetDBCores(userId string) ([]*models.DBCore, error) {
+	query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId IN nexus[*].creator OR $userId IN nexus[*].users;"
 	params := map[string]interface{}{"userId": userId}
 
 	rawData, err := db.client.Query(query, params)
@@ -47,14 +46,14 @@ func (db *DB) GetCores(userId string) ([]*models.Core, error) {
 	}
 
 	var parsedData []struct {
-		Result []*models.Core `json:"result"`
-		Status string         `json:"status"`
-		Time   string         `json:"time"`
+		Result []*models.DBCore `json:"result"`
+		Status string           `json:"status"`
+		Time   string           `json:"time"`
 	}
 
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal: %v", err)
+		return nil, fmt.Errorf("unable to unmarshal core: %v", err)
 	}
 
 	res := parsedData[0].Result

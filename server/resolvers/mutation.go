@@ -128,7 +128,6 @@ func (r *mutationResolver) CreateNexus(ctx context.Context, input models.NexusDa
 }
 
 func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData) (string, error) {
-
 	const staticDir string = "static"
 
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
@@ -185,7 +184,6 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData
 	}
 
 	return fileID, nil
-
 }
 
 func (r *mutationResolver) CreateAnnouncement(ctx context.Context, input models.AnnouncementData) (string, error) {

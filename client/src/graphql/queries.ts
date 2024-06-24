@@ -13,7 +13,7 @@ export const getInitDataQuery = gql`
       userType
       fullName
     }
-    getCores {
+    getUserData {
       id
       name
       imageUrl
@@ -21,17 +21,9 @@ export const getInitDataQuery = gql`
         id
         name
         category
+        files
+        announcements
       }
-    }
-  }
-`;
-
-export const getCoresQuery = gql`
-  query {
-    getCores {
-      id
-      name
-      imageUrl
     }
   }
 `;

@@ -43,17 +43,17 @@ type CoreData struct {
 type File struct {
 	ID          string    `json:"id"`
 	Title       string    `json:"title"`
-	Description *string   `json:"description,omitempty"`
+	Description string    `json:"description"`
 	FileURL     string    `json:"fileUrl"`
 	SentBy      *Profile  `json:"sentBy"`
 	TimeStamp   time.Time `json:"timeStamp"`
 }
 
 type FileData struct {
-	Nexus       string         `json:"nexus"`
 	Title       string         `json:"title"`
 	Description string         `json:"description"`
 	Upload      graphql.Upload `json:"upload"`
+	Nexus       string         `json:"nexus"`
 }
 
 type GetNexusData struct {
@@ -72,7 +72,7 @@ type Nexus struct {
 	ID            string          `json:"id"`
 	Name          string          `json:"name"`
 	Category      string          `json:"category"`
-	Creator       []*Profile      `json:"creator"`
+	Creator       *Profile        `json:"creator"`
 	Users         []*Profile      `json:"users"`
 	Files         []*File         `json:"files"`
 	Announcements []*Announcement `json:"announcements"`
