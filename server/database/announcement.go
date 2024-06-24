@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/soorya-u/scholar-sync/models"
 	"github.com/surrealdb/surrealdb.go"
 )
 
@@ -42,6 +43,38 @@ func (db *DB) CreateAnnouncement(title, message, nexusId, userId string) (string
 	_, err = db.client.Query(query, params)
 	if err != nil {
 		return "", fmt.Errorf("unable to Join: %v", err)
+	}
+
+	return res, nil
+
+}
+
+func (db *DB) GetAnnouncements(announcementIds []string) ([]*models.Announcement, error) {
+	query := "SELECT *, sentBy.* FROM $announcementIds;"
+	params := map[string]interface{}{
+		"announcementIds": announcementIds,
+	}
+
+	rawData, err := db.client.Query(query, params)
+	if err != nil {
+		return nil, fmt.Errorf("unable to fetch announcements: %v", err)
+	}
+
+	var parsedData []struct {
+		Result []*models.Announcement `json:"result"`
+		Status string                 `json:"status"`
+		Time   string                 `json:"time"`
+	}
+
+	err = surrealdb.Unmarshal(rawData, &parsedData)
+	if err != nil {
+		return nil, fmt.Errorf("unable to unmarshal announcements: %v", err)
+	}
+
+	res := parsedData[0].Result
+
+	if len(res) <= 0 {
+		return nil, nil
 	}
 
 	return res, nil
