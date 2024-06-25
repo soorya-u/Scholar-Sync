@@ -1,5 +1,7 @@
 import { FileDown } from "lucide-react";
 
+import { dateFormatter } from "@/utils/date-formatter";
+
 type FileViewerProps = {
   creator: string;
   date: Date;
@@ -23,7 +25,7 @@ export default function FileViewer({
         </div>
 
         <h2 className="text-xl">{creator} has Uploaded a new File</h2>
-        <h4 className="text-sm justify-self-end">{date.toDateString()}</h4>
+        <h4 className="text-sm justify-self-end">{dateFormatter(date)}</h4>
       </div>
       <div className="flex flex-col pl-10 gap-3">
         <h1 className="text-3xl">{title}</h1>
