@@ -123,7 +123,7 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 
 			fileData := make([]*models.File, len(dbFiles))
 
-			for fIdx, f := range fileData {
+			for fIdx, f := range dbFiles {
 				fileData[fIdx] = &models.File{
 					ID:          f.ID,
 					Title:       f.Title,
@@ -143,7 +143,7 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 
 			announcementsData := make([]*models.Announcement, len(dbAnnouncements))
 
-			for aIdx, a := range announcementsData {
+			for aIdx, a := range dbAnnouncements {
 				announcementsData[aIdx] = &models.Announcement{
 					ID:        a.ID,
 					Title:     a.Title,

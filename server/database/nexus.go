@@ -13,7 +13,7 @@ func (db *DB) CreateNexus(name, userId, coreId, category string) (string, error)
 	params := map[string]interface{}{
 		"category":  category,
 		"name":      name,
-		"creator":   []string{userId},
+		"creator":   userId,
 		"createdAt": time.Now(),
 		"updatedAt": time.Now(),
 	}
@@ -65,6 +65,8 @@ func (db *DB) GetDBNexus(nexusIds []string) ([]*models.DBNexus, error) {
 		Status string            `json:"status"`
 		Time   string            `json:"time"`
 	}
+
+	fmt.Printf("%v\n\n", rawData)
 
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
