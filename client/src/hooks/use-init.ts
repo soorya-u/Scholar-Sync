@@ -20,7 +20,6 @@ export const useInitData = () => {
   const { setCore } = useCore();
   const { setNexus } = useNexus();
 
-  console.log(error?.message);
   useEffect(() => {
     if (loading) return;
     if (error || !data || !data.getUser || !data.getUserData) {
@@ -31,7 +30,7 @@ export const useInitData = () => {
         description: "Please Login or Sign Up to Proceed",
       });
     }
-
+    console.log(data.getUserData);
     setUser(data.getUser as UserType);
     setApiData(data.getUserData as CoreType[]);
 
@@ -40,12 +39,7 @@ export const useInitData = () => {
     const { id, imageUrl, name, nexus } =
       selectedCores.length > 0 ? selectedCores[0] : apiData[0];
     setCore({ id, imageUrl, name, nexus });
-    nexus.length > 0 &&
-      setNexus({
-        category: nexus[0].category,
-        id: nexus[0].id,
-        name: nexus[0].name,
-      });
+    nexus.length > 0 && setNexus(nexus[0]);
   }, [data, error, loading]);
 
   return {

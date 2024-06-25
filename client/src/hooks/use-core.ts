@@ -15,11 +15,7 @@ export const useCore = () => {
   const setCore = (core: CoreReduxType) => {
     dispatch(setCoreFn(core));
     const nexus = apiData.find((c) => c.id === core.id)!.nexus;
-    setNexus({
-      category: nexus[0]?.category ?? "",
-      id: nexus[0]?.id ?? "",
-      name: nexus[0]?.name ?? "",
-    });
+    setNexus(nexus[0]);
   };
 
   return {
