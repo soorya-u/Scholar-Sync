@@ -1,3 +1,5 @@
+import { dateFormatter } from "@/utils/date-formatter";
+
 type AnnouncementViewerProps = {
   creator: string;
   date: Date;
@@ -18,7 +20,7 @@ export default function AnnouncementViewer({
           <span className="text-2xl font-extrabold">{creator[0]}</span>
         </div>
         <h2 className="text-xl">{creator} has made a new Announcement</h2>
-        <h4 className="text-sm">{date.toDateString()}</h4>
+        <h4 className="text-sm">{dateFormatter(date)}</h4>
       </div>
       <div className="flex flex-col pl-10 gap-2">
         <h1 className="text-3xl">{title}</h1>

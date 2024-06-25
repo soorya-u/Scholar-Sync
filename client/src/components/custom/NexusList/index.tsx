@@ -16,9 +16,11 @@ import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
+import { useApiData } from "@/hooks/use-api-data";
 
 export default function NexusList() {
   const { core } = useCore();
+  const { apiData } = useApiData();
   const { nexus, setNexus } = useNexus();
   const { isSidebarOpen } = useToggler();
   const { user } = useUser();
@@ -77,18 +79,22 @@ export default function NexusList() {
       </Select>
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-3 py-2 gap-4">
         {core.nexus.length > 0 ? (
-          core.nexus.map(
-            ({ category, id, name }) =>
-              category === selectedCategory && (
+          core.nexus.map((n, idx) => {
+            const apiCores = apiData.find((c) => c.id === core.id);
+            const nex = apiCores!.nexus.find((nexus) => nexus.id === n.id);
+
+            return (
+              n.category === selectedCategory && (
                 <Button
-                  onClick={() => setNexus({ id, category, name })}
+                  onClick={() => setNexus(nex!)}
                   className="text-center border border-white px-3 py-1 rounded cursor-pointer"
-                  key={id}
+                  key={idx}
                 >
-                  {name}
+                  {n.name}
                 </Button>
               )
-          )
+            );
+          })
         ) : (
           <span className="text-sm w-full font-lato text-center text-balance transition-all duration-300 leading-[1.15]">
             No Nexus Available
