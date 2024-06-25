@@ -23,7 +23,7 @@ export const useInitData = () => {
   console.log(error?.message);
   useEffect(() => {
     if (loading) return;
-    if (error || !data || !data.getUser || !data.getCores) {
+    if (error || !data || !data.getUser || !data.getUserData) {
       navigate({ to: "/auth/sign-up" });
       toast({
         title: "Authentication Required",
@@ -33,7 +33,7 @@ export const useInitData = () => {
     }
 
     setUser(data.getUser as UserType);
-    setApiData(data.getCores as CoreType[]);
+    setApiData(data.getUserData as CoreType[]);
 
     if (apiData.length === 0) return;
     const selectedCores = apiData.filter((c) => c.nexus && c.nexus?.length > 0);

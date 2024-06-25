@@ -21,8 +21,25 @@ export const getInitDataQuery = gql`
         id
         name
         category
-        files
-        announcements
+        files {
+          id
+          title
+          description
+          fileUrl
+          sentBy {
+            id
+            fullName
+          }
+        }
+        announcements {
+          id
+          title
+          message
+          sentBy {
+            id
+            fullName
+          }
+        }
       }
     }
   }
