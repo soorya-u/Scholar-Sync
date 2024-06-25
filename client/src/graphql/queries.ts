@@ -21,11 +21,19 @@ export const getInitDataQuery = gql`
         id
         name
         category
+        createdAt
+        creator {
+          fullName
+        }
+        users {
+          fullName
+        }
         files {
           id
           title
           description
           fileUrl
+          timeStamp
           sentBy {
             id
             fullName
@@ -35,6 +43,7 @@ export const getInitDataQuery = gql`
           id
           title
           message
+          timeStamp
           sentBy {
             id
             fullName

@@ -12,35 +12,35 @@ export type CoreType = {
   imageUrl: string;
   creator?: UserType;
   nexus: NexusType[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type NexusType = {
   id: string;
   name: string;
   category: string;
-  creator?: UserType[];
-  users?: UserType[];
-  files?: File[];
-  announcements?: Announcement[];
-  createdAt?: Date;
-  updatedAt?: Date;
+  creator: UserType;
+  users: UserType[];
+  files: File[];
+  announcements: Announcement[];
+  createdAt: string;
+  updatedAt?: string;
 };
 
-type File = {
+export type File = {
   id: string;
   title: string;
   description: string;
   fileUrl: string;
   sentBy: UserType;
-  timeStamp: Date;
+  timeStamp: string;
 };
 
-type Announcement = {
+export type Announcement = {
   id: string;
   title: string;
   message: string;
   sentBy: UserType;
-  timeStamp: Date;
+  timeStamp: string;
 };
