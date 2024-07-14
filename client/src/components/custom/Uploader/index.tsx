@@ -42,7 +42,7 @@ export default function Uploader() {
   return (
     <form
       className={cn(
-        "w-full gap-3 px-6 py-2 items-center bg-secondary flex flex-col transition-all border-t border-border",
+        "w-full gap-3 px-6 py-2 items-center flex flex-col transition-all border-t border-border",
         isUploaderOpen ? "h-52" : "h-[3.25rem]"
       )}
       onSubmit={handleSubmit}

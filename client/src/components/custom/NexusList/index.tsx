@@ -45,7 +45,7 @@ export default function NexusList() {
   return (
     <div
       className={cn(
-        "min-w-[11.3rem] relative flex bg-secondary py-4 flex-col gap-3 items-center px-2 border-r border-border transition-all duration-300",
+        "min-w-[11.3rem] relative flex py-4 flex-col gap-3 items-center px-2 border-r border-border transition-all duration-300",
         isSidebarOpen
           ? "translate-x-0 relative"
           : "-translate-x-[25rem] absolute"

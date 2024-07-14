@@ -13,7 +13,7 @@ export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
   return (
-    <div className="h-[8%] border-b border-border bg-background flex justify-between px-8 items-center gap-4 w-full">
+    <div className="h-[8%] border-b border-border flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
         <button className="cursor-pointer" onClick={toggleSidebar}>
           <AlignLeft className="text-foreground" />
@@ -23,7 +23,7 @@ export default function Header() {
             <AvatarImage className="w-16" src="/logo.png" />
             <AvatarFallback>Logo</AvatarFallback>
           </Avatar>
-          <h1 className="text-3xl font-[Backpack] text-foreground">
+          <h1 className="text-2xl font-playwrite text-foreground">
             Scholar Sync
           </h1>
         </div>

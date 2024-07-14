@@ -17,12 +17,12 @@ export const Route = createFileRoute("/")({
 function HomePage() {
   useInitData();
   return (
-    <div className="flex h-screen flex-col bg-secondary">
+    <div className="flex h-screen flex-col">
       <Header />
       <div className="flex flex-1 h-[82%]">
         <SideBar />
         <NexusList />
-        <div className="flex-1 bg-secondary w-full h-full">
+        <div className="flex-1 w-full h-full">
           <NavBar />
           <div className="flex h-[91%] flex-1">
             <div className="flex flex-col flex-1">

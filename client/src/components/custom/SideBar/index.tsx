@@ -20,7 +20,7 @@ export default function SideBar() {
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 border-r border-border py-4 bg-background transition-all duration-300 z-10 backdrop-blur w-24"
+        "relative flex flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 z-10 w-24"
       )}
     >
       <Dialog>
@@ -75,7 +75,7 @@ const CoreIcons = ({
   >
     {/* TODO: Hover transition not working */}
     <img
-      className="size-14 rounded-full transition-all duration-500 group-hover:rounded-xl border-2 border-border"
+      className="size-14 rounded-full transition-all duration-300 group-hover:rounded-xl border-2 border-border"
       src={src}
       alt="core"
     />
