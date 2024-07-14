@@ -9,8 +9,6 @@ import { AlignLeft, LogOut } from "lucide-react";
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 
-import logo from "@/assets/images/logo.png";
-
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
@@ -22,10 +20,12 @@ export default function Header() {
         </button>
         <div className="flex justify-center items-center gap-3">
           <Avatar>
-            <AvatarImage className="w-16" src={logo} />
+            <AvatarImage className="w-16" src="/logo.png" />
             <AvatarFallback>Logo</AvatarFallback>
           </Avatar>
-          <h1 className="text-3xl font-[Backpack] text-foreground">Scholar Sync</h1>
+          <h1 className="text-3xl font-[Backpack] text-foreground">
+            Scholar Sync
+          </h1>
         </div>
       </div>
       <div className="flex justify-center items-center gap-4">
