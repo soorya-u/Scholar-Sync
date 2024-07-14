@@ -30,7 +30,6 @@ export const useInitData = () => {
         description: "Please Login or Sign Up to Proceed",
       });
     }
-    console.log(data.getUserData);
     setUser(data.getUser as UserType);
     setApiData(data.getUserData as CoreType[]);
 

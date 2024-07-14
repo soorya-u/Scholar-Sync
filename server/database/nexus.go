@@ -66,8 +66,6 @@ func (db *DB) GetDBNexus(nexusIds []string) ([]*models.DBNexus, error) {
 		Time   string            `json:"time"`
 	}
 
-	fmt.Printf("%v\n\n", rawData)
-
 	err = surrealdb.Unmarshal(rawData, &parsedData)
 	if err != nil {
 		return nil, fmt.Errorf("unable to unmarshall nexus: %v", err)

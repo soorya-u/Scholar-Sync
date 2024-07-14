@@ -45,7 +45,6 @@ export default function Dashboard() {
       </div>
       <Separator />
       {dashboardList.map((d) => {
-        console.log(d.timeStamp);
         if (d.id.split(":")[0] === "announcement")
           return (
             <AnnouncementViewer
