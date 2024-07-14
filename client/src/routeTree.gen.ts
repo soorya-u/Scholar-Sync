@@ -12,8 +12,6 @@
 
 import { Route as rootRoute } from './routes/__root'
 import { Route as IndexImport } from './routes/index'
-import { Route as UploadFileImport } from './routes/upload/file'
-import { Route as UploadAnnouncementImport } from './routes/upload/announcement'
 import { Route as AuthSignUpImport } from './routes/auth/sign-up'
 import { Route as AuthLoginImport } from './routes/auth/login'
 
@@ -21,16 +19,6 @@ import { Route as AuthLoginImport } from './routes/auth/login'
 
 const IndexRoute = IndexImport.update({
   path: '/',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const UploadFileRoute = UploadFileImport.update({
-  path: '/upload/file',
-  getParentRoute: () => rootRoute,
-} as any)
-
-const UploadAnnouncementRoute = UploadAnnouncementImport.update({
-  path: '/upload/announcement',
   getParentRoute: () => rootRoute,
 } as any)
 
@@ -69,20 +57,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthSignUpImport
       parentRoute: typeof rootRoute
     }
-    '/upload/announcement': {
-      id: '/upload/announcement'
-      path: '/upload/announcement'
-      fullPath: '/upload/announcement'
-      preLoaderRoute: typeof UploadAnnouncementImport
-      parentRoute: typeof rootRoute
-    }
-    '/upload/file': {
-      id: '/upload/file'
-      path: '/upload/file'
-      fullPath: '/upload/file'
-      preLoaderRoute: typeof UploadFileImport
-      parentRoute: typeof rootRoute
-    }
   }
 }
 
@@ -92,8 +66,6 @@ export const routeTree = rootRoute.addChildren({
   IndexRoute,
   AuthLoginRoute,
   AuthSignUpRoute,
-  UploadAnnouncementRoute,
-  UploadFileRoute,
 })
 
 /* prettier-ignore-end */
@@ -106,9 +78,7 @@ export const routeTree = rootRoute.addChildren({
       "children": [
         "/",
         "/auth/login",
-        "/auth/sign-up",
-        "/upload/announcement",
-        "/upload/file"
+        "/auth/sign-up"
       ]
     },
     "/": {
@@ -119,12 +89,6 @@ export const routeTree = rootRoute.addChildren({
     },
     "/auth/sign-up": {
       "filePath": "auth/sign-up.tsx"
-    },
-    "/upload/announcement": {
-      "filePath": "upload/announcement.tsx"
-    },
-    "/upload/file": {
-      "filePath": "upload/file.tsx"
     }
   }
 }
