@@ -45,7 +45,7 @@ export default function NexusList() {
   return (
     <div
       className={cn(
-        "min-w-[11.3rem] relative flex bg-gradient-to-r from-primary to-secondary via-primary py-4 flex-col gap-3 items-center px-2 border-r border-white transition-all duration-300",
+        "min-w-[11.3rem] relative flex bg-secondary py-4 flex-col gap-3 items-center px-2 border-r border-border transition-all duration-300",
         isSidebarOpen
           ? "translate-x-0 relative"
           : "-translate-x-[25rem] absolute"
@@ -56,7 +56,7 @@ export default function NexusList() {
         defaultValue={selectedCategory || nexus.category}
         onValueChange={(v) => setSelectedCategory(v)}
       >
-        <SelectTrigger className="w-[90%]">
+        <SelectTrigger className="w-[97%] border-border border-2">
           <SelectValue
             placeholder={
               selectedCategory.length > 0
@@ -66,7 +66,7 @@ export default function NexusList() {
           />
         </SelectTrigger>
         {categories.length > 0 && (
-          <SelectContent>
+          <SelectContent className="border-2 w-[97%]">
             <SelectGroup>
               {categories.map((c, idx) => (
                 <SelectItem key={idx} value={c}>
@@ -87,8 +87,9 @@ export default function NexusList() {
               n.category === selectedCategory && (
                 <Button
                   onClick={() => setNexus(nex!)}
-                  className="text-center border border-white px-3 py-1 rounded cursor-pointer"
+                  className="text-center cursor-pointer border-2 border-border px-3 py-1 rounded text-foreground hover:text-primary"
                   key={idx}
+                  variant="outline"
                 >
                   {n.name}
                 </Button>
@@ -106,7 +107,10 @@ export default function NexusList() {
         <Dialog>
           <Separator className="border-border h-[2px] w-[90%]" />
           <DialogTrigger asChild>
-            <Button variant="outline" className="w-[90%]">
+            <Button
+              variant="default"
+              className="w-[90%] text-foreground bg-primary"
+            >
               Create a Nexus
             </Button>
           </DialogTrigger>

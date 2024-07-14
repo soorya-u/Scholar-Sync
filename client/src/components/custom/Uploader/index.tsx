@@ -42,7 +42,7 @@ export default function Uploader() {
   return (
     <form
       className={cn(
-        "w-full gap-3 px-6 py-2 items-center bg-secondary flex flex-col transition-all",
+        "w-full gap-3 px-6 py-2 items-center bg-secondary flex flex-col transition-all border-t border-border",
         isUploaderOpen ? "h-52" : "h-[3.25rem]"
       )}
       onSubmit={handleSubmit}
@@ -66,12 +66,13 @@ export default function Uploader() {
         </button>
         <div className="w-full flex flex-col gap-1">
           <Input
+            className="border-2 border-border"
             {...register("title")}
             placeholder={`Enter the ${uploader === "Announcement" ? "Announcement Title" : "File Name"}`}
           />
         </div>
         <Select onValueChange={(v) => setUploader(v as UploaderType)}>
-          <SelectTrigger className="w-[40%]">
+          <SelectTrigger className="w-[40%] border-2 border-border">
             <SelectValue placeholder={uploader} />
           </SelectTrigger>
           <SelectContent>
@@ -96,8 +97,9 @@ export default function Uploader() {
         </Select>
         <Button
           disabled={!isUploaderOpen || isSubmitting}
+          className="disabled:cursor-not-allowed"
           type="submit"
-          variant={"outline"}
+          variant={"default"}
         >
           <Upload />
         </Button>
@@ -107,7 +109,7 @@ export default function Uploader() {
           <div className="flex h-full flex-col flex-1 gap-1">
             <Textarea
               {...register("description")}
-              className="flex-1 size-full resize-none"
+              className="flex-1 size-full resize-none border-2 border-border"
               placeholder={`Enter the description about ${uploader.toLowerCase()}...`}
             />
           </div>
@@ -115,7 +117,7 @@ export default function Uploader() {
             <div className="w-[30%] h-full flex flex-col gap-1">
               <div
                 className={cn(
-                  "w-full gap-2 flex-col h-full flex justify-center items-center relative border-2 border-dashed border-white rounded-md cursor-pointer",
+                  "w-full gap-2 flex-col h-full flex justify-center items-center relative border-[3px] border-dashed border-border rounded-md cursor-pointer",
                   isSubmitting && "opacity-60",
                   isFileExists && "cursor-default"
                 )}
@@ -130,8 +132,8 @@ export default function Uploader() {
                 />
                 {getValues("upload") && getValues("upload").length > 0 ? (
                   <div className="relative flex flex-col items-center justify-center">
-                    <File className="[&>path]:text-white size-8" />
-                    <span className="text-white text-lg">
+                    <File className="[&>path]:text-foreground size-8" />
+                    <span className="text-foreground text-lg">
                       {getValues("upload")[0].name}
                     </span>
                     <button
@@ -141,13 +143,13 @@ export default function Uploader() {
                         setIsFileExists(false);
                       }}
                     >
-                      <X className="[&>path]:text-white size-4" />
+                      <X className="[&>path]:text-foreground size-4" />
                     </button>
                   </div>
                 ) : (
                   <div className="flex gap-3">
-                    <FilePlus2 className="[&>path]:text-white" />
-                    <span className="text-white">Choose a File</span>
+                    <FilePlus2 className="[&>path]:text-foreground" />
+                    <span className="text-foreground">Choose a File</span>
                   </div>
                 )}
               </div>

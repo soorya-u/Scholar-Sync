@@ -19,7 +19,7 @@ export default function NavBar() {
   const { nexus } = useNexus();
 
   return (
-    <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-5  border-b border-white">
+    <div className="w-full h-[9%] bg-secondary flex justify-between items-center px-5  border-b border-border">
       <div className="flex justify-center items-center">
         {/* TODO: Add core, nexus, category check */}
         <Breadcrumb>

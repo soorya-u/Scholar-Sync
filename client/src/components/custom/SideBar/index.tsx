@@ -20,20 +20,20 @@ export default function SideBar() {
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 border-r border-white py-4 bg-gradient-to-r from-primary transition-all duration-300 z-10 backdrop-blur w-24"
+        "relative flex flex-col items-center gap-2 border-r border-border py-4 bg-background transition-all duration-300 z-10 backdrop-blur w-24"
       )}
     >
       <Dialog>
-        <DialogTrigger className="flex flex-col justify-center cursor-pointer items-center px-2 gap-1">
-          <CirclePlus className="size-10 [&>*]:text-black" />
-          <span className="text-sm leading-[1.15] text-black">
+        <DialogTrigger className="flex flex-col justify-center cursor-pointer items-center px-2 gap-1 outline-none">
+          <CirclePlus className="size-10 [&>*]:text-primary" />
+          <span className="text-sm leading-[1.15] text-foreground">
             Create a Core
           </span>
         </DialogTrigger>
         <CreateCore />
       </Dialog>
 
-      <Separator className="h-[3px] w-[77%] bg-white rounded-full border my-1" />
+      <Separator className="h-[3px] w-[77%] bg-primary rounded-full border my-1" />
 
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-2 gap-4">
         {apiData.length === 0 ? (
@@ -69,13 +69,13 @@ const CoreIcons = ({
   <button
     onClick={handleClick}
     className={cn(
-      "flex flex-col gap-1 group justify-center items-center",
+      "flex flex-col gap-1 group justify-center items-center outline-none",
       className
     )}
   >
     {/* TODO: Hover transition not working */}
     <img
-      className="size-12 rounded-full transition-all duration-500 group-hover:rounded-xl"
+      className="size-14 rounded-full transition-all duration-500 group-hover:rounded-xl border-2 border-border"
       src={src}
       alt="core"
     />
