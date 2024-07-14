@@ -21,6 +21,8 @@ const config = {
     extend: {
       fontFamily: {
         lato: ["Lato"],
+        kanit: ["Kanit"],
+        playwrite: "Playwrite DK Uloopet",
       },
       colors: {
         border: "hsl(var(--border))",
