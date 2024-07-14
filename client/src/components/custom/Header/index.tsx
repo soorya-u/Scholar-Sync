@@ -9,24 +9,23 @@ import { AlignLeft, LogOut } from "lucide-react";
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 
+import logo from "@/assets/images/logo.png";
+
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
   return (
-    <div className="h-[8%] border-b border-b-white bg-primary flex justify-between px-8 items-center gap-4 w-full">
+    <div className="h-[8%] border-b border-border bg-background flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
         <button className="cursor-pointer" onClick={toggleSidebar}>
-          <AlignLeft />
+          <AlignLeft className="text-foreground" />
         </button>
-        <div className="flex justify-center items-center gap-2">
+        <div className="flex justify-center items-center gap-3">
           <Avatar>
-            <AvatarImage
-              className="w-16"
-              src="https://belief.soorya-u.dev/logo.png"
-            />
+            <AvatarImage className="w-16" src={logo} />
             <AvatarFallback>Logo</AvatarFallback>
           </Avatar>
-          <h1 className="text-2xl">Scholar Sync</h1>
+          <h1 className="text-3xl font-[Backpack] text-foreground">Scholar Sync</h1>
         </div>
       </div>
       <div className="flex justify-center items-center gap-4">
