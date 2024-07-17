@@ -32,6 +32,7 @@ export const getInitDataQuery = gql`
           id
           title
           description
+          fileName
           fileUrl
           timeStamp
           sentBy {
