@@ -33,6 +33,7 @@ export type File = {
   title: string;
   description: string;
   fileUrl: string;
+  fileName: string;
   sentBy: UserType;
   timeStamp: string;
 };
