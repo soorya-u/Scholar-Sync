@@ -1,6 +1,7 @@
 import { useNexus } from "@/hooks/use-nexus";
 import { useToggler } from "@/hooks/use-toggler";
 import { cn } from "@/utils/cn";
+import CustomAvatar from "../CustomAvatar";
 
 export default function UsersList() {
   const { isUserListOpen } = useToggler();
@@ -15,31 +16,39 @@ export default function UsersList() {
           : "translate-x-0 relative"
       )}
     >
-      {/* Display PsuedoAdmin */}
+      {/* TODO: Display PsuedoAdmin */}
       <div className="flex flex-col justify-center">
-        <h2 className="text-lg">Creator - 1</h2>
+        <h2 className="text-lg font-lato font-bold">Creator - 1</h2>
         <div className="flex pl-3 items-center gap-2 py-2">
-          <div className="size-8 flex justify-center items-center rounded-full bg-purple-400">
-            <span>{nexus.creator && nexus.creator.fullName[0]}</span>
-          </div>
-          <h3 className="text-base">
+          {nexus.creator && (
+            <CustomAvatar
+              className="size-8"
+              textClassName="text-sm"
+              name={nexus.creator.fullName}
+            />
+          )}
+          <h3 className="text-lg font-kanit">
             {nexus.creator && nexus.creator.fullName}
           </h3>
         </div>
       </div>
       <div>
-        <h2 className="text-lg">
+        <h2 className="text-lg font-lato font-bold">
           Members - {nexus.users && nexus.users.length}
         </h2>
         {nexus.users &&
-          nexus.users.map((user, idx) => (
-            <div key={idx} className="flex pl-3 items-center gap-2 py-2">
-              <div className="size-8 flex justify-center items-center rounded-full bg-purple-400">
-                <span>{user.fullName[0]}</span>
+          nexus.users.map((user, idx) => {
+            return (
+              <div key={idx} className="flex pl-3 items-center gap-2 py-2">
+                <CustomAvatar
+                  name={user.fullName}
+                  className="size-8"
+                  textClassName="text-sm"
+                />
+                <h3 className="text-lg font-kanit">{user.fullName}</h3>
               </div>
-              <h3 className="text-base">{user.fullName}</h3>
-            </div>
-          ))}
+            );
+          })}
       </div>
     </div>
   );

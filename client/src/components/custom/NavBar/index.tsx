@@ -25,19 +25,19 @@ export default function NavBar() {
         <Breadcrumb>
           <BreadcrumbList className="flex items-center">
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-lg cursor-pointer">
+              <BreadcrumbPage className="text-lg font-kanit cursor-pointer">
                 {core.name}
               </BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-lg cursor-pointer">
+              <BreadcrumbPage className="text-lg font-kanit cursor-pointer">
                 {nexus.category}
               </BreadcrumbPage>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-lg cursor-pointer">
+              <BreadcrumbPage className="text-lg font-kanit cursor-pointer">
                 {nexus.name}
               </BreadcrumbPage>
             </BreadcrumbItem>
