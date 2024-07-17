@@ -8,10 +8,13 @@ import { AlignLeft, LogOut } from "lucide-react";
 
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
+import { getProfileColor } from "@/utils/colors";
+import CustomAvatar from "../CustomAvatar";
 
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
+  const { backgroundColor, color } = getProfileColor();
   return (
     <div className="h-[8%] border-b border-border flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
@@ -29,10 +32,14 @@ export default function Header() {
         </div>
       </div>
       <div className="flex justify-center items-center gap-4">
-        <div className="size-10 rounded-full flex justify-center items-center bg-purple-600">
-          <span className="text-lg font-extrabold">{user.fullName[0]}</span>
+        <div className="flex justify-center items-center gap-2">
+          <CustomAvatar
+            className="size-8"
+            textClassName="text-sm"
+            name={user.fullName}
+          />
+          <p className="text-lg font-kanit">{user.fullName}</p>
         </div>
-        <p className="text-base font-bold">{user.fullName}</p>
         {/* TODO: Add function to Logout */}
         <LogOut className="size-5 [&>path]:text-red-500 [&>line]:text-red-500 [&>polyline]:text-red-500" />
       </div>

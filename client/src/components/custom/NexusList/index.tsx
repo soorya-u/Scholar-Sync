@@ -56,7 +56,7 @@ export default function NexusList() {
         defaultValue={selectedCategory || nexus.category}
         onValueChange={(v: string) => setSelectedCategory(v)}
       >
-        <SelectTrigger className="w-[97%] border-border border-2">
+        <SelectTrigger className="w-[97%] border-border border-2 text-[0.9rem] font-kanit">
           <SelectValue
             placeholder={
               selectedCategory.length > 0
@@ -69,7 +69,11 @@ export default function NexusList() {
           <SelectContent className="border-2 w-[97%]">
             <SelectGroup>
               {categories.map((c, idx) => (
-                <SelectItem key={idx} value={c}>
+                <SelectItem
+                  className="font-kanit text-[0.9rem]"
+                  key={idx}
+                  value={c}
+                >
                   {c} Semester
                 </SelectItem>
               ))}
@@ -87,7 +91,7 @@ export default function NexusList() {
               n.category === selectedCategory && (
                 <Button
                   onClick={() => setNexus(nex!)}
-                  className="text-center cursor-pointer border-2 border-border px-3 py-1 rounded text-foreground hover:text-primary"
+                  className="text-center font-lato font-bold cursor-pointer border-2 border-border px-3 py-1 rounded text-foreground hover:bg-primary/50 hover:border-none"
                   key={idx}
                   variant="outline"
                 >
@@ -97,7 +101,7 @@ export default function NexusList() {
             );
           })
         ) : (
-          <span className="text-sm w-full font-lato text-center text-balance transition-all duration-300 leading-[1.15]">
+          <span className="text-sm w-full font-lato font-bold text-center text-balance transition-all duration-300 leading-[1.15]">
             No Nexus Available
           </span>
         )}

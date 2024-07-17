@@ -8,12 +8,6 @@ export const signUpMutation = gql`
   }
 `;
 
-export const fileUploadMutation = gql`
-  mutation ($file: Upload!) {
-    singleUpload(file: $file)
-  }
-`;
-
 export const createCoreMutation = gql`
   mutation ($name: String!, $imageUrl: String!) {
     createCore(input: { name: $name, imageUrl: $imageUrl })

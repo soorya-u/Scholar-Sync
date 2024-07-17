@@ -129,6 +129,7 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 					Title:       f.Title,
 					Description: f.Description,
 					FileURL:     f.FileURL,
+					FileName:    f.FileName,
 					SentBy:      f.SentBy,
 					TimeStamp:   f.TimeStamp,
 				}

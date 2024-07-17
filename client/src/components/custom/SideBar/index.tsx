@@ -20,13 +20,13 @@ export default function SideBar() {
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 z-10 w-24"
+        "relative flex flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 w-24"
       )}
     >
       <Dialog>
         <DialogTrigger className="flex flex-col justify-center cursor-pointer items-center px-2 gap-1 outline-none">
           <CirclePlus className="size-10 [&>*]:text-primary" />
-          <span className="text-sm leading-[1.15] text-foreground">
+          <span className="font-kanit text-base leading-[1.15] text-foreground">
             Create a Core
           </span>
         </DialogTrigger>
@@ -37,7 +37,7 @@ export default function SideBar() {
 
       <div className="flex-1 overflow-y-auto size-full flex flex-col px-2 gap-4">
         {apiData.length === 0 ? (
-          <span className="text-sm w-full font-lato text-center text-balance transition-all duration-300 leading-[1.15]">
+          <span className="text-sm w-full font-lato font-bold text-center text-balance transition-all duration-300 leading-[1.15]">
             No Cores Available
           </span>
         ) : (
@@ -81,7 +81,7 @@ const CoreIcons = ({
     />
     <span
       className={cn(
-        "text-sm w-full font-lato text-center text-balance transition-all duration-300 leading-[1.15]"
+        "text-sm w-full font-lato font-bold text-center text-balance transition-all duration-300 leading-[1.15]"
       )}
     >
       {heading}

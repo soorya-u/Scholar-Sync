@@ -8,12 +8,13 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-func (db *DB) CreateFile(title, description, fileUrl, nexusId, userId string) (string, error) {
+func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId string) (string, error) {
 
 	params := map[string]interface{}{
 		"title":       title,
 		"description": description,
 		"fileUrl":     fileUrl,
+		"fileName":    fileName,
 		"sentBy":      userId,
 		"timeStamp":   time.Now(),
 	}

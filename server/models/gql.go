@@ -45,6 +45,7 @@ type File struct {
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
 	FileURL     string    `json:"fileUrl"`
+	FileName    string    `json:"fileName"`
 	SentBy      *Profile  `json:"sentBy"`
 	TimeStamp   time.Time `json:"timeStamp"`
 }
