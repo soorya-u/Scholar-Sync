@@ -20,7 +20,6 @@ import { useLogin } from "@/hooks/use-auth";
 export default function LoginPage() {
   const { errors, handleSubmit, isSubmitting, register } = useLogin();
   return (
-     // TODO: Add a Header or Something
     <div className="flex min-h-full justify-center items-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
@@ -36,6 +35,7 @@ export default function LoginPage() {
                 Email
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 {...register("email")}
@@ -51,13 +51,13 @@ export default function LoginPage() {
                 Password
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 {...register("password")}
                 id="password"
                 type="password"
                 placeholder="********"
-                required
               />
               <span className="text-red-500 text-xs px-2">
                 {errors && errors.password && errors.password.message}

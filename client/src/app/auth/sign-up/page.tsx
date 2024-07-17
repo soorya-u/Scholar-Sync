@@ -19,7 +19,6 @@ export default function SignUpPage() {
   const { errors, handleSubmit, isSubmitting, register } = useSignUp();
 
   return (
-    // TODO: Add a Header or Something
     <div className="flex min-h-full justify-center items-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
@@ -36,6 +35,7 @@ export default function SignUpPage() {
                   First name
                 </Label>
                 <Input
+                  className="border-2 border-border"
                   disabled={isSubmitting}
                   aria-disabled={isSubmitting}
                   id="first-name"
@@ -48,6 +48,7 @@ export default function SignUpPage() {
                   Last name
                 </Label>
                 <Input
+                  className="border-2 border-border"
                   disabled={isSubmitting}
                   aria-disabled={isSubmitting}
                   id="last-name"
@@ -64,10 +65,11 @@ export default function SignUpPage() {
                 Email
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 id="email"
-                {...register("email")}
+                {...(register("email"), { required: false })}
                 placeholder="john-doe@example.com"
               />
               <span className="text-red-500 text-xs px-2">
@@ -79,10 +81,11 @@ export default function SignUpPage() {
                 Password
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 id="password"
-                {...register("password")}
+                {...(register("password"), { required: false })}
                 placeholder={"********"}
                 type="password"
               />
