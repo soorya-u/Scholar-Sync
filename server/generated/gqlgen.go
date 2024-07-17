@@ -71,6 +71,7 @@ type ComplexityRoot struct {
 
 	File struct {
 		Description func(childComplexity int) int
+		FileName    func(childComplexity int) int
 		FileURL     func(childComplexity int) int
 		ID          func(childComplexity int) int
 		SentBy      func(childComplexity int) int
@@ -253,6 +254,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.File.Description(childComplexity), true
+
+	case "File.fileName":
+		if e.complexity.File.FileName == nil {
+			break
+		}
+
+		return e.complexity.File.FileName(childComplexity), true
 
 	case "File.fileUrl":
 		if e.complexity.File.FileURL == nil {
@@ -696,6 +704,7 @@ type File {
   title: String!
   description: String!
   fileUrl: String!
+  fileName: String!
   sentBy: Profile!
   timeStamp: Time!
 }
@@ -1621,6 +1630,50 @@ func (ec *executionContext) fieldContext_File_fileUrl(_ context.Context, field g
 	return fc, nil
 }
 
+func (ec *executionContext) _File_fileName(ctx context.Context, field graphql.CollectedField, obj *models.File) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_File_fileName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.FileName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_File_fileName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "File",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _File_sentBy(ctx context.Context, field graphql.CollectedField, obj *models.File) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_File_sentBy(ctx, field)
 	if err != nil {
@@ -2342,6 +2395,8 @@ func (ec *executionContext) fieldContext_Nexus_files(_ context.Context, field gr
 				return ec.fieldContext_File_description(ctx, field)
 			case "fileUrl":
 				return ec.fieldContext_File_fileUrl(ctx, field)
+			case "fileName":
+				return ec.fieldContext_File_fileName(ctx, field)
 			case "sentBy":
 				return ec.fieldContext_File_sentBy(ctx, field)
 			case "timeStamp":
@@ -5313,6 +5368,11 @@ func (ec *executionContext) _File(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "fileUrl":
 			out.Values[i] = ec._File_fileUrl(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "fileName":
+			out.Values[i] = ec._File_fileName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

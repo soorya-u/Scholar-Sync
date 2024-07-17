@@ -42,6 +42,7 @@ DEFINE TABLE file SCHEMAFULL;
 DEFINE FIELD title ON file TYPE string;
 DEFINE FIELD description ON file TYPE string;
 DEFINE FIELD fileUrl ON file TYPE string;
+DEFINE FIELD fileName ON file TYPE string;
 DEFINE FIELD sentBy ON file TYPE record(user);
 DEFINE FIELD timeStamp ON file TYPE datetime DEFAULT time::now() READONLY;
 

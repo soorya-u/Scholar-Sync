@@ -173,12 +173,12 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData
 		return "", err
 	}
 
-	url, err := url.JoinPath(os.Getenv("BACKEND_URL"), staticDir, nexusId, userId, fileName)
+	url, err := url.JoinPath(nexusId, userId, fileName)
 	if err != nil {
 		return "", fmt.Errorf("unable to create URl path: %v", err)
 	}
 
-	fileID, err := r.Db.CreateFile(input.Title, input.Description, url, input.Nexus, cookie.UserId)
+	fileID, err := r.Db.CreateFile(input.Title, input.Description, input.Upload.Filename, url, input.Nexus, cookie.UserId)
 	if err != nil {
 		return "", err
 	}
