@@ -68,10 +68,12 @@ export default function Uploader() {
           <Input
             className="border-2 border-border"
             {...register("title")}
-            placeholder={`Enter the ${uploader === "Announcement" ? "Announcement Title" : "File Name"}`}
+            placeholder={`Enter the ${
+              uploader === "Announcement" ? "Announcement Title" : "File Name"
+            }`}
           />
         </div>
-        <Select onValueChange={(v) => setUploader(v as UploaderType)}>
+        <Select onValueChange={(v: string) => setUploader(v as UploaderType)}>
           <SelectTrigger className="w-[40%] border-2 border-border">
             <SelectValue placeholder={uploader} />
           </SelectTrigger>

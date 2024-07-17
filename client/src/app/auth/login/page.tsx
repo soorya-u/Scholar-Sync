@@ -1,4 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import { LoaderCircle } from "lucide-react";
 
 import { Label } from "@/components/primitives/label";
@@ -15,15 +17,10 @@ import { Input } from "@/components/primitives/input";
 
 import { useLogin } from "@/hooks/use-auth";
 
-export const Route = createFileRoute("/auth/login")({
-  component: Login,
-});
-
-function Login() {
+export default function LoginPage() {
   const { errors, handleSubmit, isSubmitting, register } = useLogin();
-
   return (
-    // TODO: Add a Header or Something
+     // TODO: Add a Header or Something
     <div className="flex min-h-full justify-center items-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
@@ -82,7 +79,7 @@ function Login() {
             </Button>
             <div className="mt-4 text-center text-sm">
               Do not have an account?{" "}
-              <Link to="/auth/sign-up" className="underline">
+              <Link href="/auth/sign-up" className="underline">
                 Sign Up
               </Link>
             </div>

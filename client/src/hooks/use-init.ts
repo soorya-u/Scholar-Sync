@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { useQuery } from "@apollo/client";
 
 import { getInitDataQuery } from "@/graphql/queries";
@@ -12,7 +12,7 @@ import { useNexus } from "./use-nexus";
 
 export const useInitData = () => {
   const { data, error, refetch, loading } = useQuery(getInitDataQuery);
-  const navigate = useNavigate();
+  const router = useRouter();
   const { toast } = useToast();
 
   const { setUser } = useUser();
@@ -23,12 +23,14 @@ export const useInitData = () => {
   useEffect(() => {
     if (loading) return;
     if (error || !data || !data.getUser || !data.getUserData) {
-      navigate({ to: "/auth/sign-up" });
+      console.log("Come here");
+      router.push("/auth/sign-up");
       toast({
         title: "Authentication Required",
         variant: "default",
         description: "Please Login or Sign Up to Proceed",
       });
+      return;
     }
     setUser(data.getUser as UserType);
     setApiData(data.getUserData as CoreType[]);

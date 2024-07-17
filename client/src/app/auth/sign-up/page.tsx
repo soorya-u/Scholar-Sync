@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -14,11 +15,7 @@ import { Label } from "@/components/primitives/label";
 
 import { useSignUp } from "@/hooks/use-auth";
 
-export const Route = createFileRoute("/auth/sign-up")({
-  component: SignUp,
-});
-
-export function SignUp() {
+export default function SignUpPage() {
   const { errors, handleSubmit, isSubmitting, register } = useSignUp();
 
   return (
@@ -104,7 +101,7 @@ export function SignUp() {
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to="/auth/login" className="underline">
+            <Link href="/auth/login" className="underline">
               Sign In
             </Link>
           </div>

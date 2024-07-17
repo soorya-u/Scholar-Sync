@@ -54,7 +54,7 @@ export default function NexusList() {
       {/* Render Catergoies */}
       <Select
         defaultValue={selectedCategory || nexus.category}
-        onValueChange={(v) => setSelectedCategory(v)}
+        onValueChange={(v: string) => setSelectedCategory(v)}
       >
         <SelectTrigger className="w-[97%] border-border border-2">
           <SelectValue
