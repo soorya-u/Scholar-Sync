@@ -1,5 +1,6 @@
-import { Link } from "@tanstack/react-router";
-import { createFileRoute } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -14,15 +15,10 @@ import { Label } from "@/components/primitives/label";
 
 import { useSignUp } from "@/hooks/use-auth";
 
-export const Route = createFileRoute("/auth/sign-up")({
-  component: SignUp,
-});
-
-export function SignUp() {
+export default function SignUpPage() {
   const { errors, handleSubmit, isSubmitting, register } = useSignUp();
 
   return (
-    // TODO: Add a Header or Something
     <div className="flex min-h-full justify-center items-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
@@ -39,6 +35,7 @@ export function SignUp() {
                   First name
                 </Label>
                 <Input
+                  className="border-2 border-border"
                   disabled={isSubmitting}
                   aria-disabled={isSubmitting}
                   id="first-name"
@@ -51,6 +48,7 @@ export function SignUp() {
                   Last name
                 </Label>
                 <Input
+                  className="border-2 border-border"
                   disabled={isSubmitting}
                   aria-disabled={isSubmitting}
                   id="last-name"
@@ -67,10 +65,11 @@ export function SignUp() {
                 Email
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 id="email"
-                {...register("email")}
+                {...(register("email"), { required: false })}
                 placeholder="john-doe@example.com"
               />
               <span className="text-red-500 text-xs px-2">
@@ -82,10 +81,11 @@ export function SignUp() {
                 Password
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 id="password"
-                {...register("password")}
+                {...(register("password"), { required: false })}
                 placeholder={"********"}
                 type="password"
               />
@@ -104,7 +104,7 @@ export function SignUp() {
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link to="/auth/login" className="underline">
+            <Link href="/auth/login" className="underline">
               Sign In
             </Link>
           </div>

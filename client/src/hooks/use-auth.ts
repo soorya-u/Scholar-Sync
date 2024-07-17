@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLazyQuery, useMutation } from "@apollo/client";
@@ -23,7 +23,7 @@ export const useSignUp = () => {
   const [mutate, { data, error }] = useMutation(signUpMutation);
 
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   useEffect(() => {
     if (error) {
@@ -47,7 +47,7 @@ export const useSignUp = () => {
 
       setTimeout(() => {
         t.dismiss();
-        navigate({ to: "/", viewTransition: true, replace: true });
+        router.replace("/");
       }, 3000);
     }
   }, [data, error]);
@@ -81,7 +81,7 @@ export const useLogin = () => {
   });
 
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [query, { data, error }] = useLazyQuery(loginQuery);
 
@@ -107,7 +107,7 @@ export const useLogin = () => {
 
       setTimeout(() => {
         t.dismiss();
-        navigate({ to: "/", viewTransition: true, replace: true });
+        router.replace("/");
       }, 3000);
     }
   }, [data, error]);

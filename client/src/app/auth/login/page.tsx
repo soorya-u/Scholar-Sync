@@ -1,4 +1,6 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+"use client";
+
+import Link from "next/link";
 import { LoaderCircle } from "lucide-react";
 
 import { Label } from "@/components/primitives/label";
@@ -15,15 +17,9 @@ import { Input } from "@/components/primitives/input";
 
 import { useLogin } from "@/hooks/use-auth";
 
-export const Route = createFileRoute("/auth/login")({
-  component: Login,
-});
-
-function Login() {
+export default function LoginPage() {
   const { errors, handleSubmit, isSubmitting, register } = useLogin();
-
   return (
-    // TODO: Add a Header or Something
     <div className="flex min-h-full justify-center items-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
@@ -39,6 +35,7 @@ function Login() {
                 Email
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 {...register("email")}
@@ -54,13 +51,13 @@ function Login() {
                 Password
               </Label>
               <Input
+                className="border-2 border-border"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 {...register("password")}
                 id="password"
                 type="password"
                 placeholder="********"
-                required
               />
               <span className="text-red-500 text-xs px-2">
                 {errors && errors.password && errors.password.message}
@@ -82,7 +79,7 @@ function Login() {
             </Button>
             <div className="mt-4 text-center text-sm">
               Do not have an account?{" "}
-              <Link to="/auth/sign-up" className="underline">
+              <Link href="/auth/sign-up" className="underline">
                 Sign Up
               </Link>
             </div>

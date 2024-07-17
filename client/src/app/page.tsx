@@ -1,20 +1,16 @@
-import { createFileRoute } from "@tanstack/react-router";
+"use client";
 
 import { useInitData } from "@/hooks/use-init";
 
-import Header from "@/components/custom/Header";
-import SideBar from "@/components/custom/SideBar";
-import NexusList from "@/components/custom/NexusList";
-import NavBar from "@/components/custom/NavBar";
-import UsersList from "@/components/custom/UsersList";
-import Uploader from "@/components/custom/Uploader";
 import Dashboard from "@/components/custom/Dashboard";
+import Header from "@/components/custom/Header";
+import NavBar from "@/components/custom/NavBar";
+import NexusList from "@/components/custom/NexusList";
+import SideBar from "@/components/custom/SideBar";
+import Uploader from "@/components/custom/Uploader";
+import UsersList from "@/components/custom/UsersList";
 
-export const Route = createFileRoute("/")({
-  component: HomePage,
-});
-
-function HomePage() {
+export default function Home() {
   useInitData();
   return (
     <div className="flex h-screen flex-col">

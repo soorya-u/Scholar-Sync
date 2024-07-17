@@ -1,3 +1,5 @@
+"use client";
+
 import { PropsWithChildren } from "react";
 import {
   ApolloClient,
@@ -9,7 +11,7 @@ import { setContext } from "@apollo/client/link/context";
 import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 
 const uploadLink = createUploadLink({
-  uri: `${import.meta.env.VITE_BACKEND_URL}/graphql`,
+  uri: `${process.env.NEXT_PUBLIC_BACKEND_URL}/graphql`,
   credentials: "include",
 });
 
