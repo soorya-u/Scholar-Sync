@@ -16,9 +16,3 @@
   - [x] Gin
 - [x] SurrealDB
   - [ ] deploy
-
-2. Second Architecture
-
-- React + Vite
-- Tailwind
-- Pocketbase -> Deploy
