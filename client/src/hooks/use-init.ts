@@ -23,7 +23,6 @@ export const useInitData = () => {
   useEffect(() => {
     if (loading) return;
     if (error || !data || !data.getUser || !data.getUserData) {
-      console.log("Come here");
       router.push("/auth/sign-up");
       toast({
         title: "Authentication Required",

@@ -9,8 +9,6 @@ const isColorDarkOrLight = (color: string): string => {
   let g = parseInt(hex.substring(2, 4), 16);
   let b = parseInt(hex.substring(4, 2), 16);
 
-  console.log(r, g, b);
-
   let luminance = 0.299 * r + 0.587 * g + 0.114 * b;
 
   return luminance > 186 ? "#000" : "#fff";
