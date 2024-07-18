@@ -8,20 +8,17 @@
 
 1. First Architecture
 
-  - [x] React + Vite
+- [x] NextJS
   - [x] Tailwind
-  - [x] Tanstack Router
-  - [x] Apollo GQL
-  - [x] Golang
-    - [x] Gin 
-  - [x] GraphQL
-  - [x] SurrealDB
-    - [ ] deploy
-  - [ ] Socket.io?
-  - [ ] Supabase
+- [x] GraphQL
+  - [x] Apollo GQL & GQL Gen
+- [x] Golang
+  - [x] Gin
+- [x] SurrealDB
+  - [ ] deploy
 
 2. Second Architecture
 
-  - React + Vite
-  - Tailwind
-  - Pocketbase -> Deploy
+- React + Vite
+- Tailwind
+- Pocketbase -> Deploy
