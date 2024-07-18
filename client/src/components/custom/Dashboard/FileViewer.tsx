@@ -1,9 +1,12 @@
+"use client";
+
 import { File, Download } from "lucide-react";
 
-import { dateFormatter, dateTimeFormatter } from "@/utils/date-formatter";
+import { dateTimeFormatter } from "@/utils/date-formatter";
 import CustomAvatar from "../CustomAvatar";
 
 type FileViewerProps = {
+  creatorId: string;
   creator: string;
   date: Date;
   title: string;
@@ -13,6 +16,7 @@ type FileViewerProps = {
 };
 
 export default function FileViewer({
+  creatorId,
   creator,
   date,
   description,
@@ -24,7 +28,7 @@ export default function FileViewer({
     <div className="flex">
       <div className="flex flex-col gap-1">
         <div className="flex gap-2 items-center justify-start">
-          <CustomAvatar name={creator} />
+          <CustomAvatar name={creator} id={creatorId} />
           <div className="flex justify-start items-center gap-2">
             <h2 className="text-xl font-kanit">{creator}</h2>
             <h4 className="text-xs font-kanit text-slate-500">

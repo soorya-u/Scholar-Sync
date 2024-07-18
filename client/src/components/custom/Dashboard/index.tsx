@@ -41,6 +41,7 @@ export default function Dashboard() {
           return (
             <AnnouncementViewer
               key={d.id}
+              creatorId={d.sentBy.id}
               creator={d.sentBy.fullName}
               date={new Date(d.timeStamp)}
               // @ts-ignore
@@ -52,6 +53,7 @@ export default function Dashboard() {
           return (
             <FileViewer
               key={d.id}
+              creatorId={d.sentBy.id}
               creator={d.sentBy.fullName}
               date={new Date(d.timeStamp)}
               // @ts-ignore

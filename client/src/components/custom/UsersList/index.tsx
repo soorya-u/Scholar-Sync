@@ -1,3 +1,5 @@
+"use client";
+
 import { useNexus } from "@/hooks/use-nexus";
 import { useToggler } from "@/hooks/use-toggler";
 import { cn } from "@/utils/cn";
@@ -24,6 +26,7 @@ export default function UsersList() {
             <CustomAvatar
               className="size-8"
               textClassName="text-sm"
+              id={nexus.creator.id}
               name={nexus.creator.fullName}
             />
           )}
@@ -41,6 +44,7 @@ export default function UsersList() {
             return (
               <div key={idx} className="flex pl-3 items-center gap-2 py-2">
                 <CustomAvatar
+                  id={user.id}
                   name={user.fullName}
                   className="size-8"
                   textClassName="text-sm"

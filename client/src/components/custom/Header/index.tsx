@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Avatar,
   AvatarFallback,
@@ -8,13 +10,12 @@ import { AlignLeft, LogOut } from "lucide-react";
 
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
-import { getProfileColor } from "@/utils/colors";
 import CustomAvatar from "../CustomAvatar";
 
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
-  const { backgroundColor, color } = getProfileColor();
+
   return (
     <div className="h-[8%] border-b border-border flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
@@ -34,6 +35,7 @@ export default function Header() {
       <div className="flex justify-center items-center gap-4">
         <div className="flex justify-center items-center gap-2">
           <CustomAvatar
+            id={user.id}
             className="size-8"
             textClassName="text-sm"
             name={user.fullName}
