@@ -4,6 +4,7 @@ import user from "./slices/user";
 import core from "./slices/core";
 import nexus from "./slices/nexus";
 import apiData from "./slices/api-data";
+import color from "./slices/color";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     core,
     nexus,
     apiData,
+    color,
   },
 });
 

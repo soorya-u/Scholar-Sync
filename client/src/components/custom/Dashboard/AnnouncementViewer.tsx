@@ -1,9 +1,12 @@
+"use client";
+
 import { MessageSquare } from "lucide-react";
 
 import { dateTimeFormatter } from "@/utils/date-formatter";
 import CustomAvatar from "../CustomAvatar";
 
 type AnnouncementViewerProps = {
+  creatorId: string;
   creator: string;
   date: Date;
   title: string;
@@ -11,6 +14,7 @@ type AnnouncementViewerProps = {
 };
 
 export default function AnnouncementViewer({
+  creatorId,
   creator,
   date,
   description,
@@ -20,7 +24,7 @@ export default function AnnouncementViewer({
     <div className="flex">
       <div className="flex flex-col gap-1">
         <div className="flex gap-2 items-center justify-start">
-          <CustomAvatar name={creator} />
+          <CustomAvatar name={creator} id={creatorId} />
           <div className="flex justify-start items-center gap-2">
             <h2 className="text-xl font-kanit">{creator}</h2>
             <h4 className="text-xs font-kanit text-slate-500">

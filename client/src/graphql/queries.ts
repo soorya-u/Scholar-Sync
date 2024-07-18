@@ -23,9 +23,11 @@ export const getInitDataQuery = gql`
         category
         createdAt
         creator {
+          id
           fullName
         }
         users {
+          id
           fullName
         }
         files {
