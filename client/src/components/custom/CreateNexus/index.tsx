@@ -36,9 +36,9 @@ export default function CreateNexus() {
     useNexusCreate();
 
   return (
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px] rounded-2xl">
       <DialogHeader>
-        <DialogTitle className="text-base">Create a Core</DialogTitle>
+        <DialogTitle className="text-base">Create a Nexus</DialogTitle>
         <DialogDescription className="text-sm">
           Add required Fields to add a new core. Click save when you&apos;re
           done.

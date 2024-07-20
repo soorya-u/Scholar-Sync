@@ -15,7 +15,7 @@ export default function CreateCore() {
   const { errors, handleSubmit, isSubmitting, register } = useCoreCreate();
 
   return (
-    <DialogContent className="sm:max-w-[425px]">
+    <DialogContent className="sm:max-w-[425px] rounded-2xl">
       <DialogHeader>
         <DialogTitle className="text-base">Create a Core</DialogTitle>
         <DialogDescription className="text-sm">

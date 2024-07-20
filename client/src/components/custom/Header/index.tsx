@@ -1,16 +1,11 @@
 "use client";
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/primitives/avatar";
-
 import { AlignLeft, LogOut } from "lucide-react";
 
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 import CustomAvatar from "../CustomAvatar";
+import Drawer from "../Drawer";
 
 export default function Header() {
   const { toggleSidebar } = useToggler();
@@ -19,7 +14,13 @@ export default function Header() {
   return (
     <div className="h-[8%] border-b border-border flex justify-between px-8 items-center gap-4 w-full">
       <div className="flex justify-center items-center gap-10">
-        <button className="cursor-pointer" onClick={toggleSidebar}>
+        <Drawer>
+          <AlignLeft className="cursor-pointer text-foreground flex md-lg:hidden" />
+        </Drawer>
+        <button
+          className="cursor-pointer hidden md-lg:flex"
+          onClick={toggleSidebar}
+        >
           <AlignLeft className="text-foreground" />
         </button>
         <div className="flex justify-center items-center gap-3">

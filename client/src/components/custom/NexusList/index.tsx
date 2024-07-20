@@ -11,8 +11,6 @@ import { useEffect, useState } from "react";
 import CreateNexus from "../CreateNexus";
 import { Button } from "@/components/primitives/button";
 import { Separator } from "@/components/primitives/separator";
-import { cn } from "@/utils/cn";
-import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
@@ -22,7 +20,7 @@ export default function NexusList() {
   const { core } = useCore();
   const { apiData } = useApiData();
   const { nexus, setNexus } = useNexus();
-  const { isSidebarOpen } = useToggler();
+
   const { user } = useUser();
   const [selectedCategory, setSelectedCategory] = useState(
     nexus.category || ""
@@ -43,14 +41,7 @@ export default function NexusList() {
   }, [nexus]);
 
   return (
-    <div
-      className={cn(
-        "min-w-[11.3rem] relative hidden py-4 flex-col gap-3 items-center px-2 border-r border-border transition-all duration-300 md-lg:flex",
-        isSidebarOpen
-          ? "translate-x-0 relative"
-          : "-translate-x-[25rem] absolute"
-      )}
-    >
+    <>
       {/* Render Catergoies */}
       <Select
         defaultValue={selectedCategory || nexus.category}
@@ -121,6 +112,6 @@ export default function NexusList() {
           <CreateNexus />
         </Dialog>
       )}
-    </div>
+    </>
   );
 }
