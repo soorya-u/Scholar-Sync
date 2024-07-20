@@ -40,7 +40,8 @@ export default function CreateNexus() {
       <DialogHeader>
         <DialogTitle className="text-base">Create a Core</DialogTitle>
         <DialogDescription className="text-sm">
-          Add required Fields to add a new core. Click save when you're done.
+          Add required Fields to add a new core. Click save when you&apos;re
+          done.
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit}>

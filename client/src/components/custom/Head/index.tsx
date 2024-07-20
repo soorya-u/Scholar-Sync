@@ -1,6 +1,8 @@
-export default function Head() {
+import Head from "next/head";
+
+export default function CustomHead() {
   return (
-    <head>
+    <Head>
       <link rel="icon" type="image/svg+xml" href="/favicon.ico" />
       <link
         rel="apple-touch-icon"
@@ -25,6 +27,6 @@ export default function Head() {
       <meta name="theme-color" content="#ffffff" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Scholar Sync</title>
-    </head>
+    </Head>
   );
 }
