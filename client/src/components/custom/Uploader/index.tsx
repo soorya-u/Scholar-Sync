@@ -66,14 +66,17 @@ export default function Uploader() {
         </button>
         <div className="w-full flex flex-col gap-1">
           <Input
-            className="border-2 border-border"
+            className="border-2 border-border font-lato font-bold text-sm"
             {...register("title")}
             placeholder={`Enter the ${
               uploader === "Announcement" ? "Announcement Title" : "File Name"
             }`}
           />
         </div>
-        <Select onValueChange={(v: string) => setUploader(v as UploaderType)}>
+        <Select
+          defaultValue="Announcement"
+          onValueChange={(v: string) => setUploader(v as UploaderType)}
+        >
           <SelectTrigger className="w-[40%] border-2 border-border">
             <SelectValue placeholder={uploader} />
           </SelectTrigger>
@@ -83,13 +86,17 @@ export default function Uploader() {
                 <SelectItem key={idx} value={c}>
                   {c === "Announcement" ? (
                     <div className="flex items-center gap-4">
-                      <MessageSquarePlus />
-                      <span>Create an Announcement</span>
+                      <MessageSquarePlus className="hidden lg:block" />
+                      <span className="font-lato font-bold text-sm">
+                        Create an Announcement
+                      </span>
                     </div>
                   ) : (
                     <div className="flex items-center gap-4">
-                      <FilePlus />
-                      <span>Upload a New File</span>
+                      <FilePlus className="hidden lg:block" />
+                      <span className="font-lato font-bold text-sm">
+                        Upload a New File
+                      </span>
                     </div>
                   )}
                 </SelectItem>
@@ -111,7 +118,7 @@ export default function Uploader() {
           <div className="flex h-full flex-col flex-1 gap-1">
             <Textarea
               {...register("description")}
-              className="flex-1 size-full resize-none border-2 border-border"
+              className="flex-1 text-sm size-full resize-none border-2 border-border font-lato font-bold"
               placeholder={`Enter the description about ${uploader.toLowerCase()}...`}
             />
           </div>
@@ -149,9 +156,11 @@ export default function Uploader() {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex gap-3">
+                  <div className="flex gap-3 flex-col lg:flex-row justify-center items-center">
                     <FilePlus2 className="[&>path]:text-foreground" />
-                    <span className="text-foreground">Choose a File</span>
+                    <span className="font-lato font-bold text-foreground text-sm text-center">
+                      Choose a File
+                    </span>
                   </div>
                 )}
               </div>

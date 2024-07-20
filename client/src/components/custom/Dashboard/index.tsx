@@ -30,7 +30,7 @@ export default function Dashboard() {
         <h1 className="text-slate-500 text-lg font-kanit">
           Enjoy your Time from here on
         </h1>
-        <h1 className="text-slate-500 text-lg font-kanit">
+        <h1 className="text-slate-500 text-base font-kanit hidden lg:block">
           {dateFormatter(new Date(nexus.createdAt))}
         </h1>
       </div>

@@ -14,14 +14,22 @@ const config = {
       center: true,
       padding: "2rem",
       screens: {
+        "2xs": "390px",
+        xs: "450px",
+        sm: "640px",
+        md: "768px",
+        "md-lg": "850px",
+        lg: "1024px",
+        xl: "1280px",
         "2xl": "1400px",
+        "3xl": "1536px",
       },
     },
     extend: {
       fontFamily: {
         lato: ["Lato"],
         kanit: ["Kanit"],
-        playwrite: "Playwrite DK Uloopet",
+        playwrite: ["Playwrite DK Uloopet"],
       },
       colors: {
         border: "hsl(var(--border))",
