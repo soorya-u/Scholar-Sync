@@ -20,7 +20,7 @@ export default function SideBar() {
   return (
     <div
       className={cn(
-        "relative flex flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 w-24"
+        "relative hidden flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 w-24 md-lg:flex"
       )}
     >
       <Dialog>

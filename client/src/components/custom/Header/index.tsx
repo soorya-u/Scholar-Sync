@@ -23,11 +23,8 @@ export default function Header() {
           <AlignLeft className="text-foreground" />
         </button>
         <div className="flex justify-center items-center gap-3">
-          <Avatar>
-            <AvatarImage className="w-16" src="/logo.png" />
-            <AvatarFallback>Logo</AvatarFallback>
-          </Avatar>
-          <h1 className="text-2xl font-playwrite text-foreground">
+          <img src="/logo.png" alt="logo" className="size-8" />
+          <h1 className="text-2xl font-playwrite text-foreground hidden xs-sm:block">
             Scholar Sync
           </h1>
         </div>
@@ -40,10 +37,10 @@ export default function Header() {
             textClassName="text-sm"
             name={user.fullName}
           />
-          <p className="text-lg font-kanit">{user.fullName}</p>
+          <p className="text-lg font-kanit hidden 2xs:flex">{user.fullName}</p>
         </div>
         {/* TODO: Add function to Logout */}
-        <LogOut className="size-5 [&>path]:text-red-500 [&>line]:text-red-500 [&>polyline]:text-red-500" />
+        <LogOut className="hidden 2xs:flex size-5 [&>path]:text-red-500 [&>line]:text-red-500 [&>polyline]:text-red-500" />
       </div>
     </div>
   );

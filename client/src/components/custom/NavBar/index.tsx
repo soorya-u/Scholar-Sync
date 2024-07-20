@@ -45,18 +45,18 @@ export default function NavBar() {
         </Breadcrumb>
       </div>
       <div className="flex justify-center items-center gap-6">
-        <button onClick={toggleUserList}>
+        <button className="hidden xs-sm:flex" onClick={toggleUserList}>
           <Users className="size-6" />
         </button>
         {/* TODO: Generate Link using Core and Nexus */}
-        {user.userType !== "NORMAL" && <Share2 className="size-6" />}
+        {user.userType !== "NORMAL" && <Share2 className="size-6  hidden 2xs:flex" />}
         {/* TODO: Add Functionality */}
         {user.userType === "NORMAL" && (
-          <DoorOpen className="size-7 [&>path]:text-red-500/70" />
+          <DoorOpen className="size-7 [&>path]:text-red-500/70  hidden 2xs:flex" />
         )}
         {/* TODO: Add Functionality */}
         {user.userType !== "NORMAL" && (
-          <Trash2 className="size-6 [&>path]:text-red-500/70 [&>line]:text-red-500/70" />
+          <Trash2 className="size-6 [&>path]:text-red-500/70 [&>line]:text-red-500/70  hidden 2xs:flex" />
         )}
       </div>
     </div>
