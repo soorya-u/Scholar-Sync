@@ -19,28 +19,28 @@ export default function Home() {
   return (
     <div className="flex h-screen flex-col">
       <Header />
-      <div className="flex flex-1 h-[82%]">
+      <div className="flex h-[82%] flex-1">
         <div
           className={cn(
-            "relative hidden flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 w-24 md-lg:flex"
+            "relative hidden w-24 flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 md-lg:flex",
           )}
         >
           <SideBar />
         </div>
         <div
           className={cn(
-            "min-w-[11.3rem] relative hidden py-4 flex-col gap-3 items-center px-2 border-r border-border transition-all duration-300 md-lg:flex",
+            "relative hidden min-w-[11.3rem] flex-col items-center gap-3 border-r border-border px-2 py-4 transition-all duration-300 md-lg:flex",
             isSidebarOpen
-              ? "translate-x-0 relative"
-              : "-translate-x-[25rem] absolute"
+              ? "relative translate-x-0"
+              : "absolute -translate-x-[25rem]",
           )}
         >
           <NexusList />
         </div>
-        <div className="flex-1 w-full h-full">
+        <div className="h-full w-full flex-1">
           <NavBar />
           <div className="flex h-[91%] flex-1">
-            <div className="flex flex-col flex-1">
+            <div className="flex flex-1 flex-col">
               <div className="flex-1">
                 <Dashboard />
               </div>

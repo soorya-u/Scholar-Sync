@@ -12,25 +12,25 @@ import { dateFormatter } from "@/utils/date-formatter";
 export default function Dashboard() {
   const { nexus } = useNexus();
   const [dashboardList, setDashboardList] = useState<(Announcement | File)[]>(
-    []
+    [],
   );
 
   useEffect(() => {
     const list = [...nexus.announcements, ...nexus.files].sort(
       (l1, l2) =>
-        new Date(l1.timeStamp).getTime() - new Date(l2.timeStamp).getTime()
+        new Date(l1.timeStamp).getTime() - new Date(l2.timeStamp).getTime(),
     );
 
     setDashboardList(list);
   }, [nexus]);
 
   return (
-    <div className="flex-1 flex flex-col gap-4 p-4 h-full overflow-y-auto">
+    <div className="flex h-full flex-1 flex-col gap-4 overflow-y-auto p-4">
       <div className="flex justify-between">
-        <h1 className="text-slate-500 text-lg font-kanit">
+        <h1 className="font-kanit text-lg text-slate-500">
           Enjoy your Time from here on
         </h1>
-        <h1 className="text-slate-500 text-base font-kanit hidden lg:block">
+        <h1 className="hidden font-kanit text-base text-slate-500 lg:block">
           {dateFormatter(new Date(nexus.createdAt))}
         </h1>
       </div>

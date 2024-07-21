@@ -1,6 +1,6 @@
 export default function Gradient() {
   return (
-    <div className="w-full h-full -z-50 absolute top-96 right-28">
+    <div className="absolute right-28 top-96 -z-50 h-full w-full">
       <div className="relative isolate size-full">
         <div
           aria-hidden="true"

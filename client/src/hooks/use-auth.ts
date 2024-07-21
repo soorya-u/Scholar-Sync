@@ -32,7 +32,7 @@ export const useSignUp = () => {
         variant: "destructive",
         description: error.message.replace(
           error.message[0],
-          error.message[0].toUpperCase()
+          error.message[0].toUpperCase(),
         ),
       });
       return;
@@ -92,7 +92,7 @@ export const useLogin = () => {
         variant: "destructive",
         description: error.message.replace(
           error.message[0],
-          error.message[0].toUpperCase()
+          error.message[0].toUpperCase(),
         ),
       });
       return;

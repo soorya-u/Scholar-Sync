@@ -45,15 +45,15 @@ export default function Uploader() {
       <MobileView />
       <form
         className={cn(
-          "w-full gap-3 px-6 py-2 items-center hidden flex-col transition-all border-t border-border 2xs:flex",
-          isUploaderOpen ? "h-52" : "h-[3.25rem]"
+          "hidden w-full flex-col items-center gap-3 border-t border-border px-6 py-2 transition-all 2xs:flex",
+          isUploaderOpen ? "h-52" : "h-[3.25rem]",
         )}
         onSubmit={handleSubmit}
       >
         <div
           className={cn(
             "flex w-full gap-4",
-            isUploaderOpen ? "items-start" : "items-center"
+            isUploaderOpen ? "items-start" : "items-center",
           )}
         >
           <button
@@ -63,13 +63,13 @@ export default function Uploader() {
             <ChevronUp
               className={cn(
                 "size-6 transition-transform duration-300",
-                isUploaderOpen ? "rotate-180 mt-[0.6rem]" : "rotate-0"
+                isUploaderOpen ? "mt-[0.6rem] rotate-180" : "rotate-0",
               )}
             />
           </button>
-          <div className="w-full flex flex-col gap-1">
+          <div className="flex w-full flex-col gap-1">
             <Input
-              className="border-2 border-border font-lato font-bold text-sm text-foreground placeholder:text-foreground/80"
+              className="border-2 border-border font-lato text-sm font-bold text-foreground placeholder:text-foreground/80"
               {...register("title")}
               placeholder={`Enter the ${
                 uploader === "Announcement" ? "Announcement Title" : "File Name"
@@ -90,14 +90,14 @@ export default function Uploader() {
                     {c === "Announcement" ? (
                       <div className="flex items-center gap-4">
                         <MessageSquarePlus className="hidden lg:block" />
-                        <span className="font-lato font-bold text-sm">
+                        <span className="font-lato text-sm font-bold">
                           Create an Announcement
                         </span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-4">
                         <FilePlus className="hidden lg:block" />
-                        <span className="font-lato font-bold text-sm">
+                        <span className="font-lato text-sm font-bold">
                           Upload a New File
                         </span>
                       </div>
@@ -117,21 +117,21 @@ export default function Uploader() {
           </Button>
         </div>
         {isUploaderOpen && (
-          <div className="flex h-full flex-1 w-full items-center gap-4">
-            <div className="flex h-full flex-col flex-1 gap-1">
+          <div className="flex h-full w-full flex-1 items-center gap-4">
+            <div className="flex h-full flex-1 flex-col gap-1">
               <Textarea
                 {...register("description")}
-                className="flex-1 text-sm size-full resize-none border-2 border-border font-lato font-bold text-foreground placeholder:text-foreground/80"
+                className="size-full flex-1 resize-none border-2 border-border font-lato text-sm font-bold text-foreground placeholder:text-foreground/80"
                 placeholder={`Enter the description about ${uploader.toLowerCase()}...`}
               />
             </div>
             {uploader === "File" && (
-              <div className="w-[30%] h-full flex flex-col gap-1">
+              <div className="flex h-full w-[30%] flex-col gap-1">
                 <div
                   className={cn(
-                    "w-full gap-2 flex-col h-full flex justify-center items-center relative border-[3px] border-dashed border-border rounded-md cursor-pointer",
+                    "relative flex h-full w-full cursor-pointer flex-col items-center justify-center gap-2 rounded-md border-[3px] border-dashed border-border",
                     isSubmitting && "opacity-60",
-                    isFileExists && "cursor-default"
+                    isFileExists && "cursor-default",
                   )}
                 >
                   <Input
@@ -140,28 +140,28 @@ export default function Uploader() {
                       onChange: () => setIsFileExists(true),
                     })}
                     type="file"
-                    className="absolute flex-1 opacity-0 size-full cursor-pointer disabled:hidden"
+                    className="absolute size-full flex-1 cursor-pointer opacity-0 disabled:hidden"
                   />
                   {getValues("upload") && getValues("upload").length > 0 ? (
                     <div className="relative flex flex-col items-center justify-center">
-                      <File className="[&>path]:text-foreground size-8" />
-                      <span className="text-foreground text-lg">
+                      <File className="size-8 [&>path]:text-foreground" />
+                      <span className="text-lg text-foreground">
                         {getValues("upload")[0].name}
                       </span>
                       <button
-                        className="absolute -top-3 -right-5 hover:opacity-65"
+                        className="absolute -right-5 -top-3 hover:opacity-65"
                         onClick={() => {
                           setValue("upload", []);
                           setIsFileExists(false);
                         }}
                       >
-                        <X className="[&>path]:text-foreground size-4" />
+                        <X className="size-4 [&>path]:text-foreground" />
                       </button>
                     </div>
                   ) : (
-                    <div className="flex gap-3 flex-col lg:flex-row justify-center items-center">
+                    <div className="flex flex-col items-center justify-center gap-3 lg:flex-row">
                       <FilePlus2 className="[&>path]:text-foreground" />
-                      <span className="font-lato font-bold text-foreground text-sm text-center">
+                      <span className="text-center font-lato text-sm font-bold text-foreground">
                         Choose a File
                       </span>
                     </div>

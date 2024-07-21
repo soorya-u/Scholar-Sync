@@ -36,7 +36,7 @@ export default function CreateNexus() {
     useNexusCreate();
 
   return (
-    <DialogContent className="sm:max-w-[425px] rounded-2xl">
+    <DialogContent className="rounded-2xl sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle className="text-base">Create a Nexus</DialogTitle>
         <DialogDescription className="text-sm">
@@ -50,7 +50,7 @@ export default function CreateNexus() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-left">
                 Name{" "}
-                <span className="text-left text-xs opacity-65 text-red-500">
+                <span className="text-left text-xs text-red-500 opacity-65">
                   *
                 </span>
               </Label>
@@ -61,7 +61,7 @@ export default function CreateNexus() {
                 placeholder="Nexus Name..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balance self-center">
+            <span className="self-center text-balance text-sm text-red-500">
               {errors && errors.name && errors.name.message}
             </span>
           </div>
@@ -69,18 +69,22 @@ export default function CreateNexus() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="category" className="text-left">
                 Category{" "}
-                <span className="text-left text-xs opacity-65 text-red-500">
+                <span className="text-left text-xs text-red-500 opacity-65">
                   *
                 </span>
               </Label>
               <Select onValueChange={category.onChange}>
-                <SelectTrigger className="w-full col-span-3 border-border font-lato font-bold text-foreground/80">
+                <SelectTrigger className="col-span-3 w-full border-border font-lato font-bold text-foreground/80">
                   <SelectValue placeholder={`${category.value} Semester`} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     {categories.map((c, idx) => (
-                      <SelectItem className="font-lato font-bold text-foreground/80" value={c} key={idx}>
+                      <SelectItem
+                        className="font-lato font-bold text-foreground/80"
+                        value={c}
+                        key={idx}
+                      >
                         {c} Semester
                       </SelectItem>
                     ))}
@@ -88,7 +92,7 @@ export default function CreateNexus() {
                 </SelectContent>
               </Select>
             </div>
-            <span className="text-sm text-red-500 text-balance self-center">
+            <span className="self-center text-balance text-sm text-red-500">
               {errors && errors.category && errors.category.message}
             </span>
           </div>

@@ -20,10 +20,10 @@ import { useLogin } from "@/hooks/use-auth";
 export default function LoginPage() {
   const { errors, handleSubmit, isSubmitting, register } = useLogin();
   return (
-    <div className="flex min-h-full justify-center items-center">
+    <div className="flex min-h-full items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="text-2xl font-lato">Login</CardTitle>
+          <CardTitle className="font-lato text-2xl">Login</CardTitle>
           <CardDescription>
             Enter your email below to login to your account.
           </CardDescription>
@@ -42,7 +42,7 @@ export default function LoginPage() {
                 id="email"
                 placeholder="john-doe@example.com"
               />
-              <span className="text-red-500 text-xs px-2">
+              <span className="px-2 text-xs text-red-500">
                 {errors && errors.email && errors.email.message}
               </span>
             </div>
@@ -59,7 +59,7 @@ export default function LoginPage() {
                 type="password"
                 placeholder="********"
               />
-              <span className="text-red-500 text-xs px-2">
+              <span className="px-2 text-xs text-red-500">
                 {errors && errors.password && errors.password.message}
               </span>
             </div>

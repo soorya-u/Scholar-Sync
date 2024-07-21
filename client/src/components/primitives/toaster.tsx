@@ -24,7 +24,7 @@ export function Toaster() {
                 <ToastTitle
                   className={cn(
                     "font-lato text-base",
-                    props.variant === "destructive" && "text-red-500"
+                    props.variant === "destructive" && "text-red-500",
                   )}
                 >
                   {title}

@@ -15,7 +15,7 @@ export default function CreateCore() {
   const { errors, handleSubmit, isSubmitting, register } = useCoreCreate();
 
   return (
-    <DialogContent className="sm:max-w-[425px] rounded-2xl">
+    <DialogContent className="rounded-2xl sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle className="text-base">Create a Core</DialogTitle>
         <DialogDescription className="text-sm">
@@ -29,7 +29,7 @@ export default function CreateCore() {
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="name" className="text-left">
                 Name{" "}
-                <span className="text-left text-xs opacity-65 text-red-500">
+                <span className="text-left text-xs text-red-500 opacity-65">
                   *
                 </span>
               </Label>
@@ -40,7 +40,7 @@ export default function CreateCore() {
                 placeholder="Core Name..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
+            <span className="text-balance pl-[6.5rem] text-sm text-red-500">
               {errors && errors.name && errors.name.message}
             </span>
           </div>
@@ -59,7 +59,7 @@ export default function CreateCore() {
                 placeholder="Image Link..."
               />
             </div>
-            <span className="text-sm text-red-500 text-balance pl-[6.5rem]">
+            <span className="text-balance pl-[6.5rem] text-sm text-red-500">
               {errors && errors.imageUrl && errors.imageUrl.message}
             </span>
           </div>

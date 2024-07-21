@@ -13,19 +13,16 @@ export default function Drawer({ children }: PropsWithChildren) {
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
-      <SheetContent
-        className="w-[78vw] p-0 bg-primary"
-        side={"left"}
-      >
-        <h1 className="text-base pt-2 font-playwrite text-foreground pb-2 pl-6">
+      <SheetContent className="w-[78vw] bg-primary p-0" side={"left"}>
+        <h1 className="pb-2 pl-6 pt-2 font-playwrite text-base text-foreground">
           Scholar Sync
         </h1>
-        <div className="w-full bg-secondary h-full flex justify-center items-center">
-          <div className="flex flex-col w-28 h-full relative items-center gap-2 border-r border-border py-4 transition-all duration-300">
+        <div className="flex h-full w-full items-center justify-center bg-secondary">
+          <div className="relative flex h-full w-28 flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300">
             <SideBar />
           </div>
 
-          <div className="flex flex-1 h-full flex-col py-4 gap-3 items-center px-2 border-r border-border transition-all duration-300">
+          <div className="flex h-full flex-1 flex-col items-center gap-3 border-r border-border px-2 py-4 transition-all duration-300">
             <NexusList />
           </div>
         </div>
