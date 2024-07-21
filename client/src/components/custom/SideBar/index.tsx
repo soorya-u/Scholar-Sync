@@ -65,7 +65,7 @@ export const CoreIcons = ({
   <button
     onClick={handleClick}
     className={cn(
-      "group flex flex-col items-center justify-center gap-1 outline-none",
+      "group flex flex-col items-center justify-center gap-1 outline-none transition-all",
       className,
     )}
   >

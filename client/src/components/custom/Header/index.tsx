@@ -93,6 +93,7 @@ export default function Header() {
                   <Trash2 className="flex size-4 2xs:hidden [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
                 </DropdownMenuItem>
               )}
+              {/* TODO: Add function to Logout */}
               <DropdownMenuItem className="flex justify-between">
                 <p className="text-red-500">Logout</p>
                 <LogOut className="flex size-4 2xs:hidden [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />

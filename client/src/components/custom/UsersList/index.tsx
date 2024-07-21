@@ -18,7 +18,6 @@ export default function UsersList() {
           : "relative translate-x-0",
       )}
     >
-      {/* TODO: Display PsuedoAdmin */}
       <div className="flex flex-col justify-center">
         <h2 className="font-lato text-lg font-bold">Creator - 1</h2>
         <div className="flex items-center gap-2 py-2 pl-3">

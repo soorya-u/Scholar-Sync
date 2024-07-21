@@ -21,28 +21,29 @@ export default function NavBar() {
   return (
     <div className="flex h-[9%] w-full items-center justify-center border-b border-border px-2 2xs:justify-between 2xs:px-5">
       <div className="flex items-center justify-center">
-        {/* TODO: Add core, nexus, category check */}
-        <Breadcrumb>
-          <BreadcrumbList className="flex items-center">
-            <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
-                {core.name}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
-                {nexus.category}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
-                {nexus.name}
-              </BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
+        {core.name && nexus.category && nexus.name && (
+          <Breadcrumb>
+            <BreadcrumbList className="flex items-center">
+              <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
+                  {core.name}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
+                  {nexus.category}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
+                  {nexus.name}
+                </BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        )}
       </div>
       <div className="hidden items-center justify-center gap-6 2xs:flex">
         <button className="hidden xs-sm:flex" onClick={toggleUserList}>
