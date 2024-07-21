@@ -64,3 +64,29 @@ func (db *DB) GetDBCores(userId string) ([]*models.DBCore, error) {
 
 	return res, nil
 }
+
+func (db *DB) AddPseudoAdminToCore(userId, coreId string) (bool, error) {
+	query := "UPDATE $coreId SET pseudoAdmin+=$userId;"
+	params := map[string]interface{}{
+		"coreId": coreId,
+		"userId": userId,
+	}
+
+	_, err := db.client.Query(query, params)
+	if err != nil {
+		return false, fmt.Errorf("unable to Join: %v", err)
+	}
+
+	query = "UPDATE $userId SET userType+=$type;"
+	params = map[string]interface{}{
+		"userId": userId,
+		"type":   models.ProfileTypePseudoadmin,
+	}
+
+	_, err = db.client.Query(query, params)
+	if err != nil {
+		return false, fmt.Errorf("unable to Promote User: %v", err)
+	}
+
+	return true, nil
+}

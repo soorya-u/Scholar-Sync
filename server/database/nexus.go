@@ -80,3 +80,17 @@ func (db *DB) GetDBNexus(nexusIds []string) ([]*models.DBNexus, error) {
 	return res, nil
 
 }
+
+func (db *DB) AddUserToNexus(userId, nexusId string) (bool, error) {
+	query := "UPDATE $nexusId SET users+=$userId;"
+	params := map[string]interface{}{
+		"nexusId": nexusId,
+		"userId":  userId,
+	}
+	_, err := db.client.Query(query, params)
+	if err != nil {
+		return false, fmt.Errorf("unable to Join: %v", err)
+	}
+
+	return true, nil
+}
