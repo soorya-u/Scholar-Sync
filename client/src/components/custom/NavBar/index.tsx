@@ -49,16 +49,6 @@ export default function NavBar() {
         <button className="hidden xs-sm:flex" onClick={toggleUserList}>
           <Users className="size-6" />
         </button>
-        {/* TODO: Generate Link using Core and Nexus */}
-        {user.userType !== "NORMAL" && <Share2 className="size-6" />}
-        {/* TODO: Add Functionality */}
-        {user.userType === "NORMAL" && (
-          <DoorOpen className="size-7 [&>path]:text-red-500/70" />
-        )}
-        {/* TODO: Add Functionality */}
-        {user.userType !== "NORMAL" && (
-          <Trash2 className="size-6 [&>line]:text-red-500/70 [&>path]:text-red-500/70" />
-        )}
       </div>
     </div>
   );

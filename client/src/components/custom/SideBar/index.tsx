@@ -1,4 +1,4 @@
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Share2, Trash2 } from "lucide-react";
 
 import { useUser } from "@/hooks/use-user";
 import { useApiData } from "@/hooks/use-api-data";
@@ -7,6 +7,14 @@ import { useCore } from "@/hooks/use-core";
 import { Separator } from "@/components/primitives/separator";
 import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
 import CreateCore from "../CreateCore";
+
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuTrigger,
+  ContextMenuSeparator,
+} from "@/components/primitives/context-menu";
 
 import { cn } from "@/utils/cn";
 
@@ -38,12 +46,29 @@ export default function SideBar() {
           </span>
         ) : (
           apiData.map(({ id, imageUrl, name, nexus }) => (
-            <CoreIcons
-              handleClick={() => setCore({ id, imageUrl, name, nexus })}
-              key={id}
-              heading={name}
-              src={imageUrl}
-            />
+            <ContextMenu>
+              <ContextMenuTrigger className="grid place-content-center">
+                <CoreIcons
+                  handleClick={() => setCore({ id, imageUrl, name, nexus })}
+                  key={id}
+                  heading={name}
+                  src={imageUrl}
+                />
+              </ContextMenuTrigger>
+              {user.userType === "ADMIN" && (
+                <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
+                  <ContextMenuItem className="flex justify-between">
+                    <p className="font-lato font-bold text-foreground">Share</p>
+                    <Share2 className="flex size-4 [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
+                  </ContextMenuItem>
+                  <ContextMenuSeparator className="w-[95%] self-center" />
+                  <ContextMenuItem className="flex justify-between">
+                    <p className="font-lato font-bold text-red-500">Delete</p>
+                    <Trash2 className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
+                  </ContextMenuItem>
+                </ContextMenuContent>
+              )}
+            </ContextMenu>
           ))
         )}
       </div>
