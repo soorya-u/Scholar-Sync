@@ -25,6 +25,7 @@ import { useUser } from "@/hooks/use-user";
 
 import { cn } from "@/utils/cn";
 import { useUploader } from "@/hooks/use-uploader";
+import MobileView from "./MobileView";
 
 type UploaderType = "Announcement" | "File";
 const uploaders: UploaderType[] = ["Announcement", "File"];
@@ -41,10 +42,7 @@ export default function Uploader() {
   if (user.userType === "NORMAL") return;
   return (
     <>
-      <Button className="block 2xs:hidden w-full rounded-none h-12 font-kanit text-lg text-wrap">
-        Add an Announcement / Upload a File
-      </Button>
-
+      <MobileView />
       <form
         className={cn(
           "w-full gap-3 px-6 py-2 items-center hidden flex-col transition-all border-t border-border 2xs:flex",

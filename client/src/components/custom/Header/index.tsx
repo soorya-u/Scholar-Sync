@@ -41,7 +41,7 @@ export default function Header() {
         </button>
         <div className="flex justify-center items-center gap-3">
           <img src="/logo.png" alt="logo" className="size-8" />
-          <h1 className="text-base font-playwrite text-foreground xs-sm:text-2xl">
+          <h1 className="text-2xl hidden font-playwrite text-foreground xs-sm:block">
             Scholar Sync
           </h1>
         </div>
