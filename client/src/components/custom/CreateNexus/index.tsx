@@ -57,7 +57,7 @@ export default function CreateNexus() {
               <Input
                 disabled={isSubmitting}
                 {...register("name")}
-                className="col-span-3 border border-border font-lato font-bold text-foreground/80"
+                className="col-span-3 border border-border font-lato font-bold text-foreground placeholder:text-foreground/80"
                 placeholder="Nexus Name..."
               />
             </div>
