@@ -15,6 +15,10 @@ func (r *coreResolver) Creator(ctx context.Context, obj *models.Core) (*models.P
 	return obj.Creator, nil
 }
 
+func (r *coreResolver) PseudoAdmins(ctx context.Context, obj *models.Core) ([]*models.Profile, error) {
+	return obj.PseudoAdmins, nil
+}
+
 func (r *coreResolver) Nexus(ctx context.Context, obj *models.Core) ([]*models.Nexus, error) {
 	return obj.Nexus, nil
 }

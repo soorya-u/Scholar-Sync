@@ -94,6 +94,8 @@ models:
         resolver: true
       nexus:
         resolver: true
+      pseudoAdmins:
+        resolver: true
   Nexus:
     fields:
       creator:

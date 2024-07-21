@@ -99,7 +99,11 @@ func (r *mutationResolver) CreateCore(ctx context.Context, input models.CoreData
 		return "", fmt.Errorf("cookie not found")
 	}
 
-	// TODO: Add Admin Check
+	if isAdmin, err := r.Db.AdminCheck(cookie.UserId); err != nil {
+		return "", err
+	} else if !isAdmin {
+		return "", fmt.Errorf("not an admin")
+	}
 
 	coreId, err := r.Db.CreateCore(input.Name, input.ImageURL, cookie.UserId)
 	if err != nil {
@@ -117,7 +121,11 @@ func (r *mutationResolver) CreateNexus(ctx context.Context, input models.NexusDa
 		return "", fmt.Errorf("cookie not found")
 	}
 
-	// TODO: Add Admin or PseudoAdmin Check
+	if isAdmin, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
+		return "", err
+	} else if !isAdmin {
+		return "", fmt.Errorf("not an admin or pseudoadmin")
+	}
 
 	nexusId, err := r.Db.CreateNexus(input.Name, cookie.UserId, input.Core, input.Category)
 	if err != nil {
@@ -137,7 +145,11 @@ func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData
 		return "", fmt.Errorf("cookie not found")
 	}
 
-	// TODO: Add Admin or PseudoAdmin Check
+	if isAdmin, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
+		return "", err
+	} else if !isAdmin {
+		return "", fmt.Errorf("not an admin or pseudoadmin")
+	}
 
 	splitter := strings.Split(input.Upload.Filename, ".")
 	fileExtention := splitter[len(splitter)-1]
@@ -194,7 +206,11 @@ func (r *mutationResolver) CreateAnnouncement(ctx context.Context, input models.
 		return "", fmt.Errorf("cookie not found")
 	}
 
-	// TODO: Add Admin or PseudoAdmin Check
+	if isAdmin, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
+		return "", err
+	} else if !isAdmin {
+		return "", fmt.Errorf("not an admin or pseudoadmin")
+	}
 
 	announcementId, err := r.Db.CreateAnnouncement(input.Title, input.Message, input.Nexus, cookie.UserId)
 	if err != nil {

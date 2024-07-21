@@ -1,18 +1,15 @@
 package routes
 
 import (
-	"time"
-
 	"github.com/gin-gonic/gin"
+	"github.com/soorya-u/scholar-sync/controllers"
+	"github.com/soorya-u/scholar-sync/middlewares"
 )
 
 func APIRoutes(r *gin.Engine) {
-	api := r.Group("/api")
+	api := r.Group("/api", middlewares.QueryMiddleware)
 	{
-		api.GET("/test", func(ctx *gin.Context) {
-			ctx.JSON(200, gin.H{
-				"data": time.Now(),
-			})
-		})
+		api.GET("/nexus/join", controllers.JoinUserToNexus)
+		api.GET("/core/join", controllers.JoinPseudoUserToCore)
 	}
 }
