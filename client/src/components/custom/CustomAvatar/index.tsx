@@ -20,12 +20,12 @@ export default function CustomAvatar({
     return (
       <div
         className={cn(
-          "size-10 rounded-full flex justify-center items-center bg-sky-400",
-          className
+          "flex size-10 items-center justify-center rounded-full bg-sky-400",
+          className,
         )}
       >
         <span
-          className={cn("text-lg font-playwrite text-black", textClassName)}
+          className={cn("font-playwrite text-lg text-black", textClassName)}
         >
           {name[0]}
         </span>
@@ -37,13 +37,13 @@ export default function CustomAvatar({
     <div
       style={{ backgroundColor: c.backgroundColor }}
       className={cn(
-        "size-10 rounded-full flex justify-center items-center",
-        className
+        "flex size-10 items-center justify-center rounded-full",
+        className,
       )}
     >
       <span
         style={{ color: c.color }}
-        className={cn("text-lg font-playwrite", textClassName)}
+        className={cn("font-playwrite text-lg", textClassName)}
       >
         {name[0]}
       </span>

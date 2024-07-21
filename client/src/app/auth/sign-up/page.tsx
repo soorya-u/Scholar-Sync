@@ -19,17 +19,17 @@ export default function SignUpPage() {
   const { errors, handleSubmit, isSubmitting, register } = useSignUp();
 
   return (
-    <div className="flex min-h-full justify-center items-center">
+    <div className="flex min-h-full items-center justify-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
-          <CardTitle className="text-xl font-lato">Sign Up</CardTitle>
+          <CardTitle className="font-lato text-xl">Sign Up</CardTitle>
           <CardDescription>
             Enter your information to create an account
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="grid gap-4">
-            <div className="grid grid-cols-2 gap-y-2 gap-x-4">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
               <div className="grid gap-2">
                 <Label className="font-lato font-bold" htmlFor="first-name">
                   First name
@@ -56,7 +56,7 @@ export default function SignUpPage() {
                   {...register("lastName")}
                 />
               </div>
-              <span className="text-red-500 text-xs px-2">
+              <span className="px-2 text-xs text-red-500">
                 {errors && errors.firstName && errors.firstName.message}
               </span>
             </div>
@@ -72,7 +72,7 @@ export default function SignUpPage() {
                 {...(register("email"), { required: false })}
                 placeholder="john-doe@example.com"
               />
-              <span className="text-red-500 text-xs px-2">
+              <span className="px-2 text-xs text-red-500">
                 {errors && errors.email && errors.email.message}
               </span>
             </div>
@@ -89,7 +89,7 @@ export default function SignUpPage() {
                 placeholder={"********"}
                 type="password"
               />
-              <span className="text-red-500 text-xs px-2">
+              <span className="px-2 text-xs text-red-500">
                 {errors && errors.password && errors.password.message}
               </span>
             </div>

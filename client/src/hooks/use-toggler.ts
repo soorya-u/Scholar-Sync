@@ -7,10 +7,10 @@ import {
 
 export const useToggler = () => {
   const isSidebarOpen = useSelector(
-    (state: RootState) => state.toggler.sidebar
+    (state: RootState) => state.toggler.sidebar,
   );
   const isUserListOpen = useSelector(
-    (state: RootState) => state.toggler.userList
+    (state: RootState) => state.toggler.userList,
   );
   const dispatch = useDispatch();
   return {

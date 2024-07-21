@@ -23,19 +23,19 @@ export default function NexusList() {
 
   const { user } = useUser();
   const [selectedCategory, setSelectedCategory] = useState(
-    nexus.category || ""
+    nexus.category || "",
   );
   const [categories, setCategories] = useState(
     core.nexus.length > 0
       ? Array.from(new Set(core.nexus.map((n) => n.category)))
-      : []
+      : [],
   );
 
   useEffect(() => {
     setCategories(
       core.nexus.length > 0
         ? Array.from(new Set(core.nexus.map((n) => n.category)))
-        : []
+        : [],
     );
     setSelectedCategory(nexus.category);
   }, [nexus]);
@@ -47,7 +47,7 @@ export default function NexusList() {
         defaultValue={selectedCategory || nexus.category}
         onValueChange={(v: string) => setSelectedCategory(v)}
       >
-        <SelectTrigger className="w-[97%] border-border border-2 text-[0.9rem] font-kanit">
+        <SelectTrigger className="w-[97%] border-2 border-border font-kanit text-[0.9rem]">
           <SelectValue
             placeholder={
               selectedCategory.length > 0
@@ -57,7 +57,7 @@ export default function NexusList() {
           />
         </SelectTrigger>
         {categories.length > 0 && (
-          <SelectContent className="border-2 w-[97%]">
+          <SelectContent className="w-[97%] border-2">
             <SelectGroup>
               {categories.map((c, idx) => (
                 <SelectItem
@@ -72,7 +72,7 @@ export default function NexusList() {
           </SelectContent>
         )}
       </Select>
-      <div className="flex-1 overflow-y-auto size-full flex flex-col px-3 py-2 gap-4">
+      <div className="flex size-full flex-1 flex-col gap-4 overflow-y-auto px-3 py-2">
         {core.nexus.length > 0 ? (
           core.nexus.map((n, idx) => {
             const apiCores = apiData.find((c) => c.id === core.id);
@@ -82,7 +82,7 @@ export default function NexusList() {
               n.category === selectedCategory && (
                 <Button
                   onClick={() => setNexus(nex!)}
-                  className="text-center font-lato font-bold cursor-pointer border-2 border-border px-3 py-1 rounded text-foreground hover:bg-primary/50 hover:border-none"
+                  className="cursor-pointer rounded border-2 border-border px-3 py-1 text-center font-lato font-bold text-foreground hover:border-none hover:bg-primary/50"
                   key={idx}
                   variant="outline"
                 >
@@ -92,7 +92,7 @@ export default function NexusList() {
             );
           })
         ) : (
-          <span className="text-sm w-full font-lato font-bold text-center text-balance transition-all duration-300 leading-[1.15]">
+          <span className="w-full text-balance text-center font-lato text-sm font-bold leading-[1.15] transition-all duration-300">
             No Nexus Available
           </span>
         )}
@@ -100,11 +100,11 @@ export default function NexusList() {
 
       {user.userType !== "NORMAL" && (
         <Dialog>
-          <Separator className="border-border h-[2px] w-[90%]" />
+          <Separator className="h-[2px] w-[90%] border-border" />
           <DialogTrigger asChild>
             <Button
               variant="default"
-              className="w-[90%] text-foreground bg-primary"
+              className="w-[90%] bg-primary text-foreground"
             >
               Create a Nexus
             </Button>

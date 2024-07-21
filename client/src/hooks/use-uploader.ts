@@ -17,7 +17,7 @@ import { useNexus } from "./use-nexus";
 
 export const useUploader = (
   uploader: "Announcement" | "File",
-  showToast: boolean = true
+  showToast: boolean = true,
 ) => {
   const { toast } = useToast();
   const {
@@ -29,7 +29,7 @@ export const useUploader = (
     uploader === "File" ? createFileMutation : createAnnouncementMutation,
     {
       onError: (e) => console.log(e.message),
-    }
+    },
   );
 
   const {
@@ -40,7 +40,7 @@ export const useUploader = (
     setValue,
   } = useForm<AnnouncementType | FileType>({
     resolver: zodResolver(
-      uploader === "File" ? fileSchema : announcementSchema
+      uploader === "File" ? fileSchema : announcementSchema,
     ),
     defaultValues: {
       description: "",
@@ -79,7 +79,7 @@ export const useUploader = (
         variant: "destructive",
         description: error.message.replace(
           error.message[0],
-          error.message[0].toUpperCase()
+          error.message[0].toUpperCase(),
         ),
       });
       return;

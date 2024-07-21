@@ -27,24 +27,24 @@ export default function FileViewer({
   return (
     <div className="flex">
       <div className="flex flex-col gap-1">
-        <div className="flex gap-2 items-center justify-start">
+        <div className="flex items-center justify-start gap-2">
           <CustomAvatar name={creator} id={creatorId} />
-          <div className="flex justify-start items-center gap-2">
-            <h2 className="text-xl font-kanit">{creator}</h2>
-            <h4 className="text-xs font-kanit text-slate-500">
+          <div className="flex items-center justify-start gap-2">
+            <h2 className="font-kanit text-xl">{creator}</h2>
+            <h4 className="font-kanit text-xs text-slate-500">
               {dateTimeFormatter(date)}
             </h4>
           </div>
         </div>
-        <div className="flex ml-11 gap-2">
-          <div className="flex gap-2 bg-neutral-300/25 pr-16 rounded-md">
-            <div className="h-full w-[0.3rem] bg-neutral-300 rounded-l-md" />
-            <div className="flex flex-col justify-center items-start">
-              <div className="flex justify-center items-center gap-2">
-                <File className="size-5 [&>*]:text-yellow-500 -scale-x-100" />
-                <h1 className="text-lg text-yellow-500 font-kanit">{title}</h1>
+        <div className="ml-11 flex gap-2">
+          <div className="flex gap-2 rounded-md bg-neutral-300/25 pr-16">
+            <div className="h-full w-[0.3rem] rounded-l-md bg-neutral-300" />
+            <div className="flex flex-col items-start justify-center">
+              <div className="flex items-center justify-center gap-2">
+                <File className="size-5 -scale-x-100 [&>*]:text-yellow-500" />
+                <h1 className="font-kanit text-lg text-yellow-500">{title}</h1>
               </div>
-              <p className="font-lato text-sm font-bold text-slate-700 pl-7">
+              <p className="pl-7 font-lato text-sm font-bold text-slate-700">
                 {description}
               </p>
               <a
@@ -52,7 +52,7 @@ export default function FileViewer({
                 href={`${
                   process.env.NEXT_PUBLIC_BACKEND_URL
                 }/static/${encodeURIComponent(fileUrl)}`}
-                className="flex justify-center items-center gap-2 mt-1 transition-all duration-300 hover:opacity-35"
+                className="mt-1 flex items-center justify-center gap-2 transition-all duration-300 hover:opacity-35"
               >
                 <Download className="size-5" />
                 <p className="font-kanit text-slate-700">{fileName}</p>

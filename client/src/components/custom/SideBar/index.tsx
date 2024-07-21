@@ -20,7 +20,7 @@ export default function SideBar() {
   return (
     <>
       <Dialog>
-        <DialogTrigger className="flex flex-col justify-center cursor-pointer items-center px-2 gap-1 outline-none">
+        <DialogTrigger className="flex cursor-pointer flex-col items-center justify-center gap-1 px-2 outline-none">
           <CirclePlus className="size-10 [&>*]:text-primary" />
           <span className="font-kanit text-base leading-[1.15] text-foreground">
             Create a Core
@@ -29,11 +29,11 @@ export default function SideBar() {
         <CreateCore />
       </Dialog>
 
-      <Separator className="h-[3px] w-[77%] bg-primary rounded-full border my-1" />
+      <Separator className="my-1 h-[3px] w-[77%] rounded-full border bg-primary" />
 
-      <div className="flex-1 overflow-y-auto size-full flex flex-col px-2 gap-4">
+      <div className="flex size-full flex-1 flex-col gap-4 overflow-y-auto px-2">
         {apiData.length === 0 ? (
-          <span className="text-sm w-full font-lato font-bold text-center text-balance transition-all duration-300 leading-[1.15]">
+          <span className="w-full text-balance text-center font-lato text-sm font-bold leading-[1.15] transition-all duration-300">
             No Cores Available
           </span>
         ) : (
@@ -65,19 +65,19 @@ export const CoreIcons = ({
   <button
     onClick={handleClick}
     className={cn(
-      "flex flex-col gap-1 group justify-center items-center outline-none",
-      className
+      "group flex flex-col items-center justify-center gap-1 outline-none",
+      className,
     )}
   >
     {/* TODO: Hover transition not working */}
     <img
-      className="size-14 rounded-full transition-all duration-300 group-hover:rounded-xl border-2 border-border"
+      className="size-14 rounded-full border-2 border-border transition-all duration-300 group-hover:rounded-xl"
       src={src}
       alt="core"
     />
     <span
       className={cn(
-        "text-sm w-full font-lato font-bold text-center text-balance transition-all duration-300 leading-[1.15]"
+        "w-full text-balance text-center font-lato text-sm font-bold leading-[1.15] transition-all duration-300",
       )}
     >
       {heading}
