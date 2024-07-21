@@ -69,7 +69,7 @@ export default function Uploader() {
           </button>
           <div className="w-full flex flex-col gap-1">
             <Input
-              className="border-2 border-border font-lato font-bold text-sm"
+              className="border-2 border-border font-lato font-bold text-sm text-foreground placeholder:text-foreground/80"
               {...register("title")}
               placeholder={`Enter the ${
                 uploader === "Announcement" ? "Announcement Title" : "File Name"
@@ -121,7 +121,7 @@ export default function Uploader() {
             <div className="flex h-full flex-col flex-1 gap-1">
               <Textarea
                 {...register("description")}
-                className="flex-1 text-sm size-full resize-none border-2 border-border font-lato font-bold"
+                className="flex-1 text-sm size-full resize-none border-2 border-border font-lato font-bold text-foreground placeholder:text-foreground/80"
                 placeholder={`Enter the description about ${uploader.toLowerCase()}...`}
               />
             </div>

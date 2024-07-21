@@ -14,7 +14,8 @@ func main() {
 
 	port := helpers.GetPort()
 	server := gin.Default()
-	server.Static("/static", "./static")
+
+	routes.StaticRoutes(server)
 
 	corsMiddleware := middlewares.GetCorsMiddleware()
 	server.Use(corsMiddleware)
