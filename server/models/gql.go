@@ -26,13 +26,14 @@ type AnnouncementData struct {
 }
 
 type Core struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	ImageURL  string    `json:"imageUrl"`
-	Creator   *Profile  `json:"creator"`
-	Nexus     []*Nexus  `json:"nexus"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID           string     `json:"id"`
+	Name         string     `json:"name"`
+	ImageURL     string     `json:"imageUrl"`
+	Creator      *Profile   `json:"creator"`
+	PseudoAdmins []*Profile `json:"pseudoAdmins"`
+	Nexus        []*Nexus   `json:"nexus"`
+	CreatedAt    time.Time  `json:"createdAt"`
+	UpdatedAt    time.Time  `json:"updatedAt"`
 }
 
 type CoreData struct {
