@@ -49,7 +49,9 @@ export default function FileViewer({
               </p>
               <a
                 download={fileName}
-                href={`/api/download?fileUrl=${fileUrl}`}
+                href={`${
+                  process.env.NEXT_PUBLIC_BACKEND_URL
+                }/static/${encodeURIComponent(fileUrl)}`}
                 className="flex justify-center items-center gap-2 mt-1 transition-all duration-300 hover:opacity-35"
               >
                 <Download className="size-5" />
