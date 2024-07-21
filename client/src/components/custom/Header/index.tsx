@@ -74,28 +74,9 @@ export default function Header() {
                 {user.fullName}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* TODO: Generate Link using Core and Nexus */}
-              {user.userType !== "NORMAL" && (
-                <DropdownMenuItem className="flex justify-between">
-                  <p className="text-foreground">Share</p>
-                  <Share2 className="flex size-4 2xs:hidden [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
-                </DropdownMenuItem>
-              )}
-              {user.userType === "NORMAL" && (
-                <DropdownMenuItem className="flex justify-between">
-                  <p className="text-red-500">Leave</p>
-                  <DoorOpen className="flex size-4 2xs:hidden [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
-                </DropdownMenuItem>
-              )}
-              {user.userType !== "NORMAL" && (
-                <DropdownMenuItem className="flex justify-between">
-                  <p className="text-red-500">Delete</p>
-                  <Trash2 className="flex size-4 2xs:hidden [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
-                </DropdownMenuItem>
-              )}
               {/* TODO: Add function to Logout */}
               <DropdownMenuItem className="flex justify-between">
-                <p className="text-red-500">Logout</p>
+                <p className="text-red-500 font-lato font-bold">Logout</p>
                 <LogOut className="flex size-4 2xs:hidden [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
               </DropdownMenuItem>
             </DropdownMenuContent>

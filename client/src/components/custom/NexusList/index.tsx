@@ -15,6 +15,14 @@ import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
 import { useApiData } from "@/hooks/use-api-data";
+import {
+  ContextMenu,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuSeparator,
+  ContextMenuTrigger,
+} from "@/components/primitives/context-menu";
+import { DoorOpen, Share2Icon, Trash2 } from "lucide-react";
 
 export default function NexusList() {
   const { core } = useCore();
@@ -80,14 +88,52 @@ export default function NexusList() {
 
             return (
               n.category === selectedCategory && (
-                <Button
-                  onClick={() => setNexus(nex!)}
-                  className="cursor-pointer rounded border-2 border-border px-3 py-1 text-center font-lato font-bold text-foreground hover:border-none hover:bg-primary/50"
-                  key={idx}
-                  variant="outline"
-                >
-                  {n.name}
-                </Button>
+                <ContextMenu>
+                  <ContextMenuTrigger className="flex w-full items-center justify-center">
+                    <Button
+                      onClick={() => setNexus(nex!)}
+                      className="min-w-full cursor-pointer rounded border-2 border-border px-3 py-1 text-center font-lato font-bold text-foreground"
+                      key={idx}
+                      variant="outline"
+                    >
+                      {n.name}
+                    </Button>
+                  </ContextMenuTrigger>
+                  <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
+                    {user.userType !== "NORMAL" && (
+                      <>
+                        <ContextMenuItem className="flex justify-between">
+                          <p className="font-lato font-bold text-foreground">
+                            Share
+                          </p>
+                          <Share2Icon className="flex size-4 [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
+                        </ContextMenuItem>
+                        <ContextMenuSeparator className="w-[95%] self-center border" />
+                      </>
+                    )}
+                    {user.userType === "NORMAL" && (
+                      <>
+                        <ContextMenuItem className="flex justify-between">
+                          <p className="font-lato font-bold text-red-500">
+                            Leave
+                          </p>
+                          <DoorOpen className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
+                        </ContextMenuItem>
+                        <ContextMenuSeparator className="w-[95%] self-center border" />
+                      </>
+                    )}
+                    {user.userType !== "NORMAL" && (
+                      <>
+                        <ContextMenuItem className="flex justify-between">
+                          <p className="font-lato font-bold text-red-500">
+                            Delete
+                          </p>
+                          <Trash2 className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
+                        </ContextMenuItem>
+                      </>
+                    )}
+                  </ContextMenuContent>
+                </ContextMenu>
               )
             );
           })
@@ -104,7 +150,7 @@ export default function NexusList() {
           <DialogTrigger asChild>
             <Button
               variant="default"
-              className="w-[90%] bg-primary text-foreground"
+              className="w-[90%] mb-8 md-lg:mb-0 bg-primary text-foreground"
             >
               Create a Nexus
             </Button>
