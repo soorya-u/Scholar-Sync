@@ -19,7 +19,7 @@ export default function NavBar() {
   const { nexus } = useNexus();
 
   return (
-    <div className="w-full h-[9%] flex justify-between items-center px-5  border-b border-border">
+    <div className="w-full h-[9%] flex justify-center 2xs:justify-between items-center px-2 2xs:px-5  border-b border-border">
       <div className="flex justify-center items-center">
         {/* TODO: Add core, nexus, category check */}
         <Breadcrumb>
@@ -44,8 +44,8 @@ export default function NavBar() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex justify-center items-center gap-6">
-        <button onClick={toggleUserList}>
+      <div className="hidden justify-center items-center gap-6 2xs:flex">
+        <button className="hidden xs-sm:flex" onClick={toggleUserList}>
           <Users className="size-6" />
         </button>
         {/* TODO: Generate Link using Core and Nexus */}

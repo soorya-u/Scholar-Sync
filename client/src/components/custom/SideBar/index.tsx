@@ -18,11 +18,7 @@ export default function SideBar() {
   if (user.userType === "NORMAL") return;
 
   return (
-    <div
-      className={cn(
-        "relative flex flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 w-24"
-      )}
-    >
+    <>
       <Dialog>
         <DialogTrigger className="flex flex-col justify-center cursor-pointer items-center px-2 gap-1 outline-none">
           <CirclePlus className="size-10 [&>*]:text-primary" />
@@ -51,11 +47,11 @@ export default function SideBar() {
           ))
         )}
       </div>
-    </div>
+    </>
   );
 }
 
-const CoreIcons = ({
+export const CoreIcons = ({
   className,
   src,
   heading,

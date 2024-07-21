@@ -15,7 +15,10 @@ import { useInitData } from "./use-init";
 import { useToast } from "@/components/primitives/use-toast";
 import { useNexus } from "./use-nexus";
 
-export const useUploader = (uploader: "Announcement" | "File") => {
+export const useUploader = (
+  uploader: "Announcement" | "File",
+  showToast: boolean = true
+) => {
   const { toast } = useToast();
   const {
     nexus: { id: nexus },
@@ -32,7 +35,7 @@ export const useUploader = (uploader: "Announcement" | "File") => {
   const {
     register,
     handleSubmit: handleFormSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
     getValues,
     setValue,
   } = useForm<AnnouncementType | FileType>({
@@ -61,7 +64,7 @@ export const useUploader = (uploader: "Announcement" | "File") => {
   const handleSubmit = handleFormSubmit(onSubmitFn, (e) => {
     // @ts-ignore
     const err = e.title ?? e.description ?? e.upload;
-    if (err)
+    if (err && showToast)
       toast({
         title: "Upload Error",
         description: err.message,
@@ -99,5 +102,6 @@ export const useUploader = (uploader: "Announcement" | "File") => {
     isSubmitting,
     getValues,
     setValue,
+    errors,
   };
 };

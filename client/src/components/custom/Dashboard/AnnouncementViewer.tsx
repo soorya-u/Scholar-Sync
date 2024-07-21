@@ -25,8 +25,8 @@ export default function AnnouncementViewer({
       <div className="flex flex-col gap-1">
         <div className="flex gap-2 items-center justify-start">
           <CustomAvatar name={creator} id={creatorId} />
-          <div className="flex justify-start items-center gap-2">
-            <h2 className="text-xl font-kanit">{creator}</h2>
+          <div className="flex justify-start items-center gap-0 flex-col 3xs:flex-row 3xs:gap-2">
+            <h2 className="text-xl self-start 3xs:self-center font-kanit">{creator}</h2>
             <h4 className="text-xs font-kanit text-slate-500">
               {dateTimeFormatter(date)}
             </h4>
