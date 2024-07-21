@@ -65,7 +65,7 @@ func (db *DB) GetDBCores(userId string) ([]*models.DBCore, error) {
 	return res, nil
 }
 
-func (db *DB) AddPseudoAdminToCore(userId, coreId string) (bool, error) {
+func (db *DB) AddPseudoAdminToCore(userId, coreId string, endConnection bool) (bool, error) {
 	query := "UPDATE $coreId SET pseudoAdmin+=$userId;"
 	params := map[string]interface{}{
 		"coreId": coreId,
@@ -86,6 +86,10 @@ func (db *DB) AddPseudoAdminToCore(userId, coreId string) (bool, error) {
 	_, err = db.client.Query(query, params)
 	if err != nil {
 		return false, fmt.Errorf("unable to Promote User: %v", err)
+	}
+
+	if endConnection {
+		db.client.Close()
 	}
 
 	return true, nil
