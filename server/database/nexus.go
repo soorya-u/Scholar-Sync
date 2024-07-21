@@ -81,6 +81,28 @@ func (db *DB) GetDBNexus(nexusIds []string) ([]*models.DBNexus, error) {
 
 }
 
+func (db *DB) HasAccessToNexus(userId, nexusId string) (bool, error) {
+
+	// Complete Function
+	return false, nil
+
+}
+
+func (db *DB) DeleteNexus(userId, nexusId string) (bool, error) {
+
+	if isAdmin, err := db.AdminOrPseudoAdminCheck(userId); err != nil {
+		return false, err
+	} else if !isAdmin {
+		return false, fmt.Errorf("no privilages")
+	}
+
+	if _, err := db.client.Delete(nexusId); err != nil {
+		return false, fmt.Errorf("failed to delete: %v", err)
+	}
+
+	return true, nil
+}
+
 func (db *DB) AddUserToNexus(userId, nexusId string, endConnection bool) (bool, error) {
 	query := "UPDATE $nexusId SET users+=$userId;"
 	params := map[string]interface{}{
