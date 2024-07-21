@@ -57,7 +57,7 @@ export default function CreateNexus() {
               <Input
                 disabled={isSubmitting}
                 {...register("name")}
-                className="col-span-3"
+                className="col-span-3 border border-border font-lato font-bold text-foreground/80"
                 placeholder="Nexus Name..."
               />
             </div>
@@ -74,13 +74,13 @@ export default function CreateNexus() {
                 </span>
               </Label>
               <Select onValueChange={category.onChange}>
-                <SelectTrigger className="w-full col-span-3">
+                <SelectTrigger className="w-full col-span-3 border-border font-lato font-bold text-foreground/80">
                   <SelectValue placeholder={`${category.value} Semester`} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     {categories.map((c, idx) => (
-                      <SelectItem value={c} key={idx}>
+                      <SelectItem className="font-lato font-bold text-foreground/80" value={c} key={idx}>
                         {c} Semester
                       </SelectItem>
                     ))}

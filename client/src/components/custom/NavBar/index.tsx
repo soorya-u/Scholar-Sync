@@ -19,7 +19,7 @@ export default function NavBar() {
   const { nexus } = useNexus();
 
   return (
-    <div className="w-full h-[9%] flex justify-between items-center px-5  border-b border-border">
+    <div className="w-full h-[9%] flex justify-center 2xs:justify-between items-center px-2 2xs:px-5  border-b border-border">
       <div className="flex justify-center items-center">
         {/* TODO: Add core, nexus, category check */}
         <Breadcrumb>
@@ -44,19 +44,19 @@ export default function NavBar() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      <div className="flex justify-center items-center gap-6">
+      <div className="hidden justify-center items-center gap-6 2xs:flex">
         <button className="hidden xs-sm:flex" onClick={toggleUserList}>
           <Users className="size-6" />
         </button>
         {/* TODO: Generate Link using Core and Nexus */}
-        {user.userType !== "NORMAL" && <Share2 className="size-6  hidden 2xs:flex" />}
+        {user.userType !== "NORMAL" && <Share2 className="size-6" />}
         {/* TODO: Add Functionality */}
         {user.userType === "NORMAL" && (
-          <DoorOpen className="size-7 [&>path]:text-red-500/70  hidden 2xs:flex" />
+          <DoorOpen className="size-7 [&>path]:text-red-500/70" />
         )}
         {/* TODO: Add Functionality */}
         {user.userType !== "NORMAL" && (
-          <Trash2 className="size-6 [&>path]:text-red-500/70 [&>line]:text-red-500/70  hidden 2xs:flex" />
+          <Trash2 className="size-6 [&>path]:text-red-500/70 [&>line]:text-red-500/70" />
         )}
       </div>
     </div>

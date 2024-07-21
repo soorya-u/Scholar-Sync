@@ -12,7 +12,7 @@ const config = {
   theme: {
     screens: {
       "3xs": "310px",
-      "2xs": "390px",
+      "2xs": "450px",
       xs: "510px",
       "xs-sm": "565px",
       sm: "640px",

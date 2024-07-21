@@ -19,7 +19,8 @@ export default function CreateCore() {
       <DialogHeader>
         <DialogTitle className="text-base">Create a Core</DialogTitle>
         <DialogDescription className="text-sm">
-          Add required Fields to add a new core. Click save when you&apos;re done.
+          Add required Fields to add a new core. Click save when you&apos;re
+          done.
         </DialogDescription>
       </DialogHeader>
       <form onSubmit={handleSubmit}>
@@ -35,7 +36,7 @@ export default function CreateCore() {
               <Input
                 disabled={isSubmitting}
                 {...register("name")}
-                className="col-span-3"
+                className="col-span-3 border border-border font-lato font-bold text-foreground/80"
                 placeholder="Core Name..."
               />
             </div>
@@ -54,7 +55,7 @@ export default function CreateCore() {
               <Input
                 {...register("imageUrl", { required: false })}
                 disabled={isSubmitting}
-                className="col-span-3"
+                className="col-span-3 border border-border font-lato font-bold text-foreground/80"
                 placeholder="Image Link..."
               />
             </div>
