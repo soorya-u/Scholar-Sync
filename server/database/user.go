@@ -76,3 +76,19 @@ func (db *DB) GetProfileByID(id string) (*models.Profile, error) {
 	return &user, nil
 
 }
+
+func (db *DB) AdminCheck(id string) (bool, error) {
+	if profile, err := db.GetProfileByID(id); err != nil {
+		return false, err
+	} else {
+		return profile.UserType == models.ProfileTypeAdmin, nil
+	}
+}
+
+func (db *DB) AdminOrPseudoAdminCheck(id string) (bool, error) {
+	if profile, err := db.GetProfileByID(id); err != nil {
+		return false, err
+	} else {
+		return (profile.UserType == models.ProfileTypeAdmin || profile.UserType == models.ProfileTypePseudoadmin), nil
+	}
+}
