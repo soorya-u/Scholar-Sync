@@ -7,7 +7,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { LoginType, loginSchema } from "@/schema/login";
 import { SignUpType, signUpSchema } from "@/schema/sign-up";
 import { signUpMutation } from "@/graphql/mutations";
-import { loginQuery } from "@/graphql/queries";
+import { loginQuery, logOutQuery } from "@/graphql/queries";
 import { useToast } from "@/components/primitives/use-toast";
 
 export const useSignUp = () => {
@@ -126,5 +126,42 @@ export const useLogin = () => {
     register,
     isSubmitting,
     errors,
+  };
+};
+
+export const useLogOut = () => {
+  const [query, { data, error }] = useLazyQuery(logOutQuery);
+  const { toast } = useToast();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: "Logout Unsuccessfull!",
+        variant: "destructive",
+        description: error.message.replace(
+          error.message[0],
+          error.message[0].toUpperCase(),
+        ),
+      });
+      return;
+    }
+
+    if (data) {
+      const t = toast({
+        title: "Logout Successfull!",
+        variant: "default",
+        description: "You have been Successfully Logged Out.",
+      });
+
+      setTimeout(() => {
+        t.dismiss();
+        router.replace("/auth/login");
+      }, 2000);
+    }
+  }, [data, error]);
+
+  return {
+    handleClick: async () => await query(),
   };
 };

@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  AlignLeft,
-  LogOut,
-  ChevronDown,
-  Trash2,
-  Share2,
-  DoorOpen,
-} from "lucide-react";
+import { AlignLeft, LogOut, ChevronDown } from "lucide-react";
 
 import {
   DropdownMenu,
@@ -20,12 +13,14 @@ import {
 
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
+import { useLogOut } from "@/hooks/use-auth";
 import CustomAvatar from "../CustomAvatar";
 import Drawer from "../Drawer";
 
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
+  const { handleClick: logOut } = useLogOut();
 
   return (
     <div className="flex h-[8%] w-full items-center justify-between gap-4 border-b border-border px-8">
@@ -74,16 +69,19 @@ export default function Header() {
                 {user.fullName}
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              {/* TODO: Add function to Logout */}
-              <DropdownMenuItem className="flex justify-between">
-                <p className="text-red-500 font-lato font-bold">Logout</p>
+              <DropdownMenuItem
+                onClick={async () => await logOut()}
+                className="flex justify-between"
+              >
+                <p className="font-lato font-bold text-red-500">Logout</p>
                 <LogOut className="flex size-4 2xs:hidden [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        {/* TODO: Add function to Logout */}
-        <LogOut className="hidden size-5 2xs:flex [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
+        <button onClick={async () => await logOut()}>
+          <LogOut className="hidden size-5 2xs:flex [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
+        </button>
       </div>
     </div>
   );

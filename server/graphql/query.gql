@@ -11,4 +11,5 @@ type Query {
   loginUser(input: LoginData!): String!
   getUser: Profile!
   getUserData: [Core]!
+  logOut: Boolean!
 }
