@@ -50,7 +50,7 @@ export default function Home() {
             <NexusList />
           </div>
           {nexus.id === "" ? (
-            <NotFound message="You need to join a Core inorder to Use the App" />
+            <NotFound message="You need to Create or join a Nexus inorder to Use the App" />
           ) : (
             <div className="h-full w-full flex-1">
               <NavBar />

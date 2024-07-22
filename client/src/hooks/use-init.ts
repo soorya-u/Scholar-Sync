@@ -11,14 +11,16 @@ import { useCore } from "./use-core";
 import { useNexus } from "./use-nexus";
 
 export const useInitData = () => {
-  const { data, error, refetch, loading } = useQuery(getInitDataQuery);
+  const { data, error, refetch, loading } = useQuery(getInitDataQuery, {
+    fetchPolicy: "no-cache",
+  });
   const router = useRouter();
   const { toast } = useToast();
 
   const { setUser } = useUser();
   const { apiData, setApiData } = useApiData();
   const { setCore } = useCore();
-  const { setNexus } = useNexus();
+  const { nexus: bnexus, setNexus } = useNexus();
 
   useEffect(() => {
     if (loading) return;
@@ -35,11 +37,12 @@ export const useInitData = () => {
     setApiData(data.getUserData as CoreType[]);
 
     if (apiData.length === 0) return;
+    console.log(apiData);
     const selectedCores = apiData.filter((c) => c.nexus && c.nexus?.length > 0);
     const { id, imageUrl, name, nexus } =
       selectedCores.length > 0 ? selectedCores[0] : apiData[0];
     setCore({ id, imageUrl, name, nexus });
-    nexus.length > 0 && setNexus(nexus[0]);
+    nexus.length > 0 && nexus[0] && setNexus(nexus[0]);
   }, [data, error, loading]);
 
   return {

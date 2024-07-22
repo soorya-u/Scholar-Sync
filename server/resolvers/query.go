@@ -81,6 +81,8 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 		return nil, fmt.Errorf("cookie not found")
 	}
 
+	isAdmin, _ := r.Db.AdminCheck(cookie.UserId)
+
 	dbCores, err := r.Db.GetDBCores(cookie.UserId)
 	if err != nil {
 		return nil, err
@@ -103,10 +105,24 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 			return nil, err
 		}
 
-		nexusData := make([]*models.Nexus, len(dbNexus))
+		nexusData := []*models.Nexus{}
 
-		for nIdx, n := range dbNexus {
-			nexusData[nIdx] = &models.Nexus{
+		for _, n := range dbNexus {
+
+			isNormalUserInNexus := false
+
+			for _, u := range n.Users {
+				if u.ID == cookie.UserId {
+					isNormalUserInNexus = true
+					break
+				}
+			}
+
+			if !isAdmin && cookie.UserId != n.Creator.ID && !isNormalUserInNexus {
+				continue
+			}
+
+			singleNexus := &models.Nexus{
 				ID:        n.ID,
 				Name:      n.Name,
 				Category:  n.Category,
@@ -135,7 +151,7 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 				}
 			}
 
-			nexusData[nIdx].Files = fileData
+			singleNexus.Files = fileData
 
 			dbAnnouncements, err := r.Db.GetAnnouncements(n.Announcements)
 			if err != nil {
@@ -154,7 +170,9 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 				}
 			}
 
-			nexusData[nIdx].Announcements = announcementsData
+			singleNexus.Announcements = announcementsData
+
+			nexusData = append(nexusData, singleNexus)
 
 		}
 

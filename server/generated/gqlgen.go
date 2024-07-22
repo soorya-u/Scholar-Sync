@@ -741,9 +741,9 @@ type Mutation {
   createNexus(input: NexusData!): ID!
   createFile(input: FileData!): ID!
   createAnnouncement(input: AnnouncementData!): ID!
-  deleteCore(coreId: ID!): Boolean!
-  deleteNexus(nexusId: ID!): Boolean!
-  leaveNexus(nexusId: ID!): Boolean!
+  deleteCore(coreId: String!): Boolean!
+  deleteNexus(nexusId: String!): Boolean!
+  leaveNexus(nexusId: String!): Boolean!
   addUserToNexus(nexusId: String!): Boolean!
   addPseudoUserToCore(coreId: String!): Boolean!
 }
@@ -925,7 +925,7 @@ func (ec *executionContext) field_Mutation_deleteCore_args(ctx context.Context, 
 	var arg0 string
 	if tmp, ok := rawArgs["coreId"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("coreId"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -940,7 +940,7 @@ func (ec *executionContext) field_Mutation_deleteNexus_args(ctx context.Context,
 	var arg0 string
 	if tmp, ok := rawArgs["nexusId"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexusId"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -955,7 +955,7 @@ func (ec *executionContext) field_Mutation_leaveNexus_args(ctx context.Context, 
 	var arg0 string
 	if tmp, ok := rawArgs["nexusId"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexusId"))
-		arg0, err = ec.unmarshalNID2string(ctx, tmp)
+		arg0, err = ec.unmarshalNString2string(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}

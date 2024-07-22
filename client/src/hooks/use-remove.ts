@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@apollo/client";
 
 import {
@@ -11,8 +12,9 @@ import { useToast } from "@/components/primitives/use-toast";
 
 export const useDeleteCore = () => {
   const [mutate, { data, error }] = useMutation(deleteCoreMutation);
-  const { refetch } = useInitData();
+  const { refetch: refreshQuery } = useInitData();
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleClick = async (coreId: string) => {
     await mutate({
@@ -20,6 +22,10 @@ export const useDeleteCore = () => {
         coreId,
       },
     });
+  };
+
+  const refetch = async () => {
+    await refreshQuery();
   };
 
   useEffect(() => {
@@ -42,7 +48,7 @@ export const useDeleteCore = () => {
         description: "Core has been Successfully Deleted.",
       });
 
-      refetch();
+      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -53,8 +59,9 @@ export const useDeleteCore = () => {
 
 export const useDeleteNexus = () => {
   const [mutate, { data, error }] = useMutation(deleteNexusMutation);
-  const { refetch } = useInitData();
+  const { refetch: refreshQuery } = useInitData();
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleClick = async (nexusId: string) => {
     await mutate({
@@ -62,6 +69,10 @@ export const useDeleteNexus = () => {
         nexusId,
       },
     });
+  };
+
+  const refetch = async () => {
+    await refreshQuery();
   };
 
   useEffect(() => {
@@ -84,7 +95,7 @@ export const useDeleteNexus = () => {
         description: "Nexus has been Successfully Deleted.",
       });
 
-      refetch();
+      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -95,8 +106,9 @@ export const useDeleteNexus = () => {
 
 export const useLeaveNexus = () => {
   const [mutate, { data, error }] = useMutation(leaveNexusMutation);
-  const { refetch } = useInitData();
+  const { refetch: refreshQuery } = useInitData();
   const { toast } = useToast();
+  const router = useRouter();
 
   const handleClick = async (nexusId: string) => {
     await mutate({
@@ -104,6 +116,10 @@ export const useLeaveNexus = () => {
         nexusId,
       },
     });
+  };
+
+  const refetch = async () => {
+    await refreshQuery();
   };
 
   useEffect(() => {
@@ -126,7 +142,7 @@ export const useLeaveNexus = () => {
         description: "Nexus has been Successfully Exited.",
       });
 
-      refetch();
+      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 

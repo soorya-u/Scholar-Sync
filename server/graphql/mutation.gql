@@ -37,9 +37,9 @@ type Mutation {
   createNexus(input: NexusData!): ID!
   createFile(input: FileData!): ID!
   createAnnouncement(input: AnnouncementData!): ID!
-  deleteCore(coreId: ID!): Boolean!
-  deleteNexus(nexusId: ID!): Boolean!
-  leaveNexus(nexusId: ID!): Boolean!
+  deleteCore(coreId: String!): Boolean!
+  deleteNexus(nexusId: String!): Boolean!
+  leaveNexus(nexusId: String!): Boolean!
   addUserToNexus(nexusId: String!): Boolean!
   addPseudoUserToCore(coreId: String!): Boolean!
 }

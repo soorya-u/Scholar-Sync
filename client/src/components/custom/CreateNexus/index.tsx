@@ -40,7 +40,7 @@ export default function CreateNexus() {
       <DialogHeader>
         <DialogTitle className="text-base">Create a Nexus</DialogTitle>
         <DialogDescription className="text-sm">
-          Add required Fields to add a new core. Click save when you&apos;re
+          Add required Fields to add a new nexus. Click create when you&apos;re
           done.
         </DialogDescription>
       </DialogHeader>

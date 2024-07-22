@@ -1,4 +1,4 @@
-import { Users, Share2, DoorOpen, Trash2 } from "lucide-react";
+import { Users } from "lucide-react";
 
 import {
   Breadcrumb,
