@@ -1,23 +1,33 @@
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 
 import { isUserLoggedInQuery } from "@/graphql/queries";
+import {
+  addPseudoUserToCoreMutation,
+  addUserToNexusMutation,
+} from "@/graphql/mutations";
 import { useToast } from "@/components/primitives/use-toast";
-import { sendJoinRequest } from "@/lib/axios";
-import { useUser } from "./use-user";
 
 export const useLink = () => {
-  const { data, loading } = useQuery(isUserLoggedInQuery, {
-    fetchPolicy: "no-cache",
-  });
+  const { data, loading } = useQuery(isUserLoggedInQuery);
+  const [pseudoUserMutate, { data: pseudoUserData }] = useMutation(
+    addPseudoUserToCoreMutation,
+  );
+  const [userMutate, { data: userData }] = useMutation(addUserToNexusMutation);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { toast } = useToast();
-  const { user } = useUser();
 
   const add = searchParams.get("a");
   const joinerId = searchParams.get("j");
+
+  const performMutation = async () => {
+    if (add === "c")
+      await pseudoUserMutate({ variables: { coreId: joinerId } });
+    else if (add === "n")
+      await userMutate({ variables: { nexusId: joinerId } });
+  };
 
   useEffect(() => {
     if (!add || !joinerId) {
@@ -36,12 +46,28 @@ export const useLink = () => {
           `/auth/login?${new URLSearchParams({ a: add, j: joinerId }).toString()}`,
         );
       } else {
-        sendJoinRequest(add, joinerId, user.id)
-          .then((res) => console.log(res))
-          .catch((err) => console.log(err));
+        performMutation();
       }
     }
   }, [data, loading, add, joinerId, toast, router]);
+
+  useEffect(() => {
+    if (!pseudoUserData && !userData) return;
+    if (pseudoUserData) {
+      toast({
+        title: "Join Sucessfull",
+        description: "Successfully joined as a PseudoAdmin",
+      });
+      return router.replace("/");
+    }
+    if (userData) {
+      toast({
+        title: "Join Sucessfull",
+        description: "Successfully joined as a User",
+      });
+      return router.replace("/");
+    }
+  }, [pseudoUserData, userData]);
 };
 
 type IPlace = "Nexus" | "Core";

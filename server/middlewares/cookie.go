@@ -2,7 +2,6 @@ package middlewares
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -22,7 +21,6 @@ func GetCookieMiddleware() gin.HandlerFunc {
 		}
 
 		cookie, err := ctx.Request.Cookie("authorization")
-		fmt.Printf("\n\n\nCookie: %s \n\n\n", cookie)
 		if err != nil || cookie.Value == "" {
 			log.Printf("Error fetching cookie: %v", err)
 			newCtx := context.WithValue(ctx.Request.Context(), "cookie-access", cookieAccess)

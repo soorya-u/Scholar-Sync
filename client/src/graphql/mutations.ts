@@ -63,3 +63,15 @@ export const leaveNexusMutation = gql`
     leaveNexus(nexusId: $nexusId)
   }
 `;
+
+export const addPseudoUserToCoreMutation = gql`
+  mutation ($coreId: String!) {
+    addPseudoUserToCore(coreId: $coreId)
+  }
+`;
+
+export const addUserToNexusMutation = gql`
+  mutation ($nexusId: String!) {
+    addUserToNexus(nexusId: $nexusId)
+  }
+`;

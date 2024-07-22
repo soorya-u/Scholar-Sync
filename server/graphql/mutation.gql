@@ -40,4 +40,6 @@ type Mutation {
   deleteCore(coreId: ID!): Boolean!
   deleteNexus(nexusId: ID!): Boolean!
   leaveNexus(nexusId: ID!): Boolean!
+  addUserToNexus(nexusId: String!): Boolean!
+  addPseudoUserToCore(coreId: String!): Boolean!
 }

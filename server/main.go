@@ -23,7 +23,6 @@ func main() {
 	server.Use(cookieMiddleware)
 
 	routes.GraphQLRoutes(server)
-	routes.APIRoutes(server)
 
 	err := server.Run(port)
 
