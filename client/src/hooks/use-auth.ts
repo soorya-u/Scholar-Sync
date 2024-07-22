@@ -48,7 +48,7 @@ export const useSignUp = () => {
       setTimeout(() => {
         t.dismiss();
         router.replace("/");
-      }, 3000);
+      }, 500);
     }
   }, [data, error]);
 
@@ -108,7 +108,7 @@ export const useLogin = () => {
       setTimeout(() => {
         t.dismiss();
         router.replace("/");
-      }, 3000);
+      }, 500);
     }
   }, [data, error]);
 
@@ -157,7 +157,7 @@ export const useLogOut = () => {
       setTimeout(() => {
         t.dismiss();
         router.replace("/auth/login");
-      }, 2000);
+      }, 500);
     }
   }, [data, error]);
 
