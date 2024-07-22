@@ -220,6 +220,71 @@ func (r *mutationResolver) CreateAnnouncement(ctx context.Context, input models.
 	return announcementId, nil
 }
 
+func (r *mutationResolver) DeleteNexus(ctx context.Context, nexusID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("no privilages")
+	}
+
+	if ok, err := r.Db.DeleteNexus(nexusID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to delete nexus")
+	}
+
+	return true, nil
+
+}
+
+func (r *mutationResolver) DeleteCore(ctx context.Context, coreID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.AdminCheck(cookie.UserId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("no privilages")
+	}
+
+	if ok, err := r.Db.DeleteCore(coreID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to delete core")
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) LeaveNexus(ctx context.Context, nexusID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.RemoveUserFromNexus(cookie.UserId, nexusID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to remove user")
+	}
+
+	return true, nil
+
+}
+
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }
