@@ -18,12 +18,14 @@ import {
 
 import { cn } from "@/utils/cn";
 import { useDeleteCore } from "@/hooks/use-remove";
+import { useLinkGenerate } from "@/hooks/use-link";
 
 export default function SideBar() {
   const { user } = useUser();
   const { apiData } = useApiData();
   const { setCore } = useCore();
   const { handleClick: deleteCoreFn } = useDeleteCore();
+  const { handleClick: generateLinkFn } = useLinkGenerate();
 
   if (user.userType === "NORMAL") return;
 
@@ -48,18 +50,20 @@ export default function SideBar() {
           </span>
         ) : (
           apiData.map(({ id, imageUrl, name, nexus }) => (
-            <ContextMenu>
+            <ContextMenu key={id}>
               <ContextMenuTrigger className="grid place-content-center">
                 <CoreIcons
                   handleClick={() => setCore({ id, imageUrl, name, nexus })}
-                  key={id}
                   heading={name}
                   src={imageUrl}
                 />
               </ContextMenuTrigger>
               {user.userType === "ADMIN" && (
                 <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
-                  <ContextMenuItem className="flex justify-between">
+                  <ContextMenuItem
+                    onClick={async () => await generateLinkFn("Core", id)}
+                    className="flex justify-between"
+                  >
                     <p className="font-lato font-bold text-foreground">Share</p>
                     <Share2 className="flex size-4 [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
                   </ContextMenuItem>

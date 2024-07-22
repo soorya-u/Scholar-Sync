@@ -2,17 +2,30 @@ package controllers
 
 import (
 	"fmt"
-	"os"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/soorya-u/scholar-sync/database"
+	"github.com/soorya-u/scholar-sync/models"
 )
 
 func JoinUserToNexus(ctx *gin.Context) {
-	userId, _ := ctx.GetQuery("u")
-	nexusId, _ := ctx.GetQuery("j")
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok || !cookie.IsLoggedIn || cookie.UserId == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "cookie not found or no user",
+		})
+	}
 
-	userId = fmt.Sprintf("user:%s", userId)
+	userId := cookie.UserId
+	nexusId, ok := ctx.GetQuery("j")
+
+	if !ok || nexusId == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "invalid params",
+		})
+	}
+
 	nexusId = fmt.Sprintf("nexus:%s", nexusId)
 
 	db := database.Connect()
@@ -22,16 +35,29 @@ func JoinUserToNexus(ctx *gin.Context) {
 			"error": err.Error(),
 		})
 	} else if ok {
-		url := os.Getenv("CLIENT_URL")
-		ctx.Redirect(201, url)
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"status": "OK",
+		})
 	}
 }
 
 func JoinPseudoUserToCore(ctx *gin.Context) {
-	userId, _ := ctx.GetQuery("u")
-	coreId, _ := ctx.GetQuery("j")
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok || !cookie.IsLoggedIn || cookie.UserId == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "cookie not found or no user",
+		})
+	}
 
-	userId = fmt.Sprintf("user:%s", userId)
+	userId := cookie.UserId
+	coreId, ok := ctx.GetQuery("j")
+
+	if !ok || coreId == "" {
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"error": "invalid params",
+		})
+	}
+
 	coreId = fmt.Sprintf("core:%s", coreId)
 
 	db := database.Connect()
@@ -41,7 +67,8 @@ func JoinPseudoUserToCore(ctx *gin.Context) {
 			"error": err.Error(),
 		})
 	} else if ok {
-		url := os.Getenv("CLIENT_URL")
-		ctx.Redirect(201, url)
+		ctx.JSON(http.StatusUnauthorized, gin.H{
+			"status": "OK",
+		})
 	}
 }

@@ -1,3 +1,7 @@
+import { useEffect, useState } from "react";
+import CreateNexus from "../CreateNexus";
+import { Button } from "@/components/primitives/button";
+import { Separator } from "@/components/primitives/separator";
 import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
 import {
   Select,
@@ -7,10 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
-import { useEffect, useState } from "react";
-import CreateNexus from "../CreateNexus";
-import { Button } from "@/components/primitives/button";
-import { Separator } from "@/components/primitives/separator";
 import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
@@ -24,6 +24,7 @@ import {
 } from "@/components/primitives/context-menu";
 import { DoorOpen, Share2Icon, Trash2 } from "lucide-react";
 import { useDeleteNexus, useLeaveNexus } from "@/hooks/use-remove";
+import { useLinkGenerate } from "@/hooks/use-link";
 
 export default function NexusList() {
   const { core } = useCore();
@@ -31,6 +32,7 @@ export default function NexusList() {
   const { nexus, setNexus } = useNexus();
   const { handleClick: deleteNexusFn } = useDeleteNexus();
   const { handleClick: leaveNexusFn } = useLeaveNexus();
+  const { handleClick: generateLinkFn } = useLinkGenerate();
 
   const { user } = useUser();
   const [selectedCategory, setSelectedCategory] = useState(
@@ -91,12 +93,11 @@ export default function NexusList() {
 
             return (
               n.category === selectedCategory && (
-                <ContextMenu>
+                <ContextMenu key={idx}>
                   <ContextMenuTrigger className="flex w-full items-center justify-center">
                     <Button
                       onClick={() => setNexus(nex!)}
                       className="min-w-full cursor-pointer rounded border-2 border-border px-3 py-1 text-center font-lato font-bold text-foreground"
-                      key={idx}
                       variant="outline"
                     >
                       {n.name}
@@ -105,7 +106,12 @@ export default function NexusList() {
                   <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
                     {user.userType !== "NORMAL" && (
                       <>
-                        <ContextMenuItem className="flex justify-between">
+                        <ContextMenuItem
+                          onClick={async () =>
+                            await generateLinkFn("Nexus", n.id)
+                          }
+                          className="flex justify-between"
+                        >
                           <p className="font-lato font-bold text-foreground">
                             Share
                           </p>

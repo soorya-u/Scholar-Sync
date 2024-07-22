@@ -12,4 +12,5 @@ type Query {
   getUser: Profile!
   getUserData: [Core]!
   logOut: Boolean!
+  isUserLoggedIn: Boolean!
 }

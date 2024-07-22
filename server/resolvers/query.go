@@ -189,6 +189,15 @@ func (r *queryResolver) LogOut(ctx context.Context) (bool, error) {
 	return true, nil
 }
 
+func (r *queryResolver) IsUserLoggedIn(ctx context.Context) (bool, error) {
+
+	if cookie, ok := ctx.Value("cookie-access").(models.CookieAccess); !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else {
+		return cookie.IsLoggedIn && cookie.UserId != "", nil
+	}
+}
+
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }

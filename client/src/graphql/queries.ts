@@ -12,6 +12,12 @@ export const logOutQuery = gql`
   }
 `;
 
+export const isUserLoggedInQuery = gql`
+  query {
+    isUserLoggedIn
+  }
+`;
+
 export const getInitDataQuery = gql`
   query {
     getUser {
