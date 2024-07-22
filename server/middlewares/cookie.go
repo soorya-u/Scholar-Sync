@@ -26,6 +26,7 @@ func GetCookieMiddleware() gin.HandlerFunc {
 			newCtx := context.WithValue(ctx.Request.Context(), "cookie-access", cookieAccess)
 			ctx.Request = ctx.Request.WithContext(newCtx)
 			ctx.Next()
+			return
 		}
 
 		jwtToken := cookie.Value
@@ -42,5 +43,6 @@ func GetCookieMiddleware() gin.HandlerFunc {
 		ctx.Request = ctx.Request.WithContext(newCtx)
 
 		ctx.Next()
+		return
 	}
 }

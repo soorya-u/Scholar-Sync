@@ -31,17 +31,21 @@ export default function SideBar() {
 
   return (
     <>
-      <Dialog>
-        <DialogTrigger className="flex cursor-pointer flex-col items-center justify-center gap-1 px-2 outline-none">
-          <CirclePlus className="size-10 [&>*]:text-primary" />
-          <span className="font-kanit text-base leading-[1.15] text-foreground">
-            Create a Core
-          </span>
-        </DialogTrigger>
-        <CreateCore />
-      </Dialog>
+      {user.userType === "ADMIN" && (
+        <>
+          <Dialog>
+            <DialogTrigger className="flex cursor-pointer flex-col items-center justify-center gap-1 px-2 outline-none">
+              <CirclePlus className="size-10 [&>*]:text-primary" />
+              <span className="font-kanit text-base leading-[1.15] text-foreground">
+                Create a Core
+              </span>
+            </DialogTrigger>
+            <CreateCore />
+          </Dialog>
 
-      <Separator className="my-1 h-[3px] w-[77%] rounded-full border bg-primary" />
+          <Separator className="my-1 h-[3px] w-[77%] rounded-full border bg-primary" />
+        </>
+      )}
 
       <div className="flex size-full flex-1 flex-col gap-4 overflow-y-auto px-2">
         {apiData.length === 0 ? (

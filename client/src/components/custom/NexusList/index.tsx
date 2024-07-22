@@ -40,7 +40,7 @@ export default function NexusList() {
   );
   const [categories, setCategories] = useState(
     core.nexus.length > 0
-      ? Array.from(new Set(core.nexus.map((n) => n.category)))
+      ? Array.from(new Set(core.nexus.map((n) => n && n.category)))
       : [],
   );
 
@@ -89,9 +89,12 @@ export default function NexusList() {
         {core.nexus.length > 0 ? (
           core.nexus.map((n, idx) => {
             const apiCores = apiData.find((c) => c.id === core.id);
-            const nex = apiCores!.nexus.find((nexus) => nexus.id === n.id);
+            const nex = apiCores!.nexus.find(
+              (nexus) => nexus && nexus.id === n.id,
+            );
 
             return (
+              n &&
               n.category === selectedCategory && (
                 <ContextMenu key={idx}>
                   <ContextMenuTrigger className="flex w-full items-center justify-center">
@@ -131,7 +134,6 @@ export default function NexusList() {
                           </p>
                           <DoorOpen className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
                         </ContextMenuItem>
-                        <ContextMenuSeparator className="w-[95%] self-center border" />
                       </>
                     )}
                     {user.userType !== "NORMAL" && (

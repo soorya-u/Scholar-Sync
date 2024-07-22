@@ -97,7 +97,7 @@ func (db *DB) DeleteNexus(nexusId string) (bool, error) {
 	return true, nil
 }
 
-func (db *DB) AddUserToNexus(userId, nexusId string, endConnection bool) (bool, error) {
+func (db *DB) AddUserToNexus(userId, nexusId string) (bool, error) {
 	query := "UPDATE $nexusId SET users+=$userId;"
 	params := map[string]interface{}{
 		"nexusId": nexusId,
@@ -106,10 +106,6 @@ func (db *DB) AddUserToNexus(userId, nexusId string, endConnection bool) (bool, 
 	_, err := db.client.Query(query, params)
 	if err != nil {
 		return false, fmt.Errorf("unable to join: %v", err)
-	}
-
-	if endConnection {
-		db.client.Close()
 	}
 
 	return true, nil

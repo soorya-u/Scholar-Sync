@@ -1,4 +1,4 @@
-import { Users, Share2, DoorOpen, Trash2 } from "lucide-react";
+import { Users } from "lucide-react";
 
 import {
   Breadcrumb,
@@ -8,13 +8,11 @@ import {
   BreadcrumbSeparator,
 } from "@/components/primitives/breadcrumb";
 import { useToggler } from "@/hooks/use-toggler";
-import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
 
 export default function NavBar() {
   const { toggleUserList } = useToggler();
-  const { user } = useUser();
   const { core } = useCore();
   const { nexus } = useNexus();
 
@@ -45,11 +43,13 @@ export default function NavBar() {
           </Breadcrumb>
         )}
       </div>
-      <div className="hidden items-center justify-center gap-6 2xs:flex">
-        <button className="hidden xs-sm:flex" onClick={toggleUserList}>
-          <Users className="size-6" />
-        </button>
-      </div>
+      {nexus.creator.id !== "" && (
+        <div className="hidden items-center justify-center gap-6 2xs:flex">
+          <button className="hidden xs-sm:flex" onClick={toggleUserList}>
+            <Users className="size-6" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

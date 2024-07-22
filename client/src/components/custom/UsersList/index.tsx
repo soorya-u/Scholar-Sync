@@ -9,6 +9,8 @@ export default function UsersList() {
   const { isUserListOpen } = useToggler();
   const { nexus } = useNexus();
 
+  if (nexus.creator.id === "") return;
+
   return (
     <div
       className={cn(

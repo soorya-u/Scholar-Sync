@@ -37,7 +37,7 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 }
 
 func (db *DB) GetDBCores(userId string) ([]*models.DBCore, error) {
-	query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId IN nexus[*].creator OR $userId IN nexus[*].users;"
+	query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId IN pseudoAdmins OR $userId IN nexus[*].creator OR $userId IN nexus[*].users[0];"
 	params := map[string]interface{}{"userId": userId}
 
 	rawData, err := db.client.Query(query, params)
@@ -65,8 +65,9 @@ func (db *DB) GetDBCores(userId string) ([]*models.DBCore, error) {
 	return res, nil
 }
 
-func (db *DB) AddPseudoAdminToCore(userId, coreId string, endConnection bool) (bool, error) {
-	query := "UPDATE $coreId SET pseudoAdmin+=$userId;"
+func (db *DB) AddPseudoAdminToCore(userId, coreId string) (bool, error) {
+
+	query := "UPDATE $coreId SET pseudoAdmins+=$userId;"
 	params := map[string]interface{}{
 		"coreId": coreId,
 		"userId": userId,
@@ -77,7 +78,7 @@ func (db *DB) AddPseudoAdminToCore(userId, coreId string, endConnection bool) (b
 		return false, fmt.Errorf("unable to Join: %v", err)
 	}
 
-	query = "UPDATE $userId SET userType+=$type;"
+	query = "UPDATE $userId SET userType=$type;"
 	params = map[string]interface{}{
 		"userId": userId,
 		"type":   models.ProfileTypePseudoadmin,
@@ -86,10 +87,6 @@ func (db *DB) AddPseudoAdminToCore(userId, coreId string, endConnection bool) (b
 	_, err = db.client.Query(query, params)
 	if err != nil {
 		return false, fmt.Errorf("unable to Promote User: %v", err)
-	}
-
-	if endConnection {
-		db.client.Close()
 	}
 
 	return true, nil

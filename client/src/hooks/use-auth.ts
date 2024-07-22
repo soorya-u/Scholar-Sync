@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
@@ -28,6 +28,10 @@ export const useSignUp = () => {
 
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const adder = searchParams.get("a");
+  const joinId = searchParams.get("j");
 
   useEffect(() => {
     if (error) {
@@ -51,6 +55,9 @@ export const useSignUp = () => {
 
       setTimeout(() => {
         t.dismiss();
+        if (adder && joinId)
+          return router.replace(`/link?a=${adder}&j=${joinId}`);
+
         router.replace("/");
       }, 500);
     }
@@ -86,6 +93,10 @@ export const useLogin = () => {
 
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const adder = searchParams.get("a");
+  const joinId = searchParams.get("j");
 
   const [query, { data, error }] = useLazyQuery(loginQuery);
 
@@ -111,6 +122,9 @@ export const useLogin = () => {
 
       setTimeout(() => {
         t.dismiss();
+        if (adder && joinId)
+          return router.replace(`/link?a=${adder}&j=${joinId}`);
+
         router.replace("/");
       }, 500);
     }

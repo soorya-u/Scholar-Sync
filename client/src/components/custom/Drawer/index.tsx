@@ -8,8 +8,10 @@ import {
 
 import SideBar from "../SideBar";
 import NexusList from "../NexusList";
+import { useUser } from "@/hooks/use-user";
 
 export default function Drawer({ children }: PropsWithChildren) {
+  const { user } = useUser();
   return (
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
@@ -18,9 +20,11 @@ export default function Drawer({ children }: PropsWithChildren) {
           Scholar Sync
         </h1>
         <div className="flex h-full w-full items-center justify-center bg-secondary">
-          <div className="relative flex h-full w-28 flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300">
-            <SideBar />
-          </div>
+          {user.userType !== "NORMAL" && (
+            <div className="relative flex h-full w-28 flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300">
+              <SideBar />
+            </div>
+          )}
 
           <div className="flex h-full flex-1 flex-col items-center gap-3 border-r border-border px-2 py-4 transition-all duration-300">
             <NexusList />

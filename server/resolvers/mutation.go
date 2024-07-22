@@ -283,6 +283,42 @@ func (r *mutationResolver) LeaveNexus(ctx context.Context, nexusID string) (bool
 	return true, nil
 }
 
+func (r *mutationResolver) AddUserToNexus(ctx context.Context, nexusID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	nexusId := fmt.Sprintf("nexus:%s", nexusID)
+
+	if _, err := r.Db.AddUserToNexus(cookie.UserId, nexusId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("error in db")
+	}
+	return true, nil
+}
+
+func (r *mutationResolver) AddPseudoUserToCore(ctx context.Context, coreID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	coreId := fmt.Sprintf("core:%s", coreID)
+
+	if _, err := r.Db.AddPseudoAdminToCore(cookie.UserId, coreId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("error in db")
+	}
+	return true, nil
+}
+
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }

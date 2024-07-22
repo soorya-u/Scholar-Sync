@@ -81,7 +81,7 @@ export default function SignUpPage() {
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 id="email"
-                {...(register("email"), { required: false })}
+                {...register("email")}
                 placeholder="john-doe@example.com"
               />
               <span className="px-2 text-xs text-red-500">
@@ -97,7 +97,7 @@ export default function SignUpPage() {
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 id="password"
-                {...(register("password"), { required: false })}
+                {...register("password")}
                 placeholder={"********"}
                 type="password"
               />

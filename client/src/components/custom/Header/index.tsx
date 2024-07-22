@@ -16,30 +16,39 @@ import { useUser } from "@/hooks/use-user";
 import { useLogOut } from "@/hooks/use-auth";
 import CustomAvatar from "../CustomAvatar";
 import Drawer from "../Drawer";
+import { useApiData } from "@/hooks/use-api-data";
+import Link from "next/link";
 
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
   const { handleClick: logOut } = useLogOut();
+  const { apiData } = useApiData();
 
   return (
     <div className="flex h-[8%] w-full items-center justify-between gap-4 border-b border-border px-8">
       <div className="flex items-center justify-center gap-4">
-        <Drawer>
-          <AlignLeft className="flex cursor-pointer text-foreground md-lg:hidden" />
-        </Drawer>
-        <button
-          className="hidden cursor-pointer md-lg:flex"
-          onClick={toggleSidebar}
-        >
-          <AlignLeft className="text-foreground" />
-        </button>
-        <div className="flex items-center justify-center gap-3">
+        {apiData.length === 0 && user.userType === "NORMAL" ? (
+          <></>
+        ) : (
+          <>
+            <Drawer>
+              <AlignLeft className="flex cursor-pointer text-foreground md-lg:hidden" />
+            </Drawer>
+            <button
+              className="hidden cursor-pointer md-lg:flex"
+              onClick={toggleSidebar}
+            >
+              <AlignLeft className="text-foreground" />
+            </button>
+          </>
+        )}
+        <Link href="/" className="flex items-center justify-center gap-3">
           <img src="/logo.png" alt="logo" className="size-8" />
           <h1 className="hidden font-playwrite text-2xl text-foreground xs-sm:block">
             Scholar Sync
           </h1>
-        </div>
+        </Link>
       </div>
       <div className="flex items-center justify-center gap-4">
         <div className="hidden items-center justify-center gap-2 2xs:flex">
