@@ -18,7 +18,7 @@ func JoinUserToNexus(ctx *gin.Context) {
 	}
 
 	userId := cookie.UserId
-	nexusId, ok := ctx.GetQuery("j")
+	nexusId, ok := ctx.GetQuery("jid")
 
 	if !ok || nexusId == "" {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
@@ -50,7 +50,7 @@ func JoinPseudoUserToCore(ctx *gin.Context) {
 	}
 
 	userId := cookie.UserId
-	coreId, ok := ctx.GetQuery("j")
+	coreId, ok := ctx.GetQuery("id")
 
 	if !ok || coreId == "" {
 		ctx.JSON(http.StatusUnauthorized, gin.H{
