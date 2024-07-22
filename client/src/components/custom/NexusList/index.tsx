@@ -23,11 +23,14 @@ import {
   ContextMenuTrigger,
 } from "@/components/primitives/context-menu";
 import { DoorOpen, Share2Icon, Trash2 } from "lucide-react";
+import { useDeleteNexus, useLeaveNexus } from "@/hooks/use-remove";
 
 export default function NexusList() {
   const { core } = useCore();
   const { apiData } = useApiData();
   const { nexus, setNexus } = useNexus();
+  const { handleClick: deleteNexusFn } = useDeleteNexus();
+  const { handleClick: leaveNexusFn } = useLeaveNexus();
 
   const { user } = useUser();
   const [selectedCategory, setSelectedCategory] = useState(
@@ -113,7 +116,10 @@ export default function NexusList() {
                     )}
                     {user.userType === "NORMAL" && (
                       <>
-                        <ContextMenuItem className="flex justify-between">
+                        <ContextMenuItem
+                          onClick={async () => await leaveNexusFn(n.id)}
+                          className="flex justify-between"
+                        >
                           <p className="font-lato font-bold text-red-500">
                             Leave
                           </p>
@@ -123,14 +129,15 @@ export default function NexusList() {
                       </>
                     )}
                     {user.userType !== "NORMAL" && (
-                      <>
-                        <ContextMenuItem className="flex justify-between">
-                          <p className="font-lato font-bold text-red-500">
-                            Delete
-                          </p>
-                          <Trash2 className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
-                        </ContextMenuItem>
-                      </>
+                      <ContextMenuItem
+                        onClick={async () => await deleteNexusFn(n.id)}
+                        className="flex justify-between"
+                      >
+                        <p className="font-lato font-bold text-red-500">
+                          Delete
+                        </p>
+                        <Trash2 className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
+                      </ContextMenuItem>
                     )}
                   </ContextMenuContent>
                 </ContextMenu>
@@ -150,7 +157,7 @@ export default function NexusList() {
           <DialogTrigger asChild>
             <Button
               variant="default"
-              className="w-[90%] mb-8 md-lg:mb-0 bg-primary text-foreground"
+              className="mb-8 w-[90%] bg-primary text-foreground md-lg:mb-0"
             >
               Create a Nexus
             </Button>

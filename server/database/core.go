@@ -95,13 +95,7 @@ func (db *DB) AddPseudoAdminToCore(userId, coreId string, endConnection bool) (b
 	return true, nil
 }
 
-func (db *DB) DeleteCore(userId, coreId string) (bool, error) {
-
-	if isAdmin, err := db.AdminCheck(userId); err != nil {
-		return false, err
-	} else if !isAdmin {
-		return false, fmt.Errorf("no privilages")
-	}
+func (db *DB) DeleteCore(coreId string) (bool, error) {
 
 	if _, err := db.client.Delete(coreId); err != nil {
 		return false, fmt.Errorf("failed to delete: %v", err)

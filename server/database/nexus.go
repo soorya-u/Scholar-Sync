@@ -88,13 +88,7 @@ func (db *DB) HasAccessToNexus(userId, nexusId string) (bool, error) {
 
 }
 
-func (db *DB) DeleteNexus(userId, nexusId string) (bool, error) {
-
-	if isAdmin, err := db.AdminOrPseudoAdminCheck(userId); err != nil {
-		return false, err
-	} else if !isAdmin {
-		return false, fmt.Errorf("no privilages")
-	}
+func (db *DB) DeleteNexus(nexusId string) (bool, error) {
 
 	if _, err := db.client.Delete(nexusId); err != nil {
 		return false, fmt.Errorf("failed to delete: %v", err)

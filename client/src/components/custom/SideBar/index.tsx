@@ -17,11 +17,13 @@ import {
 } from "@/components/primitives/context-menu";
 
 import { cn } from "@/utils/cn";
+import { useDeleteCore } from "@/hooks/use-remove";
 
 export default function SideBar() {
   const { user } = useUser();
   const { apiData } = useApiData();
   const { setCore } = useCore();
+  const { handleClick: deleteCoreFn } = useDeleteCore();
 
   if (user.userType === "NORMAL") return;
 
@@ -62,7 +64,10 @@ export default function SideBar() {
                     <Share2 className="flex size-4 [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
                   </ContextMenuItem>
                   <ContextMenuSeparator className="w-[95%] self-center" />
-                  <ContextMenuItem className="flex justify-between">
+                  <ContextMenuItem
+                    onClick={async () => await deleteCoreFn(id)}
+                    className="flex justify-between"
+                  >
                     <p className="font-lato font-bold text-red-500">Delete</p>
                     <Trash2 className="flex size-4 [&>line]:text-red-500 [&>path]:text-red-500 [&>polyline]:text-red-500" />
                   </ContextMenuItem>
