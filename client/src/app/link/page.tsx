@@ -1,13 +1,13 @@
 "use client";
 
-import { PropsWithChildren } from "react";
 import Image from "next/image";
-import { useCheckUserAuth } from "@/hooks/use-auth";
-
 import Gradient from "@/components/custom/Gradient";
+import { useLink } from "@/hooks/use-link";
+import { useSearchParams } from "next/navigation";
 
-export default function AuthLayout({ children }: PropsWithChildren) {
-  useCheckUserAuth();
+export default function JoinPage() {
+  useLink();
+  const searchParams = useSearchParams();
   return (
     <>
       <Gradient />
@@ -16,7 +16,10 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           <Image src={"/logo.png"} alt="Logo" width={50} height={50} />
           <h1 className="font-playwrite text-2xl text-primary">Scholar Sync</h1>
         </div>
-        {children}
+        <h1 className="font-playwrite text-5xl text-amber-400">
+          Adding you to the requested 
+          {searchParams.get("a") === "c" ? "Core" : "Nexus"}....
+        </h1>
       </div>
     </>
   );

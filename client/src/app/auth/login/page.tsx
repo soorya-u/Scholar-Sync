@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 
 import { Label } from "@/components/primitives/label";
@@ -19,6 +20,18 @@ import { useLogin } from "@/hooks/use-auth";
 
 export default function LoginPage() {
   const { errors, handleSubmit, isSubmitting, register } = useLogin();
+  const searchParams = useSearchParams();
+  const adder = searchParams.get("a");
+  const joinId = searchParams.get("j");
+
+  const query =
+    adder && joinId
+      ? {
+          a: adder,
+          j: joinId,
+        }
+      : {};
+
   return (
     <div className="flex min-h-full items-center justify-center">
       <Card className="w-full max-w-sm">
@@ -79,7 +92,10 @@ export default function LoginPage() {
             </Button>
             <div className="mt-4 text-center text-sm">
               Do not have an account?{" "}
-              <Link href="/auth/sign-up" className="underline">
+              <Link
+                href={{ pathname: "/auth/sign-up", query }}
+                className="underline"
+              >
                 Sign Up
               </Link>
             </div>

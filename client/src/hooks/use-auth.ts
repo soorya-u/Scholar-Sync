@@ -2,12 +2,16 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 
 import { LoginType, loginSchema } from "@/schema/login";
 import { SignUpType, signUpSchema } from "@/schema/sign-up";
 import { signUpMutation } from "@/graphql/mutations";
-import { loginQuery, logOutQuery } from "@/graphql/queries";
+import {
+  loginQuery,
+  logOutQuery,
+  isUserLoggedInQuery,
+} from "@/graphql/queries";
 import { useToast } from "@/components/primitives/use-toast";
 
 export const useSignUp = () => {
@@ -164,4 +168,14 @@ export const useLogOut = () => {
   return {
     handleClick: async () => await query(),
   };
+};
+
+export const useCheckUserAuth = () => {
+  const { data } = useQuery(isUserLoggedInQuery);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!data?.isUserLoggedIn) return;
+    router.replace("/");
+  }, [data]);
 };

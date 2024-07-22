@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { Button } from "@/components/primitives/button";
 import {
@@ -17,6 +18,17 @@ import { useSignUp } from "@/hooks/use-auth";
 
 export default function SignUpPage() {
   const { errors, handleSubmit, isSubmitting, register } = useSignUp();
+  const searchParams = useSearchParams();
+  const adder = searchParams.get("a");
+  const joinId = searchParams.get("j");
+
+  const query =
+    adder && joinId
+      ? {
+          a: adder,
+          j: joinId,
+        }
+      : {};
 
   return (
     <div className="flex min-h-full items-center justify-center">
@@ -104,7 +116,10 @@ export default function SignUpPage() {
           </form>
           <div className="mt-4 text-center text-sm">
             Already have an account?{" "}
-            <Link href="/auth/login" className="underline">
+            <Link
+              href={{ pathname: "/auth/login", query }}
+              className="underline"
+            >
               Sign In
             </Link>
           </div>
