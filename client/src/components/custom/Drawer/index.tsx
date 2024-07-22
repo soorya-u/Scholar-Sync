@@ -20,7 +20,7 @@ export default function Drawer({ children }: PropsWithChildren) {
           Scholar Sync
         </h1>
         <div className="flex h-full w-full items-center justify-center bg-secondary">
-          {user.userType === "ADMIN" && (
+          {user.userType !== "NORMAL" && (
             <div className="relative flex h-full w-28 flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300">
               <SideBar />
             </div>
