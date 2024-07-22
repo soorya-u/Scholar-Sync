@@ -6,6 +6,12 @@ export const loginQuery = gql`
   }
 `;
 
+export const logOutQuery = gql`
+  query {
+    logOut
+  }
+`;
+
 export const getInitDataQuery = gql`
   query {
     getUser {
