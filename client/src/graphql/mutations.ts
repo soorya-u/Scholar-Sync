@@ -45,3 +45,21 @@ export const createAnnouncementMutation = gql`
     )
   }
 `;
+
+export const deleteCoreMutation = gql`
+  mutation ($coreId: String!) {
+    deleteCore(coreId: $coreId)
+  }
+`;
+
+export const deleteNexusMutation = gql`
+  mutation ($nexusId: String!) {
+    deleteNexus(nexusId: $nexusId)
+  }
+`;
+
+export const leaveNexusMutation = gql`
+  mutation ($nexusId: String!) {
+    leaveNexus(nexusId: $nexusId)
+  }
+`;
