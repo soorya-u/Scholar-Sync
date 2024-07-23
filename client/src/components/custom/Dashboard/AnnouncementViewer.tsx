@@ -38,7 +38,7 @@ export default function AnnouncementViewer({
           <div className="flex gap-2 rounded-md bg-neutral-300/25 pr-16">
             <div className="h-full w-[0.3rem] rounded-l-md bg-neutral-300" />
             <div className="flex flex-col items-center justify-center">
-              <div className="flex items-center justify-center gap-2">
+              <div className="flex items-center justify-center gap-2 self-start">
                 <MessageSquare className="size-5 -scale-x-100 [&>*]:text-yellow-500" />
                 <h1 className="font-kanit text-lg text-yellow-500">{title}</h1>
               </div>
