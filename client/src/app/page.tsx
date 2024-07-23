@@ -56,7 +56,7 @@ export default function Home() {
               <NavBar />
               <div className="flex h-[91%] flex-1">
                 <div className="flex flex-1 flex-col">
-                  <div className="flex-1">
+                  <div className="flex-1 overflow-x-auto">
                     <Dashboard />
                   </div>
                   <Uploader />
