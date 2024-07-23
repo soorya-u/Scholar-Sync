@@ -1,6 +1,6 @@
 "use client";
 
-import { PropsWithChildren } from "react";
+import React, { PropsWithChildren } from "react";
 import Image from "next/image";
 import { useCheckUserAuth } from "@/hooks/use-auth";
 
@@ -16,7 +16,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           <Image src={"/logo.png"} alt="Logo" width={50} height={50} />
           <h1 className="font-playwrite text-2xl text-primary">Scholar Sync</h1>
         </div>
-        {children}
+        <React.Suspense>{children}</React.Suspense>
       </div>
     </>
   );
