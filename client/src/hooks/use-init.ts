@@ -13,6 +13,7 @@ import { useNexus } from "./use-nexus";
 export const useInitData = () => {
   const { data, error, refetch, loading } = useQuery(getInitDataQuery, {
     fetchPolicy: "no-cache",
+    onCompleted: () => router.refresh(),
   });
   const router = useRouter();
   const { toast } = useToast();
