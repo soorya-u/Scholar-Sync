@@ -23,6 +23,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
+// @ts-ignore
 const link = ApolloLink.from([authLink, uploadLink]);
 
 const client = new ApolloClient({
