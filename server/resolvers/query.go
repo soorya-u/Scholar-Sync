@@ -44,15 +44,28 @@ func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (
 		return "", fmt.Errorf("%v", err)
 	}
 
-	http.SetCookie(cookie.Writer, &http.Cookie{
-		Name:     "authorization",
-		Value:    token,
-		Path:     "/",
-		Expires:  time.Now().Add(time.Hour * 24 * 30),
-		HttpOnly: true,
-		Secure:   os.Getenv("GIN_MODE") == "release",
-		// SameSite: http.SameSiteNoneMode,
-	})
+	if os.Getenv("GIN_MODE") == "release" {
+		http.SetCookie(cookie.Writer, &http.Cookie{
+			Name:     "authorization",
+			Value:    token,
+			Path:     "/",
+			Expires:  time.Now().Add(time.Hour * 24 * 30),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+		})
+
+	} else {
+
+		http.SetCookie(cookie.Writer, &http.Cookie{
+			Name:     "authorization",
+			Value:    token,
+			Path:     "/",
+			Expires:  time.Now().Add(time.Hour * 24 * 30),
+			HttpOnly: true,
+			Secure:   false,
+		})
+	}
 
 	return token, nil
 }
@@ -190,15 +203,28 @@ func (r *queryResolver) LogOut(ctx context.Context) (bool, error) {
 		return false, fmt.Errorf("cookie not found")
 	}
 
-	http.SetCookie(cookie.Writer, &http.Cookie{
-		Name:     "authorization",
-		Value:    "",
-		Path:     "/",
-		Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
-		HttpOnly: true,
-		Secure:   os.Getenv("GIN_MODE") == "release",
-		// SameSite: http.SameSiteNoneMode,
-	})
+	if os.Getenv("GIN_MODE") == "release" {
+		http.SetCookie(cookie.Writer, &http.Cookie{
+			Name:     "authorization",
+			Value:    "",
+			Path:     "/",
+			Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+		})
+
+	} else {
+
+		http.SetCookie(cookie.Writer, &http.Cookie{
+			Name:     "authorization",
+			Value:    "",
+			Path:     "/",
+			Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
+			HttpOnly: true,
+			Secure:   false,
+		})
+	}
 
 	return true, nil
 }
