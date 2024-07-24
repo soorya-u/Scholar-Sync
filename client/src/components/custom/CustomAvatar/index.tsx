@@ -16,22 +16,7 @@ export default function CustomAvatar({
 }) {
   const c = useColor(id);
 
-  if (!c) {
-    return (
-      <div
-        className={cn(
-          "flex size-10 items-center justify-center rounded-full bg-sky-400",
-          className,
-        )}
-      >
-        <span
-          className={cn("font-playwrite text-lg text-black", textClassName)}
-        >
-          {name[0]}
-        </span>
-      </div>
-    );
-  }
+  if (!c) return;
 
   return (
     <div
