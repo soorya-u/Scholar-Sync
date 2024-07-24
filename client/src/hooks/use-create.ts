@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useController, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@apollo/client";
@@ -21,8 +22,9 @@ export const useCoreCreate = () => {
   });
   const { toast } = useToast();
   const [mutate, { data, error }] = useMutation(createCoreMutation);
-
-  const { refetch } = useInitData();
+  const router = useRouter();
+  const { refetch: refreshQuery } = useInitData();
+  const refetch = async () => await refreshQuery();
 
   const onSubmitFunc = async (val: CoreType) => {
     // TODO: Add Core Image String
@@ -56,7 +58,7 @@ export const useCoreCreate = () => {
         description: "Core has been Successfully Created.",
       });
 
-      refetch();
+      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -69,7 +71,8 @@ export const useCoreCreate = () => {
 };
 
 export const useNexusCreate = () => {
-  const { refetch } = useInitData();
+  const { refetch: refreshQuery } = useInitData();
+  const router = useRouter()
   const {
     register,
     handleSubmit,
@@ -88,6 +91,8 @@ export const useNexusCreate = () => {
   const { toast } = useToast();
   const { core } = useCore();
   const [mutate, { data, error }] = useMutation(createNexusMutation);
+
+  const refetch = async () => await refreshQuery();
 
   const onSubmitFunc = async (val: NexusType) => {
     await mutate({
@@ -118,7 +123,7 @@ export const useNexusCreate = () => {
         description: "Nexus has been Successfully Created.",
       });
 
-      refetch();
+      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
