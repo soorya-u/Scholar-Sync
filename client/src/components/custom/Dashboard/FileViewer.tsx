@@ -1,9 +1,12 @@
 "use client";
 
 import { File, Download } from "lucide-react";
+import { Capacitor } from "@capacitor/core";
 
 import { dateTimeFormatter } from "@/utils/date-formatter";
 import CustomAvatar from "../CustomAvatar";
+
+import {useFs} from "@/hooks/use-fs";
 
 type FileViewerProps = {
   creatorId: string;
@@ -24,6 +27,8 @@ export default function FileViewer({
   title,
   fileUrl,
 }: FileViewerProps) {
+  const isNative = Capacitor.isNativePlatform();
+  const {}  =useFs()
   return (
     <div className="flex">
       <div className="flex flex-col gap-1">
@@ -47,16 +52,20 @@ export default function FileViewer({
               <p className="pl-7 font-lato text-sm font-bold text-slate-700">
                 {description}
               </p>
-              <a
-                download={fileName}
-                href={`${
-                  process.env.NEXT_PUBLIC_BACKEND_URL
-                }/static/${encodeURIComponent(fileUrl)}`}
-                className="mt-1 flex items-center justify-center gap-2 transition-all duration-300 hover:opacity-35"
-              >
-                <Download className="size-5" />
-                <p className="font-kanit text-slate-700">{fileName}</p>
-              </a>
+              {isNative ? (
+                <></>
+              ) : (
+                <a
+                  download={fileName}
+                  href={`${
+                    process.env.NEXT_PUBLIC_BACKEND_URL
+                  }/static/${encodeURIComponent(fileUrl)}`}
+                  className="mt-1 flex items-center justify-center gap-2 transition-all duration-300 hover:opacity-35"
+                >
+                  <Download className="size-5" />
+                  <p className="font-kanit text-slate-700">{fileName}</p>
+                </a>
+              )}
             </div>
           </div>
         </div>

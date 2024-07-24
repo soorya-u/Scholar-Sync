@@ -8,7 +8,6 @@ import { Separator } from "@/components/primitives/separator";
 import FileViewer from "./FileViewer";
 import AnnouncementViewer from "./AnnouncementViewer";
 import { dateFormatter } from "@/utils/date-formatter";
-import Image from "next/image";
 
 export default function Dashboard() {
   const { nexus } = useNexus();
@@ -30,7 +29,7 @@ export default function Dashboard() {
       {dashboardList.length === 0 ? (
         <div className="flex h-full flex-1 flex-col justify-center items-center gap-4 overflow-y-auto p-4">
           <h1 className="text-3xl text-center font-playwrite text-amber-300">No Files or Announcements Found</h1>
-          <Image src="/not-found.png" alt="not found" height={150} width={150} />
+          <img src="/not-found.png" alt="not found" height={150} width={150} />
         </div>
       ) : (
         <div className="flex h-full flex-1 flex-col gap-4 overflow-y-auto p-4">

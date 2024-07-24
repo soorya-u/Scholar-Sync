@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Scholar Sync</string>
+    <string name="title_activity_main">Scholar Sync</string>
+    <string name="package_name">dev.soorya_u.scholar_sync</string>
+    <string name="custom_url_scheme">dev.soorya_u.scholar_sync</string>
+</resources>
