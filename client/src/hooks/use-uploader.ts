@@ -14,6 +14,7 @@ import { FileType, fileSchema } from "@/schema/file";
 import { useInitData } from "./use-init";
 import { useToast } from "@/components/primitives/use-toast";
 import { useNexus } from "./use-nexus";
+import { useRouter } from "next/navigation";
 
 export const useUploader = (
   uploader: "Announcement" | "File",
@@ -23,7 +24,10 @@ export const useUploader = (
   const {
     nexus: { id: nexus },
   } = useNexus();
-  const { refetch } = useInitData();
+  const { refetch: refreshQuery } = useInitData();
+  const router = useRouter();
+
+  const refetch = async () => await refreshQuery();
 
   const [mutate, { data, error }] = useMutation(
     uploader === "File" ? createFileMutation : createAnnouncementMutation,
@@ -92,7 +96,7 @@ export const useUploader = (
         description: "Nexus has been Successfully Created.",
       });
 
-      refetch();
+      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 

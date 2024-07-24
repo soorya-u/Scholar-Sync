@@ -24,9 +24,7 @@ export const useDeleteCore = () => {
     });
   };
 
-  const refetch = async () => {
-    await refreshQuery();
-  };
+  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {
@@ -71,9 +69,7 @@ export const useDeleteNexus = () => {
     });
   };
 
-  const refetch = async () => {
-    await refreshQuery();
-  };
+  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {
@@ -118,9 +114,7 @@ export const useLeaveNexus = () => {
     });
   };
 
-  const refetch = async () => {
-    await refreshQuery();
-  };
+  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {

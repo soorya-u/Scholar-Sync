@@ -13,6 +13,7 @@ import { useNexus } from "./use-nexus";
 export const useInitData = () => {
   const { data, error, refetch, loading } = useQuery(getInitDataQuery, {
     fetchPolicy: "no-cache",
+    onCompleted: () => router.refresh(),
   });
   const router = useRouter();
   const { toast } = useToast();
@@ -20,7 +21,7 @@ export const useInitData = () => {
   const { setUser } = useUser();
   const { apiData, setApiData } = useApiData();
   const { setCore } = useCore();
-  const { nexus: bnexus, setNexus } = useNexus();
+  const { setNexus } = useNexus();
 
   useEffect(() => {
     if (loading) return;
@@ -47,5 +48,6 @@ export const useInitData = () => {
 
   return {
     refetch,
+    loading,
   };
 };
