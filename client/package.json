@@ -8,9 +8,9 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
-    "android": "bunx cap sync && bunx cap run android",
-    "ios": "bunx cap sync && bunx cap run ios",
-    "assets": "bunx capacitor-assets generate --iconBackgroundColor '#fff' --iconBackgroundColorDark '#fff' --splashBackgroundColor '#fff' --splashBackgroundColorDark '#fff' --iosProject ./mobile/ios/App --androidProject ./mobile/android"
+    "android": "bunx @capacitor/cli sync && bunx @capacitor/cli run android",
+    "ios": "bunx @capacitor/cli sync && bunx @capacitor/cli run ios",
+    "assets": "capacitor-assets generate --iconBackgroundColor '#fff' --iconBackgroundColorDark '#fff' --splashBackgroundColor '#fff' --splashBackgroundColorDark '#fff' --iosProject ./mobile/ios/App --androidProject ./mobile/android"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",

@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from "@capacitor/cli";
 
 const config: CapacitorConfig = {
-  appId: "dev.soorya_u.acholar_sync",
+  appId: "dev.soorya_u.scholar_sync",
   appName: "Scholar Sync",
   webDir: "out",
   backgroundColor: "#fff",
