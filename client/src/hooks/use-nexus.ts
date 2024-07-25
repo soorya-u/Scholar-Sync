@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import type { RootState } from "@/redux/store";
-import { setNexus as setNexusFn } from "@/redux/slices/nexus";
+import { setNexus as setNexusFn, resetNexus } from "@/redux/slices/nexus";
 import { NexusType } from "@/types/api";
 
 export const useNexus = () => {
@@ -13,5 +13,6 @@ export const useNexus = () => {
   return {
     nexus,
     setNexus,
+    resetNexus: () => dispatch(resetNexus()),
   };
 };

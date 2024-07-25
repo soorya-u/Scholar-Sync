@@ -12,9 +12,11 @@ export const apiDataSlice = createSlice({
       if (payload.length === 0) return state;
       return payload;
     },
+
+    resetApiData: () => initialState,
   },
 });
 
-export const { setApiData } = apiDataSlice.actions;
+export const { setApiData, resetApiData } = apiDataSlice.actions;
 
 export default apiDataSlice.reducer;

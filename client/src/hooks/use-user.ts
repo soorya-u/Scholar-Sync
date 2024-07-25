@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import type { RootState } from "@/redux/store";
-import { setUser as setUserFn } from "@/redux/slices/user";
+import { setUser as setUserFn, resetUser } from "@/redux/slices/user";
 import { UserType } from "@/types/api";
 
 export const useUser = () => {
@@ -10,5 +10,6 @@ export const useUser = () => {
   return {
     user,
     setUser: (user: UserType) => dispatch(setUserFn(user)),
+    resetUser: () => dispatch(resetUser()),
   };
 };

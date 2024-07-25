@@ -13,6 +13,11 @@ import {
   isUserLoggedInQuery,
 } from "@/graphql/queries";
 import { useToast } from "@/components/primitives/use-toast";
+import { useApiData } from "./use-api-data";
+import { useUser } from "./use-user";
+import useColor from "./use-color";
+import { useNexus } from "./use-nexus";
+import { useCore } from "./use-core";
 
 export const useSignUp = () => {
   const {
@@ -151,6 +156,17 @@ export const useLogOut = () => {
   const [query, { data, error }] = useLazyQuery(logOutQuery);
   const { toast } = useToast();
   const router = useRouter();
+  const { resetApiData } = useApiData();
+  const { resetUser } = useUser();
+  const { resetCore } = useCore();
+  const { resetNexus } = useNexus();
+
+  const resetAll = () => {
+    resetApiData();
+    resetUser();
+    resetCore();
+    resetNexus();
+  };
 
   useEffect(() => {
     if (error) {
@@ -174,6 +190,7 @@ export const useLogOut = () => {
 
       setTimeout(() => {
         t.dismiss();
+        resetAll();
         router.replace("/auth/login");
       }, 500);
     }

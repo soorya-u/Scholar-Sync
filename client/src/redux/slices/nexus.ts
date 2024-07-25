@@ -24,9 +24,10 @@ export const nexusSlice = createSlice({
     setNexus: (_, { payload }: PayloadAction<NexusType>) => {
       return payload;
     },
+    resetNexus: () => initialState,
   },
 });
 
-export const { setNexus } = nexusSlice.actions;
+export const { setNexus, resetNexus } = nexusSlice.actions;
 
 export default nexusSlice.reducer;

@@ -34,11 +34,11 @@ export const useInitData = () => {
       });
       return;
     }
+    console.log("I have come");
     setUser(data.getUser as UserType);
     setApiData(data.getUserData as CoreType[]);
 
     if (apiData.length === 0) return;
-    console.log(apiData);
     const selectedCores = apiData.filter((c) => c.nexus && c.nexus?.length > 0);
     const { id, imageUrl, name, nexus } =
       selectedCores.length > 0 ? selectedCores[0] : apiData[0];

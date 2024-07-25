@@ -19,9 +19,10 @@ export const coreSlice = createSlice({
         ...payload,
       };
     },
+    resetCore: () => initialState,
   },
 });
 
-export const { setCore } = coreSlice.actions;
+export const { setCore, resetCore } = coreSlice.actions;
 
 export default coreSlice.reducer;

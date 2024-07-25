@@ -1,7 +1,10 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import type { RootState } from "@/redux/store";
-import { setApiData as setApiDataFn } from "@/redux/slices/api-data";
+import {
+  setApiData as setApiDataFn,
+  resetApiData,
+} from "@/redux/slices/api-data";
 import { CoreType } from "@/types/api";
 
 export const useApiData = () => {
@@ -11,5 +14,6 @@ export const useApiData = () => {
   return {
     apiData,
     setApiData: (data: CoreType[]) => dispatch(setApiDataFn(data)),
+    resetApiData: () => dispatch(resetApiData()),
   };
 };

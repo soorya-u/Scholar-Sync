@@ -1,7 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 
 import type { RootState } from "@/redux/store";
-import { setCore as setCoreFn } from "@/redux/slices/core";
+import { setCore as setCoreFn, resetCore } from "@/redux/slices/core";
 import { CoreReduxType } from "@/types/redux";
 import { useNexus } from "./use-nexus";
 import { useApiData } from "./use-api-data";
@@ -21,5 +21,6 @@ export const useCore = () => {
   return {
     core,
     setCore,
+    resetCore: () => dispatch(resetCore()),
   };
 };
