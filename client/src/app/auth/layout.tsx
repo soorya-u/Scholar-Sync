@@ -6,7 +6,7 @@ import { useCheckUserAuth } from "@/hooks/use-auth";
 import Gradient from "@/components/custom/Gradient";
 
 export default function AuthLayout({ children }: PropsWithChildren) {
-  useCheckUserAuth();
+  // useCheckUserAuth();
   return (
     <>
       <Gradient />

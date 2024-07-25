@@ -30,7 +30,7 @@ export default function NavBar() {
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 <BreadcrumbPage className="cursor-pointer font-kanit text-lg">
-                  {nexus.category}
+                  {nexus.category} Semester
                 </BreadcrumbPage>
               </BreadcrumbItem>
               <BreadcrumbSeparator />

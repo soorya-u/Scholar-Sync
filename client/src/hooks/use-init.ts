@@ -34,7 +34,6 @@ export const useInitData = () => {
       });
       return;
     }
-    console.log("I have come");
     setUser(data.getUser as UserType);
     setApiData(data.getUserData as CoreType[]);
 
