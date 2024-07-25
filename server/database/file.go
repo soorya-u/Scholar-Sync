@@ -83,3 +83,36 @@ func (db *DB) GetFiles(fileIds []string) ([]*models.File, error) {
 	return res, nil
 
 }
+
+func (db *DB) GetFilenameByPath(filePath string) (string, error) {
+	query := "SELECT *, sentBy.* from file WHERE fileUrl = $filePath"
+	params := map[string]interface{}{
+		"filePath": filePath,
+	}
+
+	rawData, err := db.client.Query(query, params)
+	if err != nil {
+		return "", fmt.Errorf("error in running query: %v", err)
+	}
+
+	var parsedData []struct {
+		Result []*models.File `json:"result"`
+		Status string         `json:"status"`
+		Time   string         `json:"time"`
+	}
+
+	if err = surrealdb.Unmarshal(rawData, &parsedData); err != nil {
+		return "", fmt.Errorf("unable to unmarshal: %v", err)
+	}
+
+	res := parsedData[0].Result
+
+	if len(res) <= 0 {
+		return "", fmt.Errorf("no result found")
+	}
+
+	db.client.Close()
+
+	return res[0].FileName, nil
+
+}
