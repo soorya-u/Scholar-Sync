@@ -77,33 +77,6 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 	return token, nil
 }
 
-func (r *mutationResolver) SingleUpload(ctx context.Context, file graphql.Upload) (bool, error) {
-	const uploadDir string = "static"
-
-	workingDirectory, err := os.Getwd()
-	if err != nil {
-		return false, err
-	}
-
-	filePath := filepath.Join(workingDirectory, uploadDir, file.Filename)
-
-	outFile, err := os.Create(filePath)
-	if err != nil {
-		return false, err
-	}
-	defer outFile.Close()
-
-	if _, err := file.File.Seek(0, io.SeekStart); err != nil {
-		return false, err
-	}
-
-	if _, err := io.Copy(outFile, file.File); err != nil {
-		return false, err
-	}
-
-	return true, nil
-}
-
 func (r *mutationResolver) CreateCore(ctx context.Context, input models.CoreData) (string, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
@@ -335,3 +308,36 @@ func (r *mutationResolver) AddPseudoUserToCore(ctx context.Context, coreID strin
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *mutationResolver) SingleUpload(ctx context.Context, file graphql.Upload) (bool, error) {
+	const uploadDir string = "static"
+
+	workingDirectory, err := os.Getwd()
+	if err != nil {
+		return false, err
+	}
+
+	filePath := filepath.Join(workingDirectory, uploadDir, file.Filename)
+
+	outFile, err := os.Create(filePath)
+	if err != nil {
+		return false, err
+	}
+	defer outFile.Close()
+
+	if _, err := file.File.Seek(0, io.SeekStart); err != nil {
+		return false, err
+	}
+
+	if _, err := io.Copy(outFile, file.File); err != nil {
+		return false, err
+	}
+
+	return true, nil
+}
