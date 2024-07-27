@@ -90,6 +90,7 @@ type ComplexityRoot struct {
 		DeleteCore          func(childComplexity int, coreID string) int
 		DeleteNexus         func(childComplexity int, nexusID string) int
 		LeaveNexus          func(childComplexity int, nexusID string) int
+		RemoveUserFromNexus func(childComplexity int, input models.RemoveUserData) int
 		SignUpUser          func(childComplexity int, input models.SignUpData) int
 	}
 
@@ -141,6 +142,7 @@ type MutationResolver interface {
 	CreateAnnouncement(ctx context.Context, input models.AnnouncementData) (string, error)
 	DeleteCore(ctx context.Context, coreID string) (bool, error)
 	DeleteNexus(ctx context.Context, nexusID string) (bool, error)
+	RemoveUserFromNexus(ctx context.Context, input models.RemoveUserData) (bool, error)
 	LeaveNexus(ctx context.Context, nexusID string) (bool, error)
 	AddUserToNexus(ctx context.Context, nexusID string) (bool, error)
 	AddPseudoUserToCore(ctx context.Context, coreID string) (bool, error)
@@ -426,6 +428,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.LeaveNexus(childComplexity, args["nexusId"].(string)), true
 
+	case "Mutation.removeUserFromNexus":
+		if e.complexity.Mutation.RemoveUserFromNexus == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_removeUserFromNexus_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.RemoveUserFromNexus(childComplexity, args["input"].(models.RemoveUserData)), true
+
 	case "Mutation.signUpUser":
 		if e.complexity.Mutation.SignUpUser == nil {
 			break
@@ -590,6 +604,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputGetNexusData,
 		ec.unmarshalInputLoginData,
 		ec.unmarshalInputNexusData,
+		ec.unmarshalInputRemoveUserData,
 		ec.unmarshalInputSignUpData,
 	)
 	first := true
@@ -720,6 +735,11 @@ input AnnouncementData {
   nexus: String!
 }
 
+input RemoveUserData {
+  userId: String!
+  nexusId: String!
+}
+
 type Mutation {
   signUpUser(input: SignUpData!): String!
   createCore(input: CoreData!): ID!
@@ -728,6 +748,7 @@ type Mutation {
   createAnnouncement(input: AnnouncementData!): ID!
   deleteCore(coreId: String!): Boolean!
   deleteNexus(nexusId: String!): Boolean!
+  removeUserFromNexus(input: RemoveUserData!): Boolean!
   leaveNexus(nexusId: String!): Boolean!
   addUserToNexus(nexusId: String!): Boolean!
   addPseudoUserToCore(coreId: String!): Boolean!
@@ -946,6 +967,21 @@ func (ec *executionContext) field_Mutation_leaveNexus_args(ctx context.Context, 
 		}
 	}
 	args["nexusId"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_removeUserFromNexus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 models.RemoveUserData
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNRemoveUserData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐRemoveUserData(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -2359,6 +2395,61 @@ func (ec *executionContext) fieldContext_Mutation_deleteNexus(ctx context.Contex
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_deleteNexus_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_removeUserFromNexus(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_removeUserFromNexus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().RemoveUserFromNexus(rctx, fc.Args["input"].(models.RemoveUserData))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_removeUserFromNexus(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_removeUserFromNexus_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -5586,6 +5677,40 @@ func (ec *executionContext) unmarshalInputNexusData(ctx context.Context, obj int
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputRemoveUserData(ctx context.Context, obj interface{}) (models.RemoveUserData, error) {
+	var it models.RemoveUserData
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"userId", "nexusId"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "userId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userId"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserID = data
+		case "nexusId":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexusId"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.NexusID = data
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputSignUpData(ctx context.Context, obj interface{}) (models.SignUpData, error) {
 	var it models.SignUpData
 	asMap := map[string]interface{}{}
@@ -6056,6 +6181,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "deleteNexus":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_deleteNexus(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "removeUserFromNexus":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_removeUserFromNexus(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -7119,6 +7251,11 @@ func (ec *executionContext) unmarshalNProfileType2githubᚗcomᚋsooryaᚑuᚋsc
 
 func (ec *executionContext) marshalNProfileType2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfileType(ctx context.Context, sel ast.SelectionSet, v models.ProfileType) graphql.Marshaler {
 	return v
+}
+
+func (ec *executionContext) unmarshalNRemoveUserData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐRemoveUserData(ctx context.Context, v interface{}) (models.RemoveUserData, error) {
+	res, err := ec.unmarshalInputRemoveUserData(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNSignUpData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐSignUpData(ctx context.Context, v interface{}) (models.SignUpData, error) {

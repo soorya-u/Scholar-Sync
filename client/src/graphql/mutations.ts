@@ -75,3 +75,9 @@ export const addUserToNexusMutation = gql`
     addUserToNexus(nexusId: $nexusId)
   }
 `;
+
+export const removeUserFromNexusMutation = gql`
+  mutation ($userId: String!, $nexusId: String!) {
+    removeUserFromNexus(input: { userId: $userId, nexusId: $nexusId })
+  }
+`;
