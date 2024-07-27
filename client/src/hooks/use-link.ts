@@ -80,7 +80,7 @@ export const useLinkGenerate = () => {
     const adder = place === "Nexus" ? "n" : "c";
     await navigator.clipboard
       .writeText(
-        `${process.env.NEXT_PUBLIC_FRONTEND_URL}/link?a=${adder}&j=${joinId}`,
+        `${process.env.NEXT_PUBLIC_URL}/link?a=${adder}&j=${joinId}`,
       )
       .then(() =>
         toast({

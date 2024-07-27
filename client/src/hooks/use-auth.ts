@@ -200,13 +200,3 @@ export const useLogOut = () => {
     handleClick: async () => await query(),
   };
 };
-
-export const useCheckUserAuth = () => {
-  const { data } = useQuery(isUserLoggedInQuery);
-  const router = useRouter();
-
-  useEffect(() => {
-    if (!data?.isUserLoggedIn) return;
-    router.replace("/");
-  }, [data]);
-};

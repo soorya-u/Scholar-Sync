@@ -1,12 +1,14 @@
-"use client";
-
-import React, { PropsWithChildren } from "react";
-import { useCheckUserAuth } from "@/hooks/use-auth";
+import { PropsWithChildren, Suspense } from "react";
+import { Metadata } from "next";
 
 import Gradient from "@/components/custom/Gradient";
 
+export const metadata: Metadata = {
+  description:
+    "Authenication in Scholar Sync provides secure access for users ensuring a seamless entry into the platform's hierarchical system.",
+};
+
 export default function AuthLayout({ children }: PropsWithChildren) {
-  // useCheckUserAuth();
   return (
     <>
       <Gradient />
@@ -15,7 +17,7 @@ export default function AuthLayout({ children }: PropsWithChildren) {
           <img src={"/logo.png"} alt="Logo" width={50} height={50} />
           <h1 className="font-playwrite text-2xl text-primary">Scholar Sync</h1>
         </div>
-        <React.Suspense>{children}</React.Suspense>
+        <Suspense>{children}</Suspense>
       </div>
     </>
   );
