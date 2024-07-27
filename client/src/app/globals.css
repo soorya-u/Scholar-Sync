@@ -45,7 +45,7 @@
     @apply border-border;
   }
   body {
-    @apply relative overflow-hidden h-screen bg-gradient-to-br from-background to-secondary via-secondary text-foreground;
+    @apply relative h-screen bg-gradient-to-br from-background via-secondary to-secondary text-foreground;
   }
 }
 

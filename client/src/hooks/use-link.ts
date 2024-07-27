@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useSearchParams, useRouter, useParams } from "next/navigation";
 import { useMutation, useQuery } from "@apollo/client";
 
 import { isUserLoggedInQuery } from "@/graphql/queries";
@@ -16,40 +16,40 @@ export const useLink = () => {
   );
   const [userMutate, { data: userData }] = useMutation(addUserToNexusMutation);
   const router = useRouter();
-  const searchParams = useSearchParams();
+  const params = useParams();
   const { toast } = useToast();
 
-  const add = searchParams.get("a");
-  const joinerId = searchParams.get("j");
+  const location = params.location as string;
+  const joinerId = params.id as string;
 
   const performMutation = async () => {
-    if (add === "c")
+    if (location === "c")
       await pseudoUserMutate({ variables: { coreId: joinerId } });
-    else if (add === "n")
+    else if (location === "n")
       await userMutate({ variables: { nexusId: joinerId } });
   };
 
   useEffect(() => {
-    if (!add || !joinerId) {
+    if (!location || !joinerId) {
       toast({
         title: "Invalid URL",
         description:
           "The URL used is Invalid. Please try again or ask the Admin to generate new URL",
         variant: "destructive",
       });
-      return router.push("/auth/login");
+      return router.push("/");
     }
 
     if (!loading && data) {
       if (!data.isUserLoggedIn) {
         router.push(
-          `/auth/login?${new URLSearchParams({ a: add, j: joinerId }).toString()}`,
+          `/auth/login?${new URLSearchParams({ l: location, j: joinerId }).toString()}`,
         );
       } else {
         performMutation();
       }
     }
-  }, [data, loading, add, joinerId, toast, router]);
+  }, [data, loading, location, joinerId, toast, router]);
 
   useEffect(() => {
     if (!pseudoUserData && !userData) return;
@@ -58,30 +58,28 @@ export const useLink = () => {
         title: "Join Sucessfull",
         description: "Successfully joined as a PseudoAdmin",
       });
-      return router.replace("/");
+      return router.replace("/dashboard");
     }
     if (userData) {
       toast({
         title: "Join Sucessfull",
         description: "Successfully joined as a User",
       });
-      return router.replace("/");
+      return router.replace("/dashboard");
     }
   }, [pseudoUserData, userData]);
 };
 
-type IPlace = "Nexus" | "Core";
+type ILocation = "Nexus" | "Core";
 
 export const useLinkGenerate = () => {
   const { toast } = useToast();
 
-  const handleClick = async (place: IPlace, id: string) => {
+  const handleClick = async (place: ILocation, id: string) => {
     const joinId = id.split(":")[1];
-    const adder = place === "Nexus" ? "n" : "c";
+    const location = place === "Nexus" ? "n" : "c";
     await navigator.clipboard
-      .writeText(
-        `${process.env.NEXT_PUBLIC_URL}/link?a=${adder}&j=${joinId}`,
-      )
+      .writeText(`${process.env.NEXT_PUBLIC_URL}/link/${location}/${joinId}`)
       .then(() =>
         toast({
           title: "Copy Successfull",

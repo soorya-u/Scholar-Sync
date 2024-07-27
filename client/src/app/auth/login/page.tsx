@@ -21,19 +21,19 @@ import { useLogin } from "@/hooks/use-auth";
 export default function LoginPage() {
   const { errors, handleSubmit, isSubmitting, register } = useLogin();
   const searchParams = useSearchParams();
-  const adder = searchParams.get("a");
+  const adder = searchParams.get("l");
   const joinId = searchParams.get("j");
 
   const query =
     adder && joinId
       ? {
-          a: adder,
+          l: adder,
           j: joinId,
         }
       : {};
 
   return (
-    <div className="flex min-h-full items-center justify-center">
+    <main className="flex min-h-full items-center justify-center">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="font-lato text-2xl">Login</CardTitle>
@@ -102,6 +102,6 @@ export default function LoginPage() {
           </CardFooter>
         </form>
       </Card>
-    </div>
+    </main>
   );
 }

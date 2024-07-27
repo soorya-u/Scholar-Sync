@@ -2,20 +2,18 @@ import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { useLazyQuery, useMutation } from "@apollo/client";
 
 import { LoginType, loginSchema } from "@/schema/login";
 import { SignUpType, signUpSchema } from "@/schema/sign-up";
+
 import { signUpMutation } from "@/graphql/mutations";
-import {
-  loginQuery,
-  logOutQuery,
-  isUserLoggedInQuery,
-} from "@/graphql/queries";
+import { loginQuery, logOutQuery } from "@/graphql/queries";
+
 import { useToast } from "@/components/primitives/use-toast";
+
 import { useApiData } from "./use-api-data";
 import { useUser } from "./use-user";
-import useColor from "./use-color";
 import { useNexus } from "./use-nexus";
 import { useCore } from "./use-core";
 
@@ -35,7 +33,7 @@ export const useSignUp = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const adder = searchParams.get("a");
+  const location = searchParams.get("l");
   const joinId = searchParams.get("j");
 
   useEffect(() => {
@@ -60,10 +58,10 @@ export const useSignUp = () => {
 
       setTimeout(() => {
         t.dismiss();
-        if (adder && joinId)
-          return router.replace(`/link?a=${adder}&j=${joinId}`);
+        if (location && joinId)
+          return router.replace(`/link/${location}/${joinId}`);
 
-        router.replace("/");
+        router.replace("/dashboard");
       }, 500);
     }
   }, [data, error]);
@@ -100,7 +98,7 @@ export const useLogin = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const adder = searchParams.get("a");
+  const location = searchParams.get("l");
   const joinId = searchParams.get("j");
 
   const [query, { data, error }] = useLazyQuery(loginQuery);
@@ -127,10 +125,10 @@ export const useLogin = () => {
 
       setTimeout(() => {
         t.dismiss();
-        if (adder && joinId)
-          return router.replace(`/link?a=${adder}&j=${joinId}`);
+        if (location && joinId)
+          return router.replace(`/link/${location}/${joinId}`);
 
-        router.replace("/");
+        router.replace("/dashboard");
       }, 500);
     }
   }, [data, error]);
@@ -191,7 +189,7 @@ export const useLogOut = () => {
       setTimeout(() => {
         t.dismiss();
         resetAll();
-        router.replace("/auth/login");
+        router.replace("/");
       }, 500);
     }
   }, [data, error]);
