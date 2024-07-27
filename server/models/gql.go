@@ -99,6 +99,11 @@ type Profile struct {
 type Query struct {
 }
 
+type RemoveUserData struct {
+	UserID  string `json:"userId"`
+	NexusID string `json:"nexusId"`
+}
+
 type SignUpData struct {
 	FullName string `json:"fullName"`
 	Email    string `json:"email"`

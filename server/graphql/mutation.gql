@@ -30,6 +30,11 @@ input AnnouncementData {
   nexus: String!
 }
 
+input RemoveUserData {
+  userId: String!
+  nexusId: String!
+}
+
 type Mutation {
   signUpUser(input: SignUpData!): String!
   createCore(input: CoreData!): ID!
@@ -38,6 +43,7 @@ type Mutation {
   createAnnouncement(input: AnnouncementData!): ID!
   deleteCore(coreId: String!): Boolean!
   deleteNexus(nexusId: String!): Boolean!
+  removeUserFromNexus(input: RemoveUserData!): Boolean!
   leaveNexus(nexusId: String!): Boolean!
   addUserToNexus(nexusId: String!): Boolean!
   addPseudoUserToCore(coreId: String!): Boolean!
