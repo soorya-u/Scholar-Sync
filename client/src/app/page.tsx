@@ -1,97 +1,116 @@
-"use client";
+import Image from "next/image";
+import Link from "next/link";
 
-import { Loader } from "lucide-react";
-
-import { useInitData } from "@/hooks/use-init";
-import { useToggler } from "@/hooks/use-toggler";
-import { useUser } from "@/hooks/use-user";
-import { useApiData } from "@/hooks/use-api-data";
-import { useNexus } from "@/hooks/use-nexus";
-
-import Dashboard from "@/components/custom/Dashboard";
-import Header from "@/components/custom/Header";
-import NavBar from "@/components/custom/NavBar";
-import NexusList from "@/components/custom/NexusList";
-import SideBar from "@/components/custom/SideBar";
-import Uploader from "@/components/custom/Uploader";
-import UsersList from "@/components/custom/UsersList";
-import NotFound from "@/components/custom/NotFound";
-
-import { cn } from "@/utils/cn";
+import { Button } from "@/components/primitives/button";
 import Gradient from "@/components/custom/Gradient";
 
 export default function Home() {
-  const { loading } = useInitData();
-  const { isSidebarOpen } = useToggler();
-  const { apiData } = useApiData();
-  const { user } = useUser();
-  const { nexus } = useNexus();
   return (
-    <div
-      className={cn(
-        "relative flex h-screen flex-col",
-        loading && "items-center justify-center bg-black/40",
-      )}
-    >
-      {loading ? (
-        <>
-          <Gradient />
-          <div className="absolute flex items-center justify-center gap-2">
-            <img src={"/logo.png"} alt="Logo" width={60} height={60} />
+    <div className="relative overflow-y-hidden">
+      <Gradient />
+      <main className="relative flex min-h-screen flex-col items-center justify-center gap-7 overflow-y-auto">
+        <header className="flex w-full items-center justify-center px-4 pt-4 2xs:justify-between xs:px-8">
+          <h1 className="font-playwrite text-3xl text-primary">Scholar Sync</h1>
+          <div className="hidden items-center justify-center gap-4 2xs:flex">
+            <Button
+              className="text-md border-[3px] bg-transparent font-kanit transition-all duration-300 hover:opacity-70"
+              variant="outline"
+            >
+              <Link href="/auth/login ">Login</Link>
+            </Button>
+            <Button
+              className="text-md bg-primary font-kanit transition-all duration-300 hover:opacity-60"
+              variant="default"
+            >
+              <Link href="/auth/sign-up">Sign Up</Link>
+            </Button>
           </div>
-          <div className="absolute">
-            <Loader
-              style={{ animationDuration: "2s" }}
-              className="size-48 animate-spin [&_path]:text-primary"
+        </header>
+        <section className="flex flex-1 flex-col items-center justify-center gap-6">
+          <Image
+            priority
+            src="/logo.png"
+            alt="logo"
+            height={7 * 16}
+            width={7 * 16}
+          />
+          <h1 className="w-11/12 text-wrap text-center font-kanit text-6xl text-primary">
+            Your Gateway to Streamlined Academia{" "}
+          </h1>
+          <h2 className="w-2/3 text-center font-lato text-lg font-bold text-foreground/70 2xs:text-xl">
+            Immerse yourself in a structured educational experience,
+            effortlessly managing announcements, file uploads, and user
+            hierarchies to enhance your academic workflow.
+          </h2>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-5">
+            <Button
+              className="text-md bg-transparent font-kanit transition-all duration-300 hover:bg-primary"
+              variant="outline"
+            >
+              <Link href="/dashboard">Navigate to Dashboard</Link>
+            </Button>
+            <Button
+              className="text-md bg-transparent font-kanit transition-all duration-300 hover:bg-primary"
+              variant="outline"
+            >
+              <Link href="https://github.com/soorya-u/Grade-Grove">
+                View Source Code
+              </Link>
+            </Button>
+          </div>
+        </section>
+        <footer className="m-auto flex min-h-16 w-[85vw] flex-col items-center justify-between gap-y-4 border-t-[2px] border-t-primary py-3 md-lg:flex-row">
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            <Image
+              src="/logo.png"
+              width={28}
+              height={28}
+              alt="Elite-AIML-Logo"
             />
-          </div>
-        </>
-      ) : (
-        <>
-          <Header />
-          {apiData.length === 0 && user.userType === "NORMAL" ? (
-            <NotFound message="You need to join a Core inorder to Use the App" />
-          ) : (
-            <div className="flex h-[82%] flex-1">
-              {user.userType !== "NORMAL" && (
-                <div
-                  className={cn(
-                    "relative hidden w-24 flex-col items-center gap-2 border-r border-border py-4 transition-all duration-300 md-lg:flex",
-                  )}
-                >
-                  <SideBar />
-                </div>
-              )}
-              <div
-                className={cn(
-                  "relative hidden min-w-[11.3rem] flex-col items-center gap-3 border-r border-border px-2 py-4 transition-all duration-300 md-lg:flex",
-                  isSidebarOpen
-                    ? "relative translate-x-0"
-                    : "absolute -translate-x-[25rem]",
-                )}
+            <p className="text-center font-kanit text-foreground/60">
+              Built by{" "}
+              <Link
+                href="https://twitter.com/sooryaa_u"
+                className="underline underline-offset-2"
+                target="_blank"
               >
-                <NexusList />
-              </div>
-              {nexus.id === "" ? (
-                <NotFound message="You need to Create or join a Nexus inorder to Use the App" />
-              ) : (
-                <div className="h-full w-full flex-1">
-                  <NavBar />
-                  <div className="flex h-[91%] flex-1">
-                    <div className="flex flex-1 flex-col">
-                      <div className="flex-1 overflow-x-auto">
-                        <Dashboard />
-                      </div>
-                      <Uploader />
-                    </div>
-                    <UsersList />
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </>
-      )}
+                soorya-u
+              </Link>
+              . The source code is available on{" "}
+              <Link
+                href="https://github.com/soorya-u/Scholar-Sync"
+                className="underline underline-offset-2"
+                target="_blank"
+              >
+                GitHub
+              </Link>
+              .
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-x-2 gap-y-1">
+            <p className="text-center font-kanit text-foreground/60">
+              Check these Projects Out:
+            </p>
+            <Link href="https://grade-grove.soorya-u.dev" target="_blank">
+              <Image
+                src="https://grade-grove.soorya-u.dev/logo.png"
+                width={28}
+                height={28}
+                alt="Grade-Grove-Logo"
+                className="rounded-md bg-foreground/70"
+              />
+            </Link>
+            <Link href="https://belief.soorya-u.dev" target="_blank">
+              <Image
+                src="https://belief.soorya-u.dev/logo.png"
+                width={28}
+                height={28}
+                alt="Belief-Logo"
+              />
+            </Link>
+          </div>
+        </footer>
+      </main>
     </div>
   );
 }

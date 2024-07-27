@@ -19,19 +19,19 @@ import { useSignUp } from "@/hooks/use-auth";
 export default function SignUpPage() {
   const { errors, handleSubmit, isSubmitting, register } = useSignUp();
   const searchParams = useSearchParams();
-  const adder = searchParams.get("a");
+  const adder = searchParams.get("l");
   const joinId = searchParams.get("j");
 
   const query =
     adder && joinId
       ? {
-          a: adder,
+          l: adder,
           j: joinId,
         }
       : {};
 
   return (
-    <div className="flex min-h-full items-center justify-center">
+    <main className="flex min-h-full items-center justify-center">
       <Card className="mx-auto max-w-sm">
         <CardHeader>
           <CardTitle className="font-lato text-xl">Sign Up</CardTitle>
@@ -125,6 +125,6 @@ export default function SignUpPage() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </main>
   );
 }

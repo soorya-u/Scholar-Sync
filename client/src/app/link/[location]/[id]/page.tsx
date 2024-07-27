@@ -3,11 +3,9 @@
 import React from "react";
 import Gradient from "@/components/custom/Gradient";
 import { useLink } from "@/hooks/use-link";
-import { useSearchParams } from "next/navigation";
 
-export default function JoinPage() {
+export default function JoinPage({ params }: { params: { location: string } }) {
   useLink();
-  const searchParams = useSearchParams();
   return (
     <>
       <Gradient />
@@ -18,7 +16,7 @@ export default function JoinPage() {
         </div>
         <h1 className="text-center font-playwrite text-4xl text-amber-400 sm:text-5xl">
           Adding you to <br /> the requested
-          {searchParams.get("a") === "c" ? "Core" : "Nexus"}....
+          {params.location === "c" ? "Core" : "Nexus"}....
         </h1>
       </div>
     </>
