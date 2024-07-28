@@ -3,21 +3,19 @@ import { Metadata } from "next";
 import { getLinkData } from "@/lib/axios";
 
 type LinkPageLayoutProps = {
-  children: React.ReactNode;
-  params: { location: string; id: string };
-  searchParams: { u: string };
+  params: { location: string; id: string; userId: string };
 };
 
 export async function generateMetadata({
   params,
-  searchParams,
 }: LinkPageLayoutProps): Promise<Metadata> {
   try {
     const body = {
       location: params.location,
       joinerId: params.id,
-      userId: searchParams.u,
+      userId: params.userId,
     };
+
     const data = await getLinkData(body);
     return {
       title: `${data.location} | Scholar Sync`,

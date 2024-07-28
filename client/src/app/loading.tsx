@@ -3,7 +3,7 @@ import Gradient from "@/components/custom/Gradient";
 
 export default function RootLoadingPage() {
   return (
-    <main className="relative flex h-screen flex-col items-center justify-center bg-black/40">
+    <main className="relative flex h-screen flex-col items-center justify-center overflow-y-hidden bg-black/40">
       <Gradient />
       <div className="absolute flex items-center justify-center gap-2">
         <img src={"/logo.png"} alt="Logo" width={60} height={60} />

@@ -18,12 +18,11 @@ export const useLink = () => {
   const [userMutate, { data: userData }] = useMutation(addUserToNexusMutation);
   const router = useRouter();
   const params = useParams();
-  const searchParams = useSearchParams();
   const { toast } = useToast();
 
   const location = params.location as string;
   const joinerId = params.id as string;
-  const userId = searchParams.get("u") as string;
+  const userId = params.userId as string;
 
   const performMutation = async () => {
     if (location === "c")
@@ -85,7 +84,7 @@ export const useLinkGenerate = () => {
     const location = place === "Nexus" ? "n" : "c";
     await navigator.clipboard
       .writeText(
-        `${process.env.NEXT_PUBLIC_URL}/link/${location}/${joinId}?u=${userId}`,
+        `${process.env.NEXT_PUBLIC_URL}/link/${location}/${joinId}/${userId}`,
       )
       .then(() =>
         toast({
