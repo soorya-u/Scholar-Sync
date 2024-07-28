@@ -36,6 +36,7 @@ func LinkHandler(ctx *gin.Context) {
 	}
 
 	name := ""
+	location := ""
 
 	if body.Location == "c" {
 		coreId := fmt.Sprintf("core:%s", body.JoinerId)
@@ -45,6 +46,7 @@ func LinkHandler(ctx *gin.Context) {
 			})
 			return
 		}
+		location = "Core"
 
 	} else if body.Location == "n" {
 		nexusId := fmt.Sprintf("nexus:%s", body.JoinerId)
@@ -54,6 +56,7 @@ func LinkHandler(ctx *gin.Context) {
 			})
 			return
 		}
+		location = "Nexus"
 
 	} else {
 		ctx.JSON(http.StatusBadRequest, gin.H{
@@ -65,6 +68,7 @@ func LinkHandler(ctx *gin.Context) {
 	ctx.JSON(http.StatusAccepted, gin.H{
 		"userFullName": userFullName,
 		"name":         name,
+		"location":     location,
 	})
 
 }
