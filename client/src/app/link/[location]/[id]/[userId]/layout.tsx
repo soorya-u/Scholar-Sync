@@ -18,7 +18,7 @@ export async function generateMetadata({
 
     const data = await getLinkData(body);
     return {
-      title: `${data.location} | Scholar Sync`,
+      title: `${data.name} | Scholar Sync`,
       description: `You have been invited to the ${data.location} ${data.name} by ${data.userFullName}. Click the link and join the Community.`,
     };
   } catch (err) {
