@@ -45,3 +45,7 @@ func Connect() *DB {
 		client: db,
 	}
 }
+
+func (db *DB) Disconnect() {
+	db.client.Close()
+}

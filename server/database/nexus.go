@@ -81,11 +81,14 @@ func (db *DB) GetDBNexus(nexusIds []string) ([]*models.DBNexus, error) {
 
 }
 
-func (db *DB) HasAccessToNexus(userId, nexusId string) (bool, error) {
+// TODO: Below Function is Exhaustive. Write better code
+func (db *DB) GetNexusNameById(id string) (string, error) {
+	nexus, err := db.GetDBNexus([]string{id})
+	if err != nil {
+		return "", err
+	}
 
-	// Complete Function
-	return false, nil
-
+	return nexus[0].Name, nil
 }
 
 func (db *DB) DeleteNexus(nexusId string) (bool, error) {
