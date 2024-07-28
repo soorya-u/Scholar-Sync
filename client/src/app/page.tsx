@@ -9,20 +9,27 @@ export default function Home() {
     <div className="relative overflow-y-hidden">
       <Gradient />
       <main className="relative flex min-h-screen flex-col items-center justify-center gap-7 overflow-y-auto">
-        <header className="flex w-full items-center justify-center px-4 pt-4 2xs:justify-between xs:px-8">
-          <h1 className="font-playwrite text-3xl text-primary">Scholar Sync</h1>
-          <div className="hidden items-center justify-center gap-4 2xs:flex">
+        <header className="flex w-full items-center justify-between px-4 pt-4 xs:px-8">
+          <h1 className="font-playwrite text-2xl 3xs:text-3xl text-primary">Scholar Sync</h1>
+          <div className="flex items-center justify-center gap-4">
             <Button
-              className="text-md border-[3px] bg-transparent font-kanit transition-all duration-300 hover:opacity-70"
+              className="text-md hidden border-[3px] bg-transparent font-kanit transition-all duration-300 hover:opacity-70 2xs:flex"
               variant="outline"
             >
               <Link href="/auth/login ">Login</Link>
             </Button>
             <Button
-              className="text-md bg-primary font-kanit transition-all duration-300 hover:opacity-60"
+              className="text-md hidden bg-primary font-kanit transition-all duration-300 hover:opacity-60 2xs:flex"
               variant="default"
             >
               <Link href="/auth/sign-up">Sign Up</Link>
+            </Button>
+
+            <Button
+              className="text-md flex bg-primary font-kanit transition-all duration-300 hover:opacity-60 2xs:hidden"
+              variant="default"
+            >
+              <Link href="/auth/sign-up">Join</Link>
             </Button>
           </div>
         </header>
@@ -35,7 +42,7 @@ export default function Home() {
             width={7 * 16}
           />
           <h1 className="w-11/12 text-wrap text-center font-kanit text-6xl text-primary">
-            Your Gateway to Streamlined Academia{" "}
+            Virtual Classroom at Your Fingertips.{" "}
           </h1>
           <h2 className="w-2/3 text-center font-lato text-lg font-bold text-foreground/70 2xs:text-xl">
             Immerse yourself in a structured educational experience,

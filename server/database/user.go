@@ -77,6 +77,16 @@ func (db *DB) GetProfileByID(id string) (*models.Profile, error) {
 
 }
 
+// TODO: Below Function is Exhaustive. Write better code
+func (db *DB) GetUserFullNameById(id string) (string, error) {
+	user, err := db.GetProfileByID(id)
+	if err != nil {
+		return "", err
+	}
+
+	return user.FullName, nil
+}
+
 func (db *DB) AdminCheck(id string) (bool, error) {
 	if profile, err := db.GetProfileByID(id); err != nil {
 		return false, err

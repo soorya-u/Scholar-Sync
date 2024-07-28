@@ -100,3 +100,38 @@ func (db *DB) DeleteCore(coreId string) (bool, error) {
 
 	return true, nil
 }
+
+func (db *DB) GetCoreNameById(id string) (string, error) {
+
+	query := "SELECT name FROM $coreId;"
+	params := map[string]interface{}{
+		"coreId": id,
+	}
+
+	rawData, err := db.client.Query(query, params)
+	if err != nil {
+		return "", fmt.Errorf("query failed: %v", err)
+	}
+
+	type coreName struct {
+		Name string `json:"name"`
+	}
+
+	var parsedData []struct {
+		Result []*coreName `json:"result"`
+		Status string      `json:"status"`
+		Time   string      `json:"time"`
+	}
+
+	if err = surrealdb.Unmarshal(rawData, &parsedData); err != nil {
+		return "", fmt.Errorf("unable to unmarshal core name: %v", err)
+	}
+
+	if len(parsedData) <= 0 || len(parsedData[0].Result) <= 0 {
+		return "", fmt.Errorf("result not found")
+	}
+
+	res := parsedData[0].Result[0]
+
+	return res.Name, nil
+}

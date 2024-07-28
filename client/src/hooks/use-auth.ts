@@ -35,6 +35,7 @@ export const useSignUp = () => {
 
   const location = searchParams.get("l");
   const joinId = searchParams.get("j");
+  const userId = searchParams.get("u");
 
   useEffect(() => {
     if (error) {
@@ -59,7 +60,7 @@ export const useSignUp = () => {
       setTimeout(() => {
         t.dismiss();
         if (location && joinId)
-          return router.replace(`/link/${location}/${joinId}`);
+          return router.replace(`/link/${location}/${joinId}/${userId}`);
 
         router.replace("/dashboard");
       }, 500);
@@ -100,6 +101,7 @@ export const useLogin = () => {
 
   const location = searchParams.get("l");
   const joinId = searchParams.get("j");
+  const userId = searchParams.get("u");
 
   const [query, { data, error }] = useLazyQuery(loginQuery);
 
@@ -126,7 +128,7 @@ export const useLogin = () => {
       setTimeout(() => {
         t.dismiss();
         if (location && joinId)
-          return router.replace(`/link/${location}/${joinId}`);
+          return router.replace(`/link/${location}/${joinId}/${userId}`);
 
         router.replace("/dashboard");
       }, 500);

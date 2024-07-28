@@ -15,10 +15,12 @@ func main() {
 	port := helpers.GetPort()
 	server := gin.Default()
 
-	routes.StaticRoutes(server)
-
 	corsMiddleware := middlewares.GetCorsMiddleware()
 	server.Use(corsMiddleware)
+
+	routes.StaticRoutes(server)
+	routes.APIRoutes(server)
+
 	cookieMiddleware := middlewares.GetCookieMiddleware()
 	server.Use(cookieMiddleware)
 

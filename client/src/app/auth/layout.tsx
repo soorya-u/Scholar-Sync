@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: PropsWithChildren) {
   return (
-    <>
+    <div className="relative h-screen overflow-hidden">
       <Gradient />
       <div className="flex min-h-full flex-col items-center justify-center gap-4">
         <div className="flex items-center justify-center gap-2">
@@ -19,6 +19,6 @@ export default function AuthLayout({ children }: PropsWithChildren) {
         </div>
         <Suspense>{children}</Suspense>
       </div>
-    </>
+    </div>
   );
 }

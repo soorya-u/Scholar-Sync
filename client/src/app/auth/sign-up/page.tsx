@@ -21,12 +21,14 @@ export default function SignUpPage() {
   const searchParams = useSearchParams();
   const adder = searchParams.get("l");
   const joinId = searchParams.get("j");
+  const userId = searchParams.get("u");
 
   const query =
-    adder && joinId
+    adder && joinId && userId
       ? {
           l: adder,
           j: joinId,
+          u: userId,
         }
       : {};
 

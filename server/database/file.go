@@ -111,8 +111,6 @@ func (db *DB) GetFilenameByPath(filePath string) (string, error) {
 		return "", fmt.Errorf("no result found")
 	}
 
-	db.client.Close()
-
 	return res[0].FileName, nil
 
 }
