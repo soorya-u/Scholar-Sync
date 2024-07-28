@@ -77,10 +77,9 @@ type ILocation = "Nexus" | "Core";
 
 export const useLinkGenerate = () => {
   const { toast } = useToast();
+  const { user } = useUser();
 
   const handleClick = async (place: ILocation, id: string) => {
-    const { user } = useUser();
-
     const userId = user.id.split(":")[1];
     const joinId = id.split(":")[1];
     const location = place === "Nexus" ? "n" : "c";
