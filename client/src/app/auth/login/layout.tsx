@@ -1,4 +1,4 @@
-import { PropsWithChildren } from "react";
+import { PropsWithChildren, Suspense } from "react";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -6,5 +6,5 @@ export const metadata: Metadata = {
 };
 
 export default function LoginLayout({ children }: PropsWithChildren) {
-  return <>{children}</>;
+  return <Suspense>{children}</Suspense>;
 }

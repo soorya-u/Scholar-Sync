@@ -8,6 +8,7 @@ import {
   addUserToNexusMutation,
 } from "@/graphql/mutations";
 import { useToast } from "@/components/primitives/use-toast";
+import { useUser } from "./use-user";
 
 export const useLink = () => {
   const { data, loading } = useQuery(isUserLoggedInQuery);
@@ -17,10 +18,12 @@ export const useLink = () => {
   const [userMutate, { data: userData }] = useMutation(addUserToNexusMutation);
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const { toast } = useToast();
 
   const location = params.location as string;
   const joinerId = params.id as string;
+  const userId = searchParams.get("u") as string;
 
   const performMutation = async () => {
     if (location === "c")
@@ -30,7 +33,7 @@ export const useLink = () => {
   };
 
   useEffect(() => {
-    if (!location || !joinerId) {
+    if (!location || !joinerId || !userId) {
       toast({
         title: "Invalid URL",
         description:
@@ -43,7 +46,7 @@ export const useLink = () => {
     if (!loading && data) {
       if (!data.isUserLoggedIn) {
         router.push(
-          `/auth/login?${new URLSearchParams({ l: location, j: joinerId }).toString()}`,
+          `/auth/login?${new URLSearchParams({ l: location, j: joinerId, u: userId }).toString()}`,
         );
       } else {
         performMutation();
@@ -76,10 +79,15 @@ export const useLinkGenerate = () => {
   const { toast } = useToast();
 
   const handleClick = async (place: ILocation, id: string) => {
+    const { user } = useUser();
+
+    const userId = user.id.split(":")[1];
     const joinId = id.split(":")[1];
     const location = place === "Nexus" ? "n" : "c";
     await navigator.clipboard
-      .writeText(`${process.env.NEXT_PUBLIC_URL}/link/${location}/${joinId}`)
+      .writeText(
+        `${process.env.NEXT_PUBLIC_URL}/link/${location}/${joinId}?u=${userId}`,
+      )
       .then(() =>
         toast({
           title: "Copy Successfull",
