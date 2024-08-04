@@ -17,8 +17,6 @@ func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
 		return "", fmt.Errorf("unable to get cookie-access")
-	} else if cookie.IsLoggedIn || cookie.UserId != "" {
-		return cookie.UserId, fmt.Errorf("already logged in")
 	}
 
 	if isValid := validators.ValidateLoginData(input); !isValid {
