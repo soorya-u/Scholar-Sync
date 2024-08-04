@@ -22,9 +22,7 @@ export const useCoreCreate = () => {
   });
   const { toast } = useToast();
   const [mutate, { data, error }] = useMutation(createCoreMutation);
-  const router = useRouter();
-  const { refetch: refreshQuery } = useInitData();
-  const refetch = async () => await refreshQuery();
+  const { refetch } = useInitData();
 
   const onSubmitFunc = async (val: CoreType) => {
     // TODO: Add Core Image String
@@ -35,7 +33,7 @@ export const useCoreCreate = () => {
       variables: {
         ...val,
       },
-    });
+    }).then(async () => await refetch());
   };
 
   useEffect(() => {
@@ -57,8 +55,6 @@ export const useCoreCreate = () => {
         variant: "default",
         description: "Core has been Successfully Created.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -71,8 +67,8 @@ export const useCoreCreate = () => {
 };
 
 export const useNexusCreate = () => {
-  const { refetch: refreshQuery } = useInitData();
-  const router = useRouter()
+  const { refetch } = useInitData();
+  const router = useRouter();
   const {
     register,
     handleSubmit,
@@ -92,15 +88,13 @@ export const useNexusCreate = () => {
   const { core } = useCore();
   const [mutate, { data, error }] = useMutation(createNexusMutation);
 
-  const refetch = async () => await refreshQuery();
-
   const onSubmitFunc = async (val: NexusType) => {
     await mutate({
       variables: {
         ...val,
         core: core.id,
       },
-    });
+    }).then(async () => await refetch());
   };
 
   useEffect(() => {
@@ -122,8 +116,6 @@ export const useNexusCreate = () => {
         variant: "default",
         description: "Nexus has been Successfully Created.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
