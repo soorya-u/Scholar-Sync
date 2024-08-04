@@ -55,12 +55,12 @@ export default function NexusList() {
         : [],
     );
     setSelectedCategory(nexus.category);
-  }, [core, nexus]);
+  }, [nexus, core]);
 
   return (
     <>
       <Select
-        defaultValue={selectedCategory || nexus.category}
+        value={selectedCategory || nexus.category || "No Semester Found"}
         onValueChange={(v: string) => setSelectedCategory(v)}
       >
         <SelectTrigger className="w-[97%] border-2 border-border font-kanit text-[0.9rem]">
