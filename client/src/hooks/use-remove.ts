@@ -13,19 +13,16 @@ import { useToast } from "@/components/primitives/use-toast";
 
 export const useDeleteCore = () => {
   const [mutate, { data, error }] = useMutation(deleteCoreMutation);
-  const { refetch: refreshQuery } = useInitData();
+  const { refetch } = useInitData();
   const { toast } = useToast();
-  const router = useRouter();
 
   const handleClick = async (coreId: string) => {
     await mutate({
       variables: {
         coreId,
       },
-    });
+    }).then(async () => await refetch());
   };
-
-  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {
@@ -46,8 +43,6 @@ export const useDeleteCore = () => {
         variant: "default",
         description: "Core has been Successfully Deleted.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -58,19 +53,16 @@ export const useDeleteCore = () => {
 
 export const useDeleteNexus = () => {
   const [mutate, { data, error }] = useMutation(deleteNexusMutation);
-  const { refetch: refreshQuery } = useInitData();
+  const { refetch } = useInitData();
   const { toast } = useToast();
-  const router = useRouter();
 
   const handleClick = async (nexusId: string) => {
     await mutate({
       variables: {
         nexusId,
       },
-    });
+    }).then(async () => await refetch());
   };
-
-  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {
@@ -91,8 +83,6 @@ export const useDeleteNexus = () => {
         variant: "default",
         description: "Nexus has been Successfully Deleted.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -103,19 +93,16 @@ export const useDeleteNexus = () => {
 
 export const useLeaveNexus = () => {
   const [mutate, { data, error }] = useMutation(leaveNexusMutation);
-  const { refetch: refreshQuery } = useInitData();
+  const { refetch } = useInitData();
   const { toast } = useToast();
-  const router = useRouter();
 
   const handleClick = async (nexusId: string) => {
     await mutate({
       variables: {
         nexusId,
       },
-    });
+    }).then(async () => await refetch());
   };
-
-  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {
@@ -136,8 +123,6 @@ export const useLeaveNexus = () => {
         variant: "default",
         description: "Nexus has been Successfully Exited.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 
@@ -148,9 +133,8 @@ export const useLeaveNexus = () => {
 
 export const useRemoveUser = () => {
   const [mutate, { data, error }] = useMutation(removeUserFromNexusMutation);
-  const { refetch: refreshQuery } = useInitData();
+  const { refetch } = useInitData();
   const { toast } = useToast();
-  const router = useRouter();
 
   const handleClick = async (userId: string, nexusId: string) => {
     await mutate({
@@ -158,10 +142,8 @@ export const useRemoveUser = () => {
         userId,
         nexusId,
       },
-    });
+    }).then(async () => await refetch());
   };
-
-  const refetch = async () => await refreshQuery();
 
   useEffect(() => {
     if (error) {
@@ -182,8 +164,6 @@ export const useRemoveUser = () => {
         variant: "default",
         description: "User has been kicked out Successfully.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 

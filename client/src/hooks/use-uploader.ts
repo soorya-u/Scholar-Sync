@@ -24,10 +24,7 @@ export const useUploader = (
   const {
     nexus: { id: nexus },
   } = useNexus();
-  const { refetch: refreshQuery } = useInitData();
-  const router = useRouter();
-
-  const refetch = async () => await refreshQuery();
+  const { refetch } = useInitData();
 
   const [mutate, { data, error }] = useMutation(
     uploader === "File" ? createFileMutation : createAnnouncementMutation,
@@ -62,7 +59,7 @@ export const useUploader = (
         ...val,
         nexus,
       },
-    });
+    }).then(async () => await refetch());
   };
 
   const handleSubmit = handleFormSubmit(onSubmitFn, (e) => {
@@ -95,8 +92,6 @@ export const useUploader = (
         variant: "default",
         description: "Nexus has been Successfully Created.",
       });
-
-      refetch().then(() => router.refresh());
     }
   }, [data, error]);
 

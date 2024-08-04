@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
-import CreateNexus from "../CreateNexus";
+import { DoorOpen, Share2Icon, Trash2 } from "lucide-react";
+
+import { useDeleteNexus, useLeaveNexus } from "@/hooks/use-remove";
+import { useLinkGenerate } from "@/hooks/use-link";
+import { useUser } from "@/hooks/use-user";
+import { useCore } from "@/hooks/use-core";
+import { useNexus } from "@/hooks/use-nexus";
+import { useApiData } from "@/hooks/use-api-data";
+
 import { Button } from "@/components/primitives/button";
 import { Separator } from "@/components/primitives/separator";
 import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
@@ -11,10 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/primitives/select";
-import { useUser } from "@/hooks/use-user";
-import { useCore } from "@/hooks/use-core";
-import { useNexus } from "@/hooks/use-nexus";
-import { useApiData } from "@/hooks/use-api-data";
+
 import {
   ContextMenu,
   ContextMenuContent,
@@ -22,9 +27,8 @@ import {
   ContextMenuSeparator,
   ContextMenuTrigger,
 } from "@/components/primitives/context-menu";
-import { DoorOpen, Share2Icon, Trash2 } from "lucide-react";
-import { useDeleteNexus, useLeaveNexus } from "@/hooks/use-remove";
-import { useLinkGenerate } from "@/hooks/use-link";
+
+import CreateNexus from "../CreateNexus";
 
 export default function NexusList() {
   const { core } = useCore();
@@ -51,11 +55,10 @@ export default function NexusList() {
         : [],
     );
     setSelectedCategory(nexus.category);
-  }, [nexus]);
+  }, [core, nexus]);
 
   return (
     <>
-      {/* Render Catergoies */}
       <Select
         defaultValue={selectedCategory || nexus.category}
         onValueChange={(v: string) => setSelectedCategory(v)}

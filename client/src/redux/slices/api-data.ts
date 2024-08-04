@@ -8,11 +8,8 @@ export const apiDataSlice = createSlice({
   name: "apiData",
   initialState,
   reducers: {
-    setApiData: (state, { payload }: PayloadAction<CoreType[]>) => {
-      if (payload.length === 0) return state;
-      return payload;
-    },
-
+    setApiData: (state, { payload }: PayloadAction<CoreType[]>) =>
+      payload.length === 0 ? state : payload,
     resetApiData: () => initialState,
   },
 });

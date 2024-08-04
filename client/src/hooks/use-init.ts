@@ -13,7 +13,6 @@ import { useNexus } from "./use-nexus";
 export const useInitData = () => {
   const { data, error, refetch, loading } = useQuery(getInitDataQuery, {
     fetchPolicy: "no-cache",
-    onCompleted: () => router.refresh(),
   });
   const router = useRouter();
   const { toast } = useToast();
@@ -36,9 +35,10 @@ export const useInitData = () => {
     }
     setUser(data.getUser as UserType);
     setApiData(data.getUserData as CoreType[]);
-
     if (apiData.length === 0) return;
-    const selectedCores = apiData.filter((c) => c.nexus && c.nexus?.length > 0);
+    const selectedCores = data.getUserData.filter(
+      (c: CoreType) => c.nexus && c.nexus?.length > 0,
+    );
     const { id, imageUrl, name, nexus } =
       selectedCores.length > 0 ? selectedCores[0] : apiData[0];
     setCore({ id, imageUrl, name, nexus });
