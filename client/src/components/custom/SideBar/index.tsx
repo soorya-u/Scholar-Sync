@@ -57,7 +57,17 @@ export default function SideBar() {
             <ContextMenu key={id}>
               <ContextMenuTrigger className="grid place-content-center">
                 <CoreIcons
-                  handleClick={() => setCore({ id, imageUrl, name, nexus })}
+                  handleClick={() =>
+                    setCore({
+                      id,
+                      imageUrl,
+                      name,
+                      nexus: nexus.map((n) => ({
+                        ...n,
+                        creator: n.creator.id,
+                      })),
+                    })
+                  }
                   heading={name}
                   src={imageUrl}
                 />

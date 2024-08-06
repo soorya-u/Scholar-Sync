@@ -1,28 +1,24 @@
 import { useEffect } from "react";
-import { useSearchParams, useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useMutation, useQuery } from "@apollo/client";
 
 import { isUserLoggedInQuery } from "@/graphql/queries";
 import {
   addPseudoUserToCoreMutation,
   addUserToNexusMutation,
+  buildDemoEnvMutation,
 } from "@/graphql/mutations";
 import { useToast } from "@/components/primitives/use-toast";
 import { useUser } from "./use-user";
 
-export const useLink = () => {
+export const useLink = (location: string, joinerId: string, userId: string) => {
   const { data, loading } = useQuery(isUserLoggedInQuery);
   const [pseudoUserMutate, { data: pseudoUserData }] = useMutation(
     addPseudoUserToCoreMutation,
   );
   const [userMutate, { data: userData }] = useMutation(addUserToNexusMutation);
   const router = useRouter();
-  const params = useParams();
   const { toast } = useToast();
-
-  const location = params.location as string;
-  const joinerId = params.id as string;
-  const userId = params.userId as string;
 
   const performMutation = async () => {
     if (location === "c")
@@ -39,17 +35,20 @@ export const useLink = () => {
           "The URL used is Invalid. Please try again or ask the Admin to generate new URL",
         variant: "destructive",
       });
-      return router.push("/");
+      return router.replace("/");
     }
 
     if (!loading && data) {
       if (!data.isUserLoggedIn) {
-        router.push(
+        router.replace(
           `/auth/login?${new URLSearchParams({ l: location, j: joinerId, u: userId }).toString()}`,
         );
-      } else {
-        performMutation();
-      }
+        toast({
+          title: "Authentication Required",
+          variant: "destructive",
+          description: "Please Login or Sign Up to Proceed",
+        });
+      } else performMutation();
     }
   }, [data, loading, location, joinerId, toast, router]);
 
@@ -97,4 +96,38 @@ export const useLinkGenerate = () => {
   return {
     handleClick,
   };
+};
+
+export const useDemoLink = async () => {
+  const { data, loading } = useQuery(isUserLoggedInQuery);
+  const { toast } = useToast();
+  const [mutate, { data: mutateData }] = useMutation(buildDemoEnvMutation);
+  const router = useRouter();
+
+  const performMutation = async () => await mutate();
+
+  useEffect(() => {
+    if (!loading && data) {
+      if (!data.isUserLoggedIn) {
+        router.replace(
+          `/auth/login?${new URLSearchParams({ demo: "true" }).toString()}`,
+        );
+        toast({
+          title: "Authentication Required",
+          variant: "destructive",
+          description: "Please Login or Sign Up to Proceed",
+        });
+      } else performMutation();
+    }
+  }, [data, loading, router]);
+
+  useEffect(() => {
+    if (!mutateData) return;
+    toast({
+      title: "Join Sucessfull",
+      description: "Successfully joined to the Demo Core",
+    });
+
+    return router.replace("/dashboard");
+  }, [mutateData]);
 };
