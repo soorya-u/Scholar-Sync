@@ -98,7 +98,7 @@ export const useLinkGenerate = () => {
   };
 };
 
-export const useDemoLink = async () => {
+export const useDemoLink = () => {
   const { data, loading } = useQuery(isUserLoggedInQuery);
   const { toast } = useToast();
   const [mutate, { data: mutateData }] = useMutation(buildDemoEnvMutation);
