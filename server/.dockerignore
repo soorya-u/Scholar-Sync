@@ -1,0 +1,6 @@
+tmp
+database/data
+.env*
+static
+.air.toml
+.gitignore
