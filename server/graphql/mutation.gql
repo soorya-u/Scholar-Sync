@@ -4,6 +4,7 @@ input SignUpData {
   fullName: String!
   email: String!
   password: String!
+  userType: String
 }
 
 input CoreData {
@@ -47,4 +48,5 @@ type Mutation {
   leaveNexus(nexusId: String!): Boolean!
   addUserToNexus(nexusId: String!): Boolean!
   addPseudoUserToCore(coreId: String!): Boolean!
+  buildDemoEnv: Boolean!
 }

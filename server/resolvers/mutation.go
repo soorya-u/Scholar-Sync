@@ -38,7 +38,7 @@ func (r *mutationResolver) SignUpUser(ctx context.Context, input models.SignUpDa
 		return "", fmt.Errorf("%v", err)
 	}
 
-	user, err = r.Db.AddNewUser(input.FullName, input.Email, hashedPassword)
+	user, err = r.Db.AddNewUser(input.FullName, input.Email, hashedPassword, input.UserType)
 	if err != nil {
 		return "", fmt.Errorf("%v", err)
 	}
@@ -270,7 +270,6 @@ func (r *mutationResolver) RemoveUserFromNexus(ctx context.Context, input models
 	}
 
 	return true, nil
-
 }
 
 func (r *mutationResolver) LeaveNexus(ctx context.Context, nexusID string) (bool, error) {
@@ -323,6 +322,76 @@ func (r *mutationResolver) AddPseudoUserToCore(ctx context.Context, coreID strin
 	} else if !ok {
 		return false, fmt.Errorf("error in db")
 	}
+	return true, nil
+}
+
+func (r *mutationResolver) BuildDemoEnv(ctx context.Context) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie-access")
+	}
+
+	const coreName = "Demo Core"
+	const coreImage = "https://previews.123rf.com/images/vectorv/vectorv2011/vectorv201114752/159704026-black-television-report-icon-isolated-on-white-background-tv-news-yellow-square-button-vector.jpg"
+	const nexusName = "Welcome"
+	const category = "First"
+	const announcementTitle = "Welcome to the Demo Core"
+	const announcementDescription = "Hello! Welcome to the Demo Core. This is where you can test out the possibilities of Scholar Sync. You have been granted the PseudoAdmin Access within this Core and therefore, you can make any kind of changes within the Core. Remember, this is only the Demo Version and No Data of this Core will be stored!"
+
+	signUpData := models.SignUpData{
+		FullName: os.Getenv("ADMIN_NAME"),
+		Email:    os.Getenv("ADMIN_EMAIL"),
+		Password: os.Getenv("ADMIN_PASSWORD"),
+	}
+
+	if isValid := validators.ValidateSignUpData(signUpData); !isValid {
+		return false, fmt.Errorf("invalid credentials")
+	}
+
+	user, err := r.Db.GetUserByEmail(signUpData.Email)
+	if err != nil {
+		return false, fmt.Errorf("%v", err)
+	}
+
+	if user == nil {
+		hashedPassword, err := helpers.GetHashedPassword(signUpData.Password)
+		if err != nil {
+			return false, fmt.Errorf("%v", err)
+		}
+
+		user, err = r.Db.AddNewUser(signUpData.FullName, signUpData.Email, hashedPassword, signUpData.UserType)
+		if err != nil {
+			return false, fmt.Errorf("%v", err)
+		}
+	}
+
+	userId := user.ID
+
+	coreId, err := r.Db.CreateCore(coreName, coreImage, userId)
+	if err != nil {
+		return false, fmt.Errorf("%v", err)
+	}
+
+	nexusId, err := r.Db.CreateNexus(nexusName, userId, coreId, category)
+	if err != nil {
+		return false, fmt.Errorf("%v", err)
+	}
+
+	_, err = r.Db.CreateAnnouncement(announcementTitle, announcementDescription, nexusId, userId)
+	if err != nil {
+		return false, fmt.Errorf("%v", err)
+	}
+
+	_, err = r.Db.AddPseudoAdminToCore(cookie.UserId, coreId)
+	if err != nil {
+		return false, fmt.Errorf("%v", err)
+	}
+
+	_, err = r.Db.AddUserToNexus(cookie.UserId, nexusId)
+	if err != nil {
+		return false, fmt.Errorf("%v", err)
+	}
+
 	return true, nil
 }
 
