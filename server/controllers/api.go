@@ -72,3 +72,9 @@ func LinkHandler(ctx *gin.Context) {
 	})
 
 }
+
+func HealthHandler(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"wakeStatus": true,
+	})
+}
