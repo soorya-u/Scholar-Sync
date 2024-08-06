@@ -24,6 +24,7 @@ export default function LoginPage() {
   const adder = searchParams.get("l");
   const joinId = searchParams.get("j");
   const userId = searchParams.get("u");
+  const demo = searchParams.get("demo");
 
   const query =
     adder && joinId && userId
@@ -32,7 +33,9 @@ export default function LoginPage() {
           j: joinId,
           u: userId,
         }
-      : {};
+      : demo
+        ? { demo: "true" }
+        : {};
 
   return (
     <main className="flex min-h-full items-center justify-center">

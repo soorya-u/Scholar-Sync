@@ -9,4 +9,5 @@ export type NexusReduxType = {
   id: string;
   name: string;
   category: string;
+  creator: string;
 };

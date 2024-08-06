@@ -110,22 +110,24 @@ export default function NexusList() {
                     </Button>
                   </ContextMenuTrigger>
                   <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
-                    {user.userType !== "NORMAL" && (
-                      <>
-                        <ContextMenuItem
-                          onClick={async () =>
-                            await generateLinkFn("Nexus", n.id)
-                          }
-                          className="flex justify-between"
-                        >
-                          <p className="font-lato font-bold text-foreground">
-                            Share
-                          </p>
-                          <Share2Icon className="flex size-4 [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
-                        </ContextMenuItem>
-                        <ContextMenuSeparator className="w-[95%] self-center border" />
-                      </>
-                    )}
+                    {user.userType === "ADMIN" ||
+                      (user.userType === "PSEUDOADMIN" &&
+                        n.creator === user.id) && (
+                          <>
+                            <ContextMenuItem
+                              onClick={async () =>
+                                await generateLinkFn("Nexus", n.id)
+                              }
+                              className="flex justify-between"
+                            >
+                              <p className="font-lato font-bold text-foreground">
+                                Share
+                              </p>
+                              <Share2Icon className="flex size-4 [&>line]:text-foreground [&>path]:text-foreground [&>polyline]:text-foreground" />
+                            </ContextMenuItem>
+                            <ContextMenuSeparator className="w-[95%] self-center border" />
+                          </>
+                        )}
                     {user.userType === "NORMAL" && (
                       <>
                         <ContextMenuItem

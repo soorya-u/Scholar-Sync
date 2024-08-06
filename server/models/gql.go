@@ -105,9 +105,10 @@ type RemoveUserData struct {
 }
 
 type SignUpData struct {
-	FullName string `json:"fullName"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	FullName string  `json:"fullName"`
+	Email    string  `json:"email"`
+	Password string  `json:"password"`
+	UserType *string `json:"userType,omitempty"`
 }
 
 type ProfileType string

@@ -10,7 +10,9 @@ export default function Home() {
       <Gradient />
       <main className="relative flex min-h-screen flex-col items-center justify-center gap-7 overflow-y-auto">
         <header className="flex w-full items-center justify-between px-4 pt-4 xs:px-8">
-          <h1 className="font-playwrite text-2xl 3xs:text-3xl text-primary">Scholar Sync</h1>
+          <h1 className="font-playwrite text-2xl text-primary 3xs:text-3xl">
+            Scholar Sync
+          </h1>
           <div className="flex items-center justify-center gap-4">
             <Button
               className="text-md hidden border-[3px] bg-transparent font-kanit transition-all duration-300 hover:opacity-70 2xs:flex"
@@ -60,9 +62,7 @@ export default function Home() {
               className="text-md bg-transparent font-kanit transition-all duration-300 hover:bg-primary"
               variant="outline"
             >
-              <Link href="https://github.com/soorya-u/Grade-Grove">
-                View Source Code
-              </Link>
+              <Link href="/link/demo">Join Demo Core</Link>
             </Button>
           </div>
         </section>

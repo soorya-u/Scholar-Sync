@@ -28,7 +28,7 @@ export const useInitData = () => {
       router.replace("/auth/sign-up");
       toast({
         title: "Authentication Required",
-        variant: "default",
+        variant: "destructive",
         description: "Please Login or Sign Up to Proceed",
       });
       return;
@@ -45,7 +45,12 @@ export const useInitData = () => {
       const { id, imageUrl, name, nexus } =
         selectedCores.length > 0 ? selectedCores[0] : apiData[0];
 
-      setCore({ id, imageUrl, name, nexus });
+      setCore({
+        id,
+        imageUrl,
+        name,
+        nexus: nexus.map((n: NexusType) => ({ ...n, creator: n.creator.id })),
+      });
       nexus.length > 0 && nexus[0] && setNexus(nexus[0]);
     } else {
       const chosenCore = data.getUserData.find(

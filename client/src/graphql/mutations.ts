@@ -81,3 +81,9 @@ export const removeUserFromNexusMutation = gql`
     removeUserFromNexus(input: { userId: $userId, nexusId: $nexusId })
   }
 `;
+
+export const buildDemoEnvMutation = gql`
+  mutation {
+    buildDemoEnv
+  }
+`;

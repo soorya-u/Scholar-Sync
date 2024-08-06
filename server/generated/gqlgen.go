@@ -83,6 +83,7 @@ type ComplexityRoot struct {
 	Mutation struct {
 		AddPseudoUserToCore func(childComplexity int, coreID string) int
 		AddUserToNexus      func(childComplexity int, nexusID string) int
+		BuildDemoEnv        func(childComplexity int) int
 		CreateAnnouncement  func(childComplexity int, input models.AnnouncementData) int
 		CreateCore          func(childComplexity int, input models.CoreData) int
 		CreateFile          func(childComplexity int, input models.FileData) int
@@ -146,6 +147,7 @@ type MutationResolver interface {
 	LeaveNexus(ctx context.Context, nexusID string) (bool, error)
 	AddUserToNexus(ctx context.Context, nexusID string) (bool, error)
 	AddPseudoUserToCore(ctx context.Context, coreID string) (bool, error)
+	BuildDemoEnv(ctx context.Context) (bool, error)
 }
 type NexusResolver interface {
 	Creator(ctx context.Context, obj *models.Nexus) (*models.Profile, error)
@@ -343,6 +345,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.AddUserToNexus(childComplexity, args["nexusId"].(string)), true
+
+	case "Mutation.buildDemoEnv":
+		if e.complexity.Mutation.BuildDemoEnv == nil {
+			break
+		}
+
+		return e.complexity.Mutation.BuildDemoEnv(childComplexity), true
 
 	case "Mutation.createAnnouncement":
 		if e.complexity.Mutation.CreateAnnouncement == nil {
@@ -709,6 +718,7 @@ input SignUpData {
   fullName: String!
   email: String!
   password: String!
+  userType: String
 }
 
 input CoreData {
@@ -752,6 +762,7 @@ type Mutation {
   leaveNexus(nexusId: String!): Boolean!
   addUserToNexus(nexusId: String!): Boolean!
   addPseudoUserToCore(coreId: String!): Boolean!
+  buildDemoEnv: Boolean!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/query.gql", Input: `input LoginData {
@@ -2617,6 +2628,50 @@ func (ec *executionContext) fieldContext_Mutation_addPseudoUserToCore(ctx contex
 	if fc.Args, err = ec.field_Mutation_addPseudoUserToCore_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_buildDemoEnv(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_buildDemoEnv(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().BuildDemoEnv(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_buildDemoEnv(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -5718,7 +5773,7 @@ func (ec *executionContext) unmarshalInputSignUpData(ctx context.Context, obj in
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"fullName", "email", "password"}
+	fieldsInOrder := [...]string{"fullName", "email", "password", "userType"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -5746,6 +5801,13 @@ func (ec *executionContext) unmarshalInputSignUpData(ctx context.Context, obj in
 				return it, err
 			}
 			it.Password = data
+		case "userType":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("userType"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.UserType = data
 		}
 	}
 
@@ -6209,6 +6271,13 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		case "addPseudoUserToCore":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Mutation_addPseudoUserToCore(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "buildDemoEnv":
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_buildDemoEnv(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++

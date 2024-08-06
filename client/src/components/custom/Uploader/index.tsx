@@ -26,12 +26,14 @@ import { useUser } from "@/hooks/use-user";
 import { cn } from "@/utils/cn";
 import { useUploader } from "@/hooks/use-uploader";
 import MobileView from "./MobileView";
+import { useNexus } from "@/hooks/use-nexus";
 
 type UploaderType = "Announcement" | "File";
 const uploaders: UploaderType[] = ["Announcement", "File"];
 
 export default function Uploader() {
   const { user } = useUser();
+  const { nexus } = useNexus();
   const [isUploaderOpen, setIsUploaderOpen] = useState(false);
   const [uploader, setUploader] = useState<UploaderType>("Announcement");
   const [isFileExists, setIsFileExists] = useState(false);
@@ -39,7 +41,11 @@ export default function Uploader() {
   const { register, handleSubmit, isSubmitting, getValues, setValue } =
     useUploader(uploader);
 
-  if (user.userType === "NORMAL") return;
+  if (
+    user.userType === "NORMAL" ||
+    !(user.userType === "PSEUDOADMIN" && nexus.creator.id === user.id)
+  )
+    return;
   return (
     <>
       <MobileView />

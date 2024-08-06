@@ -7,12 +7,20 @@ import (
 	"github.com/surrealdb/surrealdb.go"
 )
 
-func (db *DB) AddNewUser(fullName, email, hashedPassword string) (*models.User, error) {
+func (db *DB) AddNewUser(fullName, email, hashedPassword string, userType *string) (*models.User, error) {
+
+	userTypeString := ""
+	if userType != nil {
+		userTypeString = *userType
+	} else {
+		userTypeString = "NORMAL"
+	}
 
 	params := map[string]interface{}{
 		"fullName": fullName,
 		"email":    email,
 		"password": hashedPassword,
+		"userType": userTypeString,
 	}
 
 	rawData, err := db.client.Create("user", params)
