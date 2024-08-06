@@ -103,6 +103,7 @@ export const useLinkGenerate = () => {
 export const useDemoLink = () => {
   const { data, loading } = useQuery(isUserLoggedInQuery, {
     fetchPolicy: "no-cache",
+    onError: (err) => console.log(err),
   });
   const { toast } = useToast();
   const [mutate, { data: mutateData }] = useMutation(buildDemoEnvMutation);
