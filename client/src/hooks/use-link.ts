@@ -12,7 +12,9 @@ import { useToast } from "@/components/primitives/use-toast";
 import { useUser } from "./use-user";
 
 export const useLink = (location: string, joinerId: string, userId: string) => {
-  const { data, loading } = useQuery(isUserLoggedInQuery);
+  const { data, loading } = useQuery(isUserLoggedInQuery, {
+    fetchPolicy: "no-cache",
+  });
   const [pseudoUserMutate, { data: pseudoUserData }] = useMutation(
     addPseudoUserToCoreMutation,
   );
@@ -99,7 +101,10 @@ export const useLinkGenerate = () => {
 };
 
 export const useDemoLink = () => {
-  const { data, loading } = useQuery(isUserLoggedInQuery);
+  const { data, loading } = useQuery(isUserLoggedInQuery, {
+    fetchPolicy: "no-cache",
+    onError: (err) => console.log(err),
+  });
   const { toast } = useToast();
   const [mutate, { data: mutateData }] = useMutation(buildDemoEnvMutation);
   const router = useRouter();
