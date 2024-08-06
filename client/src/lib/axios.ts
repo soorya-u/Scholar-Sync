@@ -18,6 +18,7 @@ type ResponseType = {
 
 export async function getLinkData(body: BodyType) {
   const { data } = await axiosClient.post<ResponseType>("/link", body);
-
   return data;
 }
+
+export const healthCheck = async () => await axiosClient.get("/health");

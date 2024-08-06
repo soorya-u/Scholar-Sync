@@ -9,5 +9,6 @@ func APIRoutes(r *gin.Engine) {
 	api := r.Group("/api")
 	{
 		api.POST("/link", controllers.LinkHandler)
+		api.GET("/health", controllers.HealthHandler)
 	}
 }
