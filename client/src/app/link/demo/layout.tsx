@@ -1,6 +1,5 @@
 import { PropsWithChildren, Suspense } from "react";
 import { Metadata } from "next";
-import { defaultMetadata } from "@/constants/metadata";
 
 export const metadata: Metadata = {
   title: "Demo Core | Scholar Sync",
