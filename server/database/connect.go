@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/surrealdb/surrealdb.go"
+	surrealdb "github.com/surrealdb/surrealdb.go"
 )
 
 type DB struct {
@@ -12,21 +12,23 @@ type DB struct {
 }
 
 func Connect() *DB {
-	connectionString := os.Getenv("DATABASE_URL")
+	connectionString := os.Getenv("SURREALDB_URL")
 
 	db, err := surrealdb.New(connectionString)
 	if err != nil {
 		log.Fatalf("failed to connect to SurrealDB: %v", err)
 	}
 
-	if _, err := db.Signin(map[string]interface{}{
-		"user": "root",
-		"pass": "root",
-	}); err != nil {
+	auth := &surrealdb.Auth{
+		Username: os.Getenv("SURREALDB_USER"),
+		Password: os.Getenv("SURREALDB_PASSWORD"),
+	}
+
+	if _, err := db.SignIn(auth); err != nil {
 		log.Fatalf("failed to sign in to SurrealDB: %v", err)
 	}
 
-	if _, err := db.Use("test", "test"); err != nil {
+	if err := db.Use(os.Getenv("SURREALDB_NAMESPACE"), os.Getenv("SURREALDB_DATABASE")); err != nil {
 		log.Fatalf("failed to switch to specified database: %v", err)
 	}
 
@@ -35,9 +37,13 @@ func Connect() *DB {
 		log.Fatalf("Unable to read the File: %v", err)
 	}
 
-	query := string(dataBytes)
-	var params interface{}
-	if _, err := db.Query(query, params); err != nil {
+	query := []surrealdb.QueryStmt{
+		{
+			SQL: string(dataBytes),
+		},
+	}
+
+	if err := surrealdb.QueryRaw(db, &query); err != nil {
 		log.Fatalf("Unable to initialize Database Schema: %v", err)
 	}
 

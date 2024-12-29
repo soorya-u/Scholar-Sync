@@ -2,10 +2,10 @@ package database
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/soorya-u/scholar-sync/models"
 	"github.com/surrealdb/surrealdb.go"
+	surrealmodels "github.com/surrealdb/surrealdb.go/pkg/models"
 )
 
 func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId string) (string, error) {
@@ -16,96 +16,76 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 		"fileUrl":     fileUrl,
 		"fileName":    fileName,
 		"sentBy":      userId,
-		"timeStamp":   time.Now(),
 	}
 
-	rawData, err := db.client.Create("file", params)
+	rawData, err := surrealdb.Create[[]models.DBFile](db.client, surrealmodels.Table("file"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to create file in DB: %v", err)
 	}
 
-	var fileId []struct {
-		Id string
+	recordId := *(*rawData)[0].ID
+
+	nexusRecordId := surrealmodels.RecordID{
+		Table: "nexus",
+		ID:    nexusId,
 	}
 
-	err = surrealdb.Unmarshal(rawData, &fileId)
-	if err != nil {
-		return "", fmt.Errorf("unable to unmarshal created file: %v", err)
-	} else if len(fileId) <= 0 {
-		return "", fmt.Errorf("unable to find unmarshalled value of file")
+	userRelation := surrealdb.Relationship{
+		Relation: "has",
+		In:       nexusRecordId,
+		Out:      recordId,
 	}
 
-	res := fileId[0].Id
-
-	query := "UPDATE $nexusId SET files+=$fileId;"
-	params = map[string]interface{}{
-		"nexusId": nexusId,
-		"fileId":  res,
+	if err = surrealdb.Relate(db.client, &userRelation); err != nil {
+		return "", fmt.Errorf("unable to create relation between user and announcement: %v", err)
 	}
 
-	_, err = db.client.Query(query, params)
-	if err != nil {
-		return "", fmt.Errorf("unable to Join: %v", err)
-	}
-
-	return res, nil
+	return recordId.String(), nil
 
 }
 
 func (db *DB) GetFiles(fileIds []string) ([]*models.File, error) {
-	query := "SELECT *, sentBy.* FROM $fileIds;"
-	params := map[string]interface{}{
-		"fileIds": fileIds,
+	// TODO: Get User as well
+	fileRecordIds := make([]surrealmodels.RecordID, len(fileIds))
+	for _, f := range fileIds {
+		fileRecordIds = append(fileRecordIds, surrealmodels.RecordID{Table: "file", ID: f})
 	}
 
-	rawData, err := db.client.Query(query, params)
+	dbFiles, err := surrealdb.Select[[]models.DBFile, []surrealmodels.RecordID](db.client, fileRecordIds)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch files: %v", err)
 	}
 
-	var parsedData []struct {
-		Result []*models.File `json:"result"`
-		Status string         `json:"status"`
-		Time   string         `json:"time"`
+	filepts := make([]*models.File, len(*dbFiles))
+	for _, f := range *dbFiles {
+		filepts = append(filepts, &models.File{
+			ID:          f.ID.String(),
+			Title:       f.Title,
+			Description: f.Description,
+			FileURL:     f.FileURL,
+			FileName:    f.FileName,
+			// TODO: Change Later
+			SentBy:    nil,
+			TimeStamp: f.Timestamp,
+		})
 	}
 
-	err = surrealdb.Unmarshal(rawData, &parsedData)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal files: %v", err)
-	}
-
-	res := parsedData[0].Result
-
-	if len(res) <= 0 {
-		return nil, nil
-	}
-
-	return res, nil
+	return filepts, nil
 
 }
 
 func (db *DB) GetFilenameByPath(filePath string) (string, error) {
-	query := "SELECT *, sentBy.* from file WHERE fileUrl = $filePath"
+	query := "SELECT * from file WHERE fileUrl = $filePath"
 	params := map[string]interface{}{
 		"filePath": filePath,
 	}
 
-	rawData, err := db.client.Query(query, params)
+	rawData, err := surrealdb.Query[[]*models.DBFile](db.client, query, params)
 	if err != nil {
 		return "", fmt.Errorf("error in running query: %v", err)
 	}
 
-	var parsedData []struct {
-		Result []*models.File `json:"result"`
-		Status string         `json:"status"`
-		Time   string         `json:"time"`
-	}
-
-	if err = surrealdb.Unmarshal(rawData, &parsedData); err != nil {
-		return "", fmt.Errorf("unable to unmarshal: %v", err)
-	}
-
-	res := parsedData[0].Result
+	res := (*rawData)[0].Result
 
 	if len(res) <= 0 {
 		return "", fmt.Errorf("no result found")
