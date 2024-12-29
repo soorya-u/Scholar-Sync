@@ -10,8 +10,15 @@ type Profile {
   id: ID!
   fullName: String!
   email: String!
-  userType: ProfileType!
   createdAt: Time!
+}
+
+type ProfileWithRole {
+  id: ID!
+  fullName: String!
+  email: String!
+  createdAt: Time!
+  role: ProfileType!
 }
 
 type Core {
@@ -19,7 +26,6 @@ type Core {
   name: String!
   imageUrl: String!
   creator: Profile!
-  pseudoAdmins: [Profile]!
   nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
@@ -29,8 +35,7 @@ type Nexus {
   id: ID!
   name: String!
   category: String!
-  creator: Profile!
-  users: [Profile]!
+  members: [ProfileWithRole]!
   files: [File]!
   announcements: [Announcement]!
   createdAt: Time!

@@ -26,14 +26,13 @@ type AnnouncementData struct {
 }
 
 type Core struct {
-	ID           string     `json:"id"`
-	Name         string     `json:"name"`
-	ImageURL     string     `json:"imageUrl"`
-	Creator      *Profile   `json:"creator"`
-	PseudoAdmins []*Profile `json:"pseudoAdmins"`
-	Nexus        []*Nexus   `json:"nexus"`
-	CreatedAt    time.Time  `json:"createdAt"`
-	UpdatedAt    time.Time  `json:"updatedAt"`
+	ID        string    `json:"id"`
+	Name      string    `json:"name"`
+	ImageURL  string    `json:"imageUrl"`
+	Creator   *Profile  `json:"creator"`
+	Nexus     []*Nexus  `json:"nexus"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
 }
 
 type CoreData struct {
@@ -71,15 +70,14 @@ type Mutation struct {
 }
 
 type Nexus struct {
-	ID            string          `json:"id"`
-	Name          string          `json:"name"`
-	Category      string          `json:"category"`
-	Creator       *Profile        `json:"creator"`
-	Users         []*Profile      `json:"users"`
-	Files         []*File         `json:"files"`
-	Announcements []*Announcement `json:"announcements"`
-	CreatedAt     time.Time       `json:"createdAt"`
-	UpdatedAt     time.Time       `json:"updatedAt"`
+	ID            string             `json:"id"`
+	Name          string             `json:"name"`
+	Category      string             `json:"category"`
+	Members       []*ProfileWithRole `json:"members"`
+	Files         []*File            `json:"files"`
+	Announcements []*Announcement    `json:"announcements"`
+	CreatedAt     time.Time          `json:"createdAt"`
+	UpdatedAt     time.Time          `json:"updatedAt"`
 }
 
 type NexusData struct {
@@ -89,11 +87,18 @@ type NexusData struct {
 }
 
 type Profile struct {
+	ID        string    `json:"id"`
+	FullName  string    `json:"fullName"`
+	Email     string    `json:"email"`
+	CreatedAt time.Time `json:"createdAt"`
+}
+
+type ProfileWithRole struct {
 	ID        string      `json:"id"`
 	FullName  string      `json:"fullName"`
 	Email     string      `json:"email"`
-	UserType  ProfileType `json:"userType"`
 	CreatedAt time.Time   `json:"createdAt"`
+	Role      ProfileType `json:"role"`
 }
 
 type Query struct {
@@ -105,10 +110,9 @@ type RemoveUserData struct {
 }
 
 type SignUpData struct {
-	FullName string  `json:"fullName"`
-	Email    string  `json:"email"`
-	Password string  `json:"password"`
-	UserType *string `json:"userType,omitempty"`
+	FullName string `json:"fullName"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 type ProfileType string
