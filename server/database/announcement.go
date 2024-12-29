@@ -2,81 +2,86 @@ package database
 
 import (
 	"fmt"
-	"time"
 
 	"github.com/soorya-u/scholar-sync/models"
-	"github.com/surrealdb/surrealdb.go"
+	surrealdb "github.com/surrealdb/surrealdb.go"
+	surrealmodels "github.com/surrealdb/surrealdb.go/pkg/models"
 )
 
 func (db *DB) CreateAnnouncement(title, message, nexusId, userId string) (string, error) {
-	params := map[string]interface{}{
-		"title":     title,
-		"message":   message,
-		"sentBy":    userId,
-		"timeStamp": time.Now(),
+	params := models.DBAnnouncement{
+		Title:   title,
+		Message: message,
 	}
 
-	rawData, err := db.client.Create("announcement", params)
+	rawData, err := surrealdb.Create[[]models.DBAnnouncement](db.client, surrealmodels.Table("announcement"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to create announcement in DB: %v", err)
 	}
 
-	var announcementId []struct {
-		Id string
+	recordId := *(*rawData)[0].ID
+
+	userRecordId := surrealmodels.RecordID{
+		Table: "user",
+		ID:    userId,
 	}
 
-	err = surrealdb.Unmarshal(rawData, &announcementId)
-	if err != nil {
-		return "", fmt.Errorf("unable to unmarshal announcements: %v", err)
-	} else if len(announcementId) <= 0 {
-		return "", fmt.Errorf("unable to find unmarshalled value of announcement")
+	userRelation := surrealdb.Relationship{
+		Relation: "has",
+		In:       recordId,
+		Out:      userRecordId,
 	}
 
-	res := announcementId[0].Id
-
-	query := "UPDATE $nexusId SET announcements+=$announcementId;"
-	params = map[string]interface{}{
-		"nexusId":        nexusId,
-		"announcementId": res,
+	if err = surrealdb.Relate(db.client, &userRelation); err != nil {
+		return "", fmt.Errorf("unable to create relation between user and announcement: %v", err)
 	}
 
-	_, err = db.client.Query(query, params)
-	if err != nil {
-		return "", fmt.Errorf("unable to Join: %v", err)
+	nexusRecordId := surrealmodels.RecordID{
+		Table: "nexus",
+		ID:    nexusId,
 	}
 
-	return res, nil
+	nexusRelation := surrealdb.Relationship{
+		Relation: "sentBy",
+		In:       nexusRecordId,
+		Out:      recordId,
+	}
+
+	if err = surrealdb.Relate(db.client, &nexusRelation); err != nil {
+		return "", fmt.Errorf("unable to create relation between nexus and announcement: %v", err)
+	}
+
+	return recordId.String(), nil
 
 }
 
 func (db *DB) GetAnnouncements(announcementIds []string) ([]*models.Announcement, error) {
-	query := "SELECT *, sentBy.* FROM $announcementIds;"
+	// TODO: Change Query Later to fetch Sent By User Later
+	query := "SELECT * FROM $announcementIds;"
 	params := map[string]interface{}{
 		"announcementIds": announcementIds,
 	}
 
-	rawData, err := db.client.Query(query, params)
+	rawData, err := surrealdb.Query[[]models.DBAnnouncement](db.client, query, params)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch announcements: %v", err)
 	}
 
-	var parsedData []struct {
-		Result []*models.Announcement `json:"result"`
-		Status string                 `json:"status"`
-		Time   string                 `json:"time"`
+	dbAnnouncements := (*rawData)[0].Result
+
+	announcements := make([]*models.Announcement, len(dbAnnouncements))
+
+	for _, a := range dbAnnouncements {
+		announcements = append(announcements, &models.Announcement{
+			ID:      a.ID.String(),
+			Title:   a.Title,
+			Message: a.Message,
+			// TODO: Change this to Sent By User
+			SentBy:    nil,
+			TimeStamp: a.Timestamp,
+		})
 	}
 
-	err = surrealdb.Unmarshal(rawData, &parsedData)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal announcements: %v", err)
-	}
-
-	res := parsedData[0].Result
-
-	if len(res) <= 0 {
-		return nil, nil
-	}
-
-	return res, nil
+	return announcements, nil
 
 }

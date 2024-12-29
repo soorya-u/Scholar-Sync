@@ -5,61 +5,36 @@ import (
 
 	"github.com/soorya-u/scholar-sync/models"
 	"github.com/surrealdb/surrealdb.go"
+	surrealmodels "github.com/surrealdb/surrealdb.go/pkg/models"
 )
 
-func (db *DB) AddNewUser(fullName, email, hashedPassword string, userType *string) (*models.User, error) {
-
-	userTypeString := ""
-	if userType != nil {
-		userTypeString = *userType
-	} else {
-		userTypeString = "NORMAL"
-	}
+func (db *DB) AddNewUser(fullName, email, hashedPassword string) (*models.DBUser, error) {
 
 	params := map[string]interface{}{
 		"fullName": fullName,
 		"email":    email,
 		"password": hashedPassword,
-		"userType": userTypeString,
 	}
 
-	rawData, err := db.client.Create("user", params)
+	rawData, err := surrealdb.Create[models.DBUser, surrealmodels.Table](db.client, surrealmodels.Table("user"), params)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create User in database: %v", err)
 	}
 
-	var user []models.User
-
-	err = surrealdb.Unmarshal(rawData, &user)
-	if err != nil {
-		return nil, fmt.Errorf("unable to parse data from database: %v", err)
-	}
-
-	return &user[0], nil
+	return rawData, nil
 }
 
-func (db *DB) GetUserByEmail(email string) (*models.User, error) {
+func (db *DB) GetUserByEmail(email string) (*models.DBUser, error) {
 
 	query := "SELECT * FROM user WHERE email = $email"
 	params := map[string]interface{}{"email": email}
 
-	rawData, err := db.client.Query(query, params)
+	rawData, err := surrealdb.Query[[]models.DBUser](db.client, query, params)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch User: %v", err)
 	}
 
-	var parsedData []struct {
-		Result []models.User `json:"result"`
-		Status string        `json:"status"`
-		Time   string        `json:"time"`
-	}
-
-	err = surrealdb.Unmarshal(rawData, &parsedData)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal: %v", err)
-	}
-
-	res := parsedData[0].Result
+	res := (*rawData)[0].Result
 
 	if len(res) == 0 {
 		return nil, nil
@@ -69,16 +44,19 @@ func (db *DB) GetUserByEmail(email string) (*models.User, error) {
 }
 
 func (db *DB) GetProfileByID(id string) (*models.Profile, error) {
-	rawData, err := db.client.Select(id)
+
+	userRecordId := surrealmodels.RecordID{Table: "user", ID: id}
+
+	dbUser, err := surrealdb.Select[models.DBUser, surrealmodels.RecordID](db.client, userRecordId)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch User: %v", err)
 	}
 
-	var user models.Profile
-
-	err = surrealdb.Unmarshal(rawData, &user)
-	if err != nil {
-		return nil, fmt.Errorf("unable to unmarshal: %v", err)
+	user := models.Profile{
+		ID:        dbUser.ID.String(),
+		FullName:  dbUser.FullName,
+		Email:     dbUser.Email,
+		CreatedAt: dbUser.CreatedAt,
 	}
 
 	return &user, nil
@@ -95,26 +73,17 @@ func (db *DB) GetUserFullNameById(id string) (string, error) {
 	return user.FullName, nil
 }
 
+// TODO: rewrite function later
 func (db *DB) AdminCheck(id string) (bool, error) {
-	if profile, err := db.GetProfileByID(id); err != nil {
-		return false, err
-	} else {
-		return profile.UserType == models.ProfileTypeAdmin, nil
-	}
+	return false, nil
 }
 
+// TODO: rewrite function later
 func (db *DB) AdminOrPseudoAdminCheck(id string) (bool, error) {
-	if profile, err := db.GetProfileByID(id); err != nil {
-		return false, err
-	} else {
-		return (profile.UserType == models.ProfileTypeAdmin || profile.UserType == models.ProfileTypePseudoadmin), nil
-	}
+	return false, nil
 }
 
+// TODO: rewrite function later
 func (db *DB) PseudoAdminCheck(id string) (bool, error) {
-	if profile, err := db.GetProfileByID(id); err != nil {
-		return false, err
-	} else {
-		return profile.UserType == models.ProfileTypePseudoadmin, nil
-	}
+	return false, nil
 }

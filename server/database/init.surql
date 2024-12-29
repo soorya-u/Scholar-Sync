@@ -36,7 +36,7 @@ DEFINE FIELD title ON file TYPE string;
 DEFINE FIELD description ON file TYPE string;
 DEFINE FIELD fileUrl ON file TYPE string;
 DEFINE FIELD fileName ON file TYPE string;
-DEFINE FIELD timeStamp ON file TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD timestamp ON file TYPE datetime DEFAULT time::now() READONLY;
 
 -- Announcement Schema
 
@@ -44,7 +44,7 @@ DEFINE TABLE announcement SCHEMAFULL;
 
 DEFINE FIELD title ON announcement TYPE string;
 DEFINE FIELD message ON announcement TYPE string;
-DEFINE FIELD timeStamp ON announcement TYPE datetime DEFAULT time::now() READONLY;
+DEFINE FIELD timestamp ON announcement TYPE datetime DEFAULT time::now() READONLY;
 
 -- Graph Relations
 
