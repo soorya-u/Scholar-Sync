@@ -78,7 +78,7 @@ func (db *DB) GetAnnouncements(announcementIds []string) ([]*models.Announcement
 			Message: a.Message,
 			// TODO: Change this to Sent By User
 			SentBy:    nil,
-			TimeStamp: a.Timestamp,
+			Timestamp: a.Timestamp,
 		})
 	}
 

@@ -100,6 +100,41 @@ func (r *mutationResolver) CreateCore(ctx context.Context, input models.CoreData
 	return coreId, nil
 }
 
+func (r *mutationResolver) DeleteCore(ctx context.Context, coreID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.AdminCheck(cookie.UserId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("no privilages")
+	}
+
+	if ok, err := r.Db.DeleteCore(coreID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to delete core")
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) AddMemberToCore(ctx context.Context, coreID string) (bool, error) {
+	panic(fmt.Errorf("not implemented: AddMemberToCore - addMemberToCore"))
+}
+
+func (r *mutationResolver) RemoveMemberFromCore(ctx context.Context, input models.CoreMember) (bool, error) {
+	panic(fmt.Errorf("not implemented: RemoveMemberFromCore - removeMemberFromCore"))
+}
+
+func (r *mutationResolver) LeaveCore(ctx context.Context, nexusID string) (bool, error) {
+	panic(fmt.Errorf("not implemented: LeaveCore - leaveCore"))
+}
+
 func (r *mutationResolver) CreateNexus(ctx context.Context, input models.NexusData) (string, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
@@ -120,6 +155,73 @@ func (r *mutationResolver) CreateNexus(ctx context.Context, input models.NexusDa
 	}
 
 	return nexusId, nil
+}
+
+func (r *mutationResolver) DeleteNexus(ctx context.Context, nexusID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("no privilages")
+	}
+
+	if ok, err := r.Db.DeleteNexus(nexusID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to delete nexus")
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) AddMemberToNexus(ctx context.Context, nexusID string) (bool, error) {
+	panic(fmt.Errorf("not implemented: AddMemberToNexus - addMemberToNexus"))
+}
+
+func (r *mutationResolver) RemoveMemberFromNexus(ctx context.Context, input models.NexusMember) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("no privilages")
+	}
+
+	if ok, err := r.Db.RemoveUserFromNexus(input.UserID, input.NexusID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to remove user")
+	}
+
+	return true, nil
+}
+
+func (r *mutationResolver) LeaveNexus(ctx context.Context, nexusID string) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if ok, err := r.Db.RemoveUserFromNexus(cookie.UserId, nexusID); err != nil {
+		return false, err
+	} else if !ok {
+		return false, fmt.Errorf("unable to remove user")
+	}
+
+	return true, nil
 }
 
 func (r *mutationResolver) CreateFile(ctx context.Context, input models.FileData) (string, error) {
@@ -207,114 +309,6 @@ func (r *mutationResolver) CreateAnnouncement(ctx context.Context, input models.
 	return announcementId, nil
 }
 
-func (r *mutationResolver) DeleteCore(ctx context.Context, coreID string) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	if ok, err := r.Db.AdminCheck(cookie.UserId); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("no privilages")
-	}
-
-	if ok, err := r.Db.DeleteCore(coreID); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("unable to delete core")
-	}
-
-	return true, nil
-}
-
-func (r *mutationResolver) DeleteNexus(ctx context.Context, nexusID string) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	if ok, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("no privilages")
-	}
-
-	if ok, err := r.Db.DeleteNexus(nexusID); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("unable to delete nexus")
-	}
-
-	return true, nil
-}
-
-func (r *mutationResolver) RemoveUserFromNexus(ctx context.Context, input models.RemoveUserData) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	if ok, err := r.Db.AdminOrPseudoAdminCheck(cookie.UserId); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("no privilages")
-	}
-
-	if ok, err := r.Db.RemoveUserFromNexus(input.UserID, input.NexusID); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("unable to remove user")
-	}
-
-	return true, nil
-}
-
-func (r *mutationResolver) LeaveNexus(ctx context.Context, nexusID string) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	if ok, err := r.Db.RemoveUserFromNexus(cookie.UserId, nexusID); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("unable to remove user")
-	}
-
-	return true, nil
-}
-
-func (r *mutationResolver) AddUserToNexus(ctx context.Context, nexusID string) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	nexusId := fmt.Sprintf("nexus:%s", nexusID)
-
-	if _, err := r.Db.AddUserToNexus(cookie.UserId, nexusId); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("error in db")
-	}
-	return true, nil
-}
-
-func (r *mutationResolver) AddPseudoUserToNexus(ctx context.Context, nexusID string) (bool, error) {
-	panic(fmt.Errorf("not implemented: AddPseudoUserToNexus - addPseudoUserToNexus"))
-}
-
 func (r *mutationResolver) BuildDemoEnv(ctx context.Context) (bool, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
@@ -388,25 +382,3 @@ func (r *mutationResolver) BuildDemoEnv(ctx context.Context) (bool, error) {
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 type mutationResolver struct{ *Resolver }
-
-// !!! WARNING !!!
-// The code below was going to be deleted when updating resolvers. It has been copied here so you have
-// one last chance to move it out of harms way if you want. There are two reasons this happens:
-//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
-//     it when you're done.
-//   - You have helper methods in this file. Move them out to keep these resolver files clean.
-func (r *mutationResolver) AddPseudoUserToCore(ctx context.Context, nexusId string) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	if _, err := r.Db.PromoteToPseudoAdmin(cookie.UserId, nexusId); err != nil {
-		return false, err
-	} else if !ok {
-		return false, fmt.Errorf("error in db")
-	}
-	return true, nil
-}
