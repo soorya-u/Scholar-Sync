@@ -1,0 +1,19 @@
+mutation CreateNexus($name: String!, $category: String!, $core: String!) {
+  createNexus(input: { name: $name, category: $category, core: $core })
+}
+
+mutation DeleteNexus($nexusId: String!) {
+  deleteNexus(nexusId: $nexusId)
+}
+
+mutation LeaveNexus($nexusId: String!) {
+  leaveNexus(nexusId: $nexusId)
+}
+
+mutation AddMemberToNexus($nexusId: String!) {
+  addMemberToNexus(nexusId: $nexusId)
+}
+
+mutation RemoveMemberFromNexus($userId: String!, $nexusId: String!) {
+  removeMemberFromNexus(input: { userId: $userId, nexusId: $nexusId })
+}

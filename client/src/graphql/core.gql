@@ -1,0 +1,11 @@
+mutation CreateCore($name: String!, $imageUrl: String!) {
+  createCore(input: { name: $name, imageUrl: $imageUrl })
+}
+
+mutation DeleteCore($coreId: String!) {
+  deleteCore(coreId: $coreId)
+}
+
+mutation AddMemberToCore($coreId: String!) {
+  addMemberToCore(coreId: $coreId)
+}

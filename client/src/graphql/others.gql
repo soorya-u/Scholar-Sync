@@ -1,0 +1,10 @@
+mutation CreateDemoCore {
+  buildDemoEnv
+}
+
+query GetInitData {
+  getUser {
+    id
+    fullName
+  }
+}

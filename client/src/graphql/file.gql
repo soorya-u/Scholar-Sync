@@ -1,0 +1,15 @@
+mutation CreateFile(
+  $title: String!
+  $description: String!
+  $upload: Upload!
+  $nexus: String!
+) {
+  createFile(
+    input: {
+      title: $title
+      description: $description
+      upload: $upload
+      nexus: $nexus
+    }
+  )
+}

@@ -1,0 +1,9 @@
+mutation CreateAnnouncement(
+  $title: String!
+  $description: String!
+  $nexus: String!
+) {
+  createAnnouncement(
+    input: { title: $title, message: $description, nexus: $nexus }
+  )
+}
