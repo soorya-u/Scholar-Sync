@@ -72,6 +72,48 @@ func (r *queryResolver) LoginUser(ctx context.Context, input models.LoginData) (
 	return token, nil
 }
 
+func (r *queryResolver) LogOut(ctx context.Context) (bool, error) {
+	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
+	if !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
+		return false, fmt.Errorf("cookie not found")
+	}
+
+	if os.Getenv("GIN_MODE") == "release" {
+		http.SetCookie(cookie.Writer, &http.Cookie{
+			Name:     "authorization",
+			Value:    "",
+			Path:     "/",
+			Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
+			HttpOnly: true,
+			Secure:   true,
+			SameSite: http.SameSiteNoneMode,
+		})
+
+	} else {
+
+		http.SetCookie(cookie.Writer, &http.Cookie{
+			Name:     "authorization",
+			Value:    "",
+			Path:     "/",
+			Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
+			HttpOnly: true,
+			Secure:   false,
+		})
+	}
+
+	return true, nil
+}
+
+func (r *queryResolver) IsUserLoggedIn(ctx context.Context) (bool, error) {
+	if cookie, ok := ctx.Value("cookie-access").(models.CookieAccess); !ok {
+		return false, fmt.Errorf("unable to get cookie access")
+	} else {
+		return cookie.IsLoggedIn && cookie.UserId != "", nil
+	}
+}
+
 func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
 	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
 	if !ok {
@@ -196,48 +238,6 @@ func (r *queryResolver) GetUserData(ctx context.Context) ([]*models.Core, error)
 	// }
 
 	return nil, nil
-}
-
-func (r *queryResolver) LogOut(ctx context.Context) (bool, error) {
-	cookie, ok := ctx.Value("cookie-access").(models.CookieAccess)
-	if !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else if !cookie.IsLoggedIn || cookie.UserId == "" {
-		return false, fmt.Errorf("cookie not found")
-	}
-
-	if os.Getenv("GIN_MODE") == "release" {
-		http.SetCookie(cookie.Writer, &http.Cookie{
-			Name:     "authorization",
-			Value:    "",
-			Path:     "/",
-			Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
-			HttpOnly: true,
-			Secure:   true,
-			SameSite: http.SameSiteNoneMode,
-		})
-
-	} else {
-
-		http.SetCookie(cookie.Writer, &http.Cookie{
-			Name:     "authorization",
-			Value:    "",
-			Path:     "/",
-			Expires:  time.Date(2003, time.May, 20, 7, 7, 7, 7, time.UTC),
-			HttpOnly: true,
-			Secure:   false,
-		})
-	}
-
-	return true, nil
-}
-
-func (r *queryResolver) IsUserLoggedIn(ctx context.Context) (bool, error) {
-	if cookie, ok := ctx.Value("cookie-access").(models.CookieAccess); !ok {
-		return false, fmt.Errorf("unable to get cookie access")
-	} else {
-		return cookie.IsLoggedIn && cookie.UserId != "", nil
-	}
 }
 
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }

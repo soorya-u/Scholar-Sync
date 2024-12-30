@@ -66,7 +66,7 @@ func (db *DB) GetFiles(fileIds []string) ([]*models.File, error) {
 			FileName:    f.FileName,
 			// TODO: Change Later
 			SentBy:    nil,
-			TimeStamp: f.Timestamp,
+			Timestamp: f.Timestamp,
 		})
 	}
 

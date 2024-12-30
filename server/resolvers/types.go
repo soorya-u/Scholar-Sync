@@ -15,10 +15,6 @@ func (r *announcementResolver) SentBy(ctx context.Context, obj *models.Announcem
 	return obj.SentBy, nil
 }
 
-func (r *coreResolver) Creator(ctx context.Context, obj *models.Core) (*models.Profile, error) {
-	return obj.Creator, nil
-}
-
 func (r *coreResolver) Nexus(ctx context.Context, obj *models.Core) ([]*models.Nexus, error) {
 	return obj.Nexus, nil
 }

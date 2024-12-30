@@ -48,12 +48,10 @@ DEFINE FIELD timestamp ON announcement TYPE datetime DEFAULT time::now() READONL
 
 -- Graph Relations
 
-DEFINE TABLE creator SCHEMAFULL TYPE RELATION FROM user to core;
+DEFINE TABLE member SCHEMAFULL TYPE RELATION FROM user TO core | nexus;
+DEFINE FIELD role ON member TYPE string ASSERT $value IN ["ADMIN", "NORMAL"] DEFAULT "NORMAL";
 
 DEFINE TABLE contains SCHEMAFULL TYPE RELATION FROM core to nexus;
-
-DEFINE TABLE member SCHEMAFULL TYPE RELATION FROM user to nexus;
-DEFINE FIELD role ON member TYPE string ASSERT $value IN ["ADMIN", "PSEUDOADMIN", "NORMAL"] DEFAULT "NORMAL";
 
 DEFINE TABLE has SCHEMAFULL TYPE RELATION FROM nexus to file | announcement;
 

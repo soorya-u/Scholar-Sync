@@ -16,7 +16,7 @@ type Announcement struct {
 	Title     string    `json:"title"`
 	Message   string    `json:"message"`
 	SentBy    *Profile  `json:"sentBy"`
-	TimeStamp time.Time `json:"timeStamp"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 type AnnouncementData struct {
@@ -26,18 +26,23 @@ type AnnouncementData struct {
 }
 
 type Core struct {
-	ID        string    `json:"id"`
-	Name      string    `json:"name"`
-	ImageURL  string    `json:"imageUrl"`
-	Creator   *Profile  `json:"creator"`
-	Nexus     []*Nexus  `json:"nexus"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID        string             `json:"id"`
+	Name      string             `json:"name"`
+	ImageURL  string             `json:"imageUrl"`
+	Members   []*ProfileWithRole `json:"members"`
+	Nexus     []*Nexus           `json:"nexus"`
+	CreatedAt time.Time          `json:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt"`
 }
 
 type CoreData struct {
 	Name     string `json:"name"`
 	ImageURL string `json:"imageUrl"`
+}
+
+type CoreMember struct {
+	UserID string `json:"userId"`
+	CoreID string `json:"coreId"`
 }
 
 type File struct {
@@ -47,7 +52,7 @@ type File struct {
 	FileURL     string    `json:"fileUrl"`
 	FileName    string    `json:"fileName"`
 	SentBy      *Profile  `json:"sentBy"`
-	TimeStamp   time.Time `json:"timeStamp"`
+	Timestamp   time.Time `json:"timestamp"`
 }
 
 type FileData struct {
@@ -86,6 +91,11 @@ type NexusData struct {
 	Category string `json:"category"`
 }
 
+type NexusMember struct {
+	UserID  string `json:"userId"`
+	NexusID string `json:"nexusId"`
+}
+
 type Profile struct {
 	ID        string    `json:"id"`
 	FullName  string    `json:"fullName"`
@@ -104,11 +114,6 @@ type ProfileWithRole struct {
 type Query struct {
 }
 
-type RemoveUserData struct {
-	UserID  string `json:"userId"`
-	NexusID string `json:"nexusId"`
-}
-
 type SignUpData struct {
 	FullName string `json:"fullName"`
 	Email    string `json:"email"`
@@ -118,20 +123,18 @@ type SignUpData struct {
 type ProfileType string
 
 const (
-	ProfileTypeAdmin       ProfileType = "ADMIN"
-	ProfileTypePseudoadmin ProfileType = "PSEUDOADMIN"
-	ProfileTypeNormal      ProfileType = "NORMAL"
+	ProfileTypeAdmin  ProfileType = "ADMIN"
+	ProfileTypeNormal ProfileType = "NORMAL"
 )
 
 var AllProfileType = []ProfileType{
 	ProfileTypeAdmin,
-	ProfileTypePseudoadmin,
 	ProfileTypeNormal,
 }
 
 func (e ProfileType) IsValid() bool {
 	switch e {
-	case ProfileTypeAdmin, ProfileTypePseudoadmin, ProfileTypeNormal:
+	case ProfileTypeAdmin, ProfileTypeNormal:
 		return true
 	}
 	return false

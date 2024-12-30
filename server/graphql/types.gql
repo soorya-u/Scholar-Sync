@@ -2,7 +2,6 @@ scalar Time
 
 enum ProfileType {
   ADMIN
-  PSEUDOADMIN
   NORMAL
 }
 
@@ -25,7 +24,7 @@ type Core {
   id: ID!
   name: String!
   imageUrl: String!
-  creator: Profile!
+  members: [ProfileWithRole]!
   nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
@@ -49,7 +48,7 @@ type File {
   fileUrl: String!
   fileName: String!
   sentBy: Profile!
-  timeStamp: Time!
+  timestamp: Time!
 }
 
 type Announcement {
@@ -57,5 +56,5 @@ type Announcement {
   title: String!
   message: String!
   sentBy: Profile!
-  timeStamp: Time!
+  timestamp: Time!
 }
