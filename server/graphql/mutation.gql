@@ -41,18 +41,22 @@ input NexusMember {
 }
 
 type Mutation {
-  signUpUser(input: SignUpData!): String!
+  signUp(input: SignUpData!): String!
 
   createCore(input: CoreData!): ID!
   deleteCore(coreId: String!): Boolean!
-  addMemberToCore(coreId: String!): Boolean!
+
+  addMemberToCore(input: CoreMember!): Boolean!
   removeMemberFromCore(input: CoreMember!): Boolean!
+
   leaveCore(nexusId: String!): Boolean!
 
   createNexus(input: NexusData!): ID!
   deleteNexus(nexusId: String!): Boolean!
-  addMemberToNexus(nexusId: String!): Boolean!
+
+  addMemberToNexus(input: NexusMember!): Boolean!
   removeMemberFromNexus(input: NexusMember!): Boolean!
+
   leaveNexus(nexusId: String!): Boolean!
 
   createFile(input: FileData!): ID!

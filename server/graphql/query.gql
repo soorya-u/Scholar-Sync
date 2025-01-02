@@ -8,9 +8,8 @@ input GetNexusData {
 }
 
 type Query {
-  loginUser(input: LoginData!): String!
-  logOut: Boolean!
-  isUserLoggedIn: Boolean!
+  login(input: LoginData!): String!
+  logout: Boolean!
 
   getUser: Profile!
   getUserData: [Core]!

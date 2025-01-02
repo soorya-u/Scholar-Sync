@@ -16,12 +16,14 @@ func (db *DB) AddNewUser(fullName, email, hashedPassword string) (*models.DBUser
 		"password": hashedPassword,
 	}
 
-	rawData, err := surrealdb.Create[models.DBUser, surrealmodels.Table](db.client, surrealmodels.Table("user"), params)
+	dbUsers, err := surrealdb.Create[models.DBUser](db.client, surrealmodels.Table("user"), params)
 	if err != nil {
 		return nil, fmt.Errorf("unable to create User in database: %v", err)
 	}
 
-	return rawData, nil
+	fmt.Printf("\n\n%+v\n\n", *dbUsers)
+
+	return dbUsers, nil
 }
 
 func (db *DB) GetUserByEmail(email string) (*models.DBUser, error) {
@@ -45,9 +47,9 @@ func (db *DB) GetUserByEmail(email string) (*models.DBUser, error) {
 
 func (db *DB) GetProfileByID(id string) (*models.Profile, error) {
 
-	userRecordId := surrealmodels.RecordID{Table: "user", ID: id}
+	userRecordId := *surrealmodels.ParseRecordID(id)
 
-	dbUser, err := surrealdb.Select[models.DBUser, surrealmodels.RecordID](db.client, userRecordId)
+	dbUser, err := surrealdb.Select[models.DBUser](db.client, userRecordId)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch User: %v", err)
 	}
@@ -56,14 +58,13 @@ func (db *DB) GetProfileByID(id string) (*models.Profile, error) {
 		ID:        dbUser.ID.String(),
 		FullName:  dbUser.FullName,
 		Email:     dbUser.Email,
-		CreatedAt: dbUser.CreatedAt,
+		CreatedAt: dbUser.CreatedAt.Time,
 	}
 
 	return &user, nil
 
 }
 
-// TODO: Below Function is Exhaustive. Write better code
 func (db *DB) GetUserFullNameById(id string) (string, error) {
 	user, err := db.GetProfileByID(id)
 	if err != nil {
@@ -73,17 +74,50 @@ func (db *DB) GetUserFullNameById(id string) (string, error) {
 	return user.FullName, nil
 }
 
-// TODO: rewrite function later
-func (db *DB) AdminCheck(id string) (bool, error) {
-	return false, nil
+func (db *DB) IsAdmin(coreOrNexusId, userId string) (bool, error) {
+
+	userRecordId := *surrealmodels.ParseRecordID(userId)
+	coreOrNexusRecordId := *surrealmodels.ParseRecordID(coreOrNexusId)
+
+	query := "SELECT role FROM member WHERE in=$in AND out=$out"
+	params := map[string]any{
+		"in":  userRecordId,
+		"out": coreOrNexusRecordId,
+	}
+
+	queryRes, err := surrealdb.Query[[]struct{ Role string }](db.client, query, params)
+	if err != nil {
+		return false, fmt.Errorf("unable to query role: %v", err)
+	}
+
+	res := (*queryRes)[0].Result
+
+	if len(res) == 0 {
+		return false, fmt.Errorf("no relation found")
+	}
+
+	isAdmin := res[0].Role == "ADMIN"
+
+	return isAdmin, nil
 }
 
-// TODO: rewrite function later
-func (db *DB) AdminOrPseudoAdminCheck(id string) (bool, error) {
-	return false, nil
-}
+func (db *DB) IsMember(coreOrNexusId, userId string) (bool, error) {
 
-// TODO: rewrite function later
-func (db *DB) PseudoAdminCheck(id string) (bool, error) {
-	return false, nil
+	userRecordId := *surrealmodels.ParseRecordID(userId)
+	coreOrNexusRecordId := *surrealmodels.ParseRecordID(coreOrNexusId)
+
+	query := "SELECT role FROM member WHERE in=$in AND out=$out"
+	params := map[string]any{
+		"in":  userRecordId,
+		"out": coreOrNexusRecordId,
+	}
+
+	queryRes, err := surrealdb.Query[[]struct{ Role string }](db.client, query, params)
+	if err != nil {
+		return false, fmt.Errorf("unable to query role: %v", err)
+	}
+
+	res := (*queryRes)[0].Result
+
+	return len(res) != 0, nil
 }

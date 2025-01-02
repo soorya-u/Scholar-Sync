@@ -80,8 +80,8 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		AddMemberToCore       func(childComplexity int, coreID string) int
-		AddMemberToNexus      func(childComplexity int, nexusID string) int
+		AddMemberToCore       func(childComplexity int, input models.CoreMember) int
+		AddMemberToNexus      func(childComplexity int, input models.NexusMember) int
 		BuildDemoEnv          func(childComplexity int) int
 		CreateAnnouncement    func(childComplexity int, input models.AnnouncementData) int
 		CreateCore            func(childComplexity int, input models.CoreData) int
@@ -93,7 +93,7 @@ type ComplexityRoot struct {
 		LeaveNexus            func(childComplexity int, nexusID string) int
 		RemoveMemberFromCore  func(childComplexity int, input models.CoreMember) int
 		RemoveMemberFromNexus func(childComplexity int, input models.NexusMember) int
-		SignUpUser            func(childComplexity int, input models.SignUpData) int
+		SignUp                func(childComplexity int, input models.SignUpData) int
 	}
 
 	Nexus struct {
@@ -123,11 +123,10 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetUser        func(childComplexity int) int
-		GetUserData    func(childComplexity int) int
-		IsUserLoggedIn func(childComplexity int) int
-		LogOut         func(childComplexity int) int
-		LoginUser      func(childComplexity int, input models.LoginData) int
+		GetUser     func(childComplexity int) int
+		GetUserData func(childComplexity int) int
+		Login       func(childComplexity int, input models.LoginData) int
+		Logout      func(childComplexity int) int
 	}
 }
 
@@ -141,15 +140,15 @@ type FileResolver interface {
 	SentBy(ctx context.Context, obj *models.File) (*models.Profile, error)
 }
 type MutationResolver interface {
-	SignUpUser(ctx context.Context, input models.SignUpData) (string, error)
+	SignUp(ctx context.Context, input models.SignUpData) (string, error)
 	CreateCore(ctx context.Context, input models.CoreData) (string, error)
 	DeleteCore(ctx context.Context, coreID string) (bool, error)
-	AddMemberToCore(ctx context.Context, coreID string) (bool, error)
+	AddMemberToCore(ctx context.Context, input models.CoreMember) (bool, error)
 	RemoveMemberFromCore(ctx context.Context, input models.CoreMember) (bool, error)
 	LeaveCore(ctx context.Context, nexusID string) (bool, error)
 	CreateNexus(ctx context.Context, input models.NexusData) (string, error)
 	DeleteNexus(ctx context.Context, nexusID string) (bool, error)
-	AddMemberToNexus(ctx context.Context, nexusID string) (bool, error)
+	AddMemberToNexus(ctx context.Context, input models.NexusMember) (bool, error)
 	RemoveMemberFromNexus(ctx context.Context, input models.NexusMember) (bool, error)
 	LeaveNexus(ctx context.Context, nexusID string) (bool, error)
 	CreateFile(ctx context.Context, input models.FileData) (string, error)
@@ -161,9 +160,8 @@ type NexusResolver interface {
 	Announcements(ctx context.Context, obj *models.Nexus) ([]*models.Announcement, error)
 }
 type QueryResolver interface {
-	LoginUser(ctx context.Context, input models.LoginData) (string, error)
-	LogOut(ctx context.Context) (bool, error)
-	IsUserLoggedIn(ctx context.Context) (bool, error)
+	Login(ctx context.Context, input models.LoginData) (string, error)
+	Logout(ctx context.Context) (bool, error)
 	GetUser(ctx context.Context) (*models.Profile, error)
 	GetUserData(ctx context.Context) ([]*models.Core, error)
 }
@@ -330,7 +328,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddMemberToCore(childComplexity, args["coreId"].(string)), true
+		return e.complexity.Mutation.AddMemberToCore(childComplexity, args["input"].(models.CoreMember)), true
 
 	case "Mutation.addMemberToNexus":
 		if e.complexity.Mutation.AddMemberToNexus == nil {
@@ -342,7 +340,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Mutation.AddMemberToNexus(childComplexity, args["nexusId"].(string)), true
+		return e.complexity.Mutation.AddMemberToNexus(childComplexity, args["input"].(models.NexusMember)), true
 
 	case "Mutation.buildDemoEnv":
 		if e.complexity.Mutation.BuildDemoEnv == nil {
@@ -471,17 +469,17 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Mutation.RemoveMemberFromNexus(childComplexity, args["input"].(models.NexusMember)), true
 
-	case "Mutation.signUpUser":
-		if e.complexity.Mutation.SignUpUser == nil {
+	case "Mutation.signUp":
+		if e.complexity.Mutation.SignUp == nil {
 			break
 		}
 
-		args, err := ec.field_Mutation_signUpUser_args(context.TODO(), rawArgs)
+		args, err := ec.field_Mutation_signUp_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Mutation.SignUpUser(childComplexity, args["input"].(models.SignUpData)), true
+		return e.complexity.Mutation.SignUp(childComplexity, args["input"].(models.SignUpData)), true
 
 	case "Nexus.announcements":
 		if e.complexity.Nexus.Announcements == nil {
@@ -616,31 +614,24 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetUserData(childComplexity), true
 
-	case "Query.isUserLoggedIn":
-		if e.complexity.Query.IsUserLoggedIn == nil {
+	case "Query.login":
+		if e.complexity.Query.Login == nil {
 			break
 		}
 
-		return e.complexity.Query.IsUserLoggedIn(childComplexity), true
-
-	case "Query.logOut":
-		if e.complexity.Query.LogOut == nil {
-			break
-		}
-
-		return e.complexity.Query.LogOut(childComplexity), true
-
-	case "Query.loginUser":
-		if e.complexity.Query.LoginUser == nil {
-			break
-		}
-
-		args, err := ec.field_Query_loginUser_args(context.TODO(), rawArgs)
+		args, err := ec.field_Query_login_args(context.TODO(), rawArgs)
 		if err != nil {
 			return 0, false
 		}
 
-		return e.complexity.Query.LoginUser(childComplexity, args["input"].(models.LoginData)), true
+		return e.complexity.Query.Login(childComplexity, args["input"].(models.LoginData)), true
+
+	case "Query.logout":
+		if e.complexity.Query.Logout == nil {
+			break
+		}
+
+		return e.complexity.Query.Logout(childComplexity), true
 
 	}
 	return 0, false
@@ -799,18 +790,22 @@ input NexusMember {
 }
 
 type Mutation {
-  signUpUser(input: SignUpData!): String!
+  signUp(input: SignUpData!): String!
 
   createCore(input: CoreData!): ID!
   deleteCore(coreId: String!): Boolean!
-  addMemberToCore(coreId: String!): Boolean!
+
+  addMemberToCore(input: CoreMember!): Boolean!
   removeMemberFromCore(input: CoreMember!): Boolean!
+
   leaveCore(nexusId: String!): Boolean!
 
   createNexus(input: NexusData!): ID!
   deleteNexus(nexusId: String!): Boolean!
-  addMemberToNexus(nexusId: String!): Boolean!
+
+  addMemberToNexus(input: NexusMember!): Boolean!
   removeMemberFromNexus(input: NexusMember!): Boolean!
+
   leaveNexus(nexusId: String!): Boolean!
 
   createFile(input: FileData!): ID!
@@ -830,9 +825,8 @@ input GetNexusData {
 }
 
 type Query {
-  loginUser(input: LoginData!): String!
-  logOut: Boolean!
-  isUserLoggedIn: Boolean!
+  login(input: LoginData!): String!
+  logout: Boolean!
 
   getUser: Profile!
   getUserData: [Core]!
@@ -909,30 +903,30 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 func (ec *executionContext) field_Mutation_addMemberToCore_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["coreId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("coreId"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 models.CoreMember
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNCoreMember2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCoreMember(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["coreId"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
 func (ec *executionContext) field_Mutation_addMemberToNexus_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 string
-	if tmp, ok := rawArgs["nexusId"]; ok {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("nexusId"))
-		arg0, err = ec.unmarshalNString2string(ctx, tmp)
+	var arg0 models.NexusMember
+	if tmp, ok := rawArgs["input"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
+		arg0, err = ec.unmarshalNNexusMember2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexusMember(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
 	}
-	args["nexusId"] = arg0
+	args["input"] = arg0
 	return args, nil
 }
 
@@ -1086,7 +1080,7 @@ func (ec *executionContext) field_Mutation_removeMemberFromNexus_args(ctx contex
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_signUpUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_signUp_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 models.SignUpData
@@ -1116,7 +1110,7 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 	return args, nil
 }
 
-func (ec *executionContext) field_Query_loginUser_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Query_login_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 models.LoginData
@@ -2055,8 +2049,8 @@ func (ec *executionContext) fieldContext_File_timestamp(_ context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_signUpUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_signUpUser(ctx, field)
+func (ec *executionContext) _Mutation_signUp(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_signUp(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2069,7 +2063,7 @@ func (ec *executionContext) _Mutation_signUpUser(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().SignUpUser(rctx, fc.Args["input"].(models.SignUpData))
+		return ec.resolvers.Mutation().SignUp(rctx, fc.Args["input"].(models.SignUpData))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2086,7 +2080,7 @@ func (ec *executionContext) _Mutation_signUpUser(ctx context.Context, field grap
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_signUpUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_signUp(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -2103,7 +2097,7 @@ func (ec *executionContext) fieldContext_Mutation_signUpUser(ctx context.Context
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_signUpUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_signUp_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -2234,7 +2228,7 @@ func (ec *executionContext) _Mutation_addMemberToCore(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddMemberToCore(rctx, fc.Args["coreId"].(string))
+		return ec.resolvers.Mutation().AddMemberToCore(rctx, fc.Args["input"].(models.CoreMember))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2509,7 +2503,7 @@ func (ec *executionContext) _Mutation_addMemberToNexus(ctx context.Context, fiel
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().AddMemberToNexus(rctx, fc.Args["nexusId"].(string))
+		return ec.resolvers.Mutation().AddMemberToNexus(rctx, fc.Args["input"].(models.NexusMember))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3602,8 +3596,8 @@ func (ec *executionContext) fieldContext_ProfileWithRole_role(_ context.Context,
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_loginUser(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_loginUser(ctx, field)
+func (ec *executionContext) _Query_login(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_login(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3616,7 +3610,7 @@ func (ec *executionContext) _Query_loginUser(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().LoginUser(rctx, fc.Args["input"].(models.LoginData))
+		return ec.resolvers.Query().Login(rctx, fc.Args["input"].(models.LoginData))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3633,7 +3627,7 @@ func (ec *executionContext) _Query_loginUser(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_loginUser(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_login(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -3650,15 +3644,15 @@ func (ec *executionContext) fieldContext_Query_loginUser(ctx context.Context, fi
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Query_loginUser_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Query_login_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
 	return fc, nil
 }
 
-func (ec *executionContext) _Query_logOut(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_logOut(ctx, field)
+func (ec *executionContext) _Query_logout(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_logout(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3671,7 +3665,7 @@ func (ec *executionContext) _Query_logOut(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().LogOut(rctx)
+		return ec.resolvers.Query().Logout(rctx)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3688,51 +3682,7 @@ func (ec *executionContext) _Query_logOut(ctx context.Context, field graphql.Col
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Query_logOut(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_isUserLoggedIn(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_isUserLoggedIn(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().IsUserLoggedIn(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_isUserLoggedIn(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Query_logout(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Query",
 		Field:      field,
@@ -6412,9 +6362,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Mutation")
-		case "signUpUser":
+		case "signUp":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_signUpUser(ctx, field)
+				return ec._Mutation_signUp(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -6801,7 +6751,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
-		case "loginUser":
+		case "login":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -6810,7 +6760,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_loginUser(ctx, field)
+				res = ec._Query_login(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -6823,7 +6773,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "logOut":
+		case "logout":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -6832,29 +6782,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Query_logOut(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "isUserLoggedIn":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_isUserLoggedIn(ctx, field)
+				res = ec._Query_logout(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}

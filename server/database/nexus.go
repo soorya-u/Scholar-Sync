@@ -11,34 +11,27 @@ import (
 func (db *DB) CreateNexus(name, userId, coreId, category string) (string, error) {
 
 	params := map[string]interface{}{
-		"category": category,
 		"name":     name,
-		"creator":  userId,
+		"category": category,
 	}
 
-	rawData, err := surrealdb.Create[models.DBNexus, surrealmodels.Table](db.client, "nexus", params)
+	dbNexus, err := surrealdb.Create[models.DBNexus](db.client, surrealmodels.Table("nexus"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to add to database: %v", err)
 	}
 
-	recordId := *(*rawData).ID
+	recordId := dbNexus.ID
 
-	userRecordId := surrealmodels.RecordID{
-		Table: "user",
-		ID:    userId,
-	}
+	userRecordId := *surrealmodels.ParseRecordID(userId)
 
-	coreRecordId := surrealmodels.RecordID{
-		Table: "core",
-		ID:    coreId,
-	}
+	coreRecordId := *surrealmodels.ParseRecordID(coreId)
 
 	userRelation := surrealdb.Relationship{
 		Relation: "member",
 		In:       userRecordId,
 		Out:      recordId,
 		Data: map[string]any{
-			"role": "PSEUDOUSER",
+			"role": "ADMIN",
 		},
 	}
 
