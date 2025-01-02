@@ -18,12 +18,12 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 		"sentBy":      userId,
 	}
 
-	rawData, err := surrealdb.Create[[]models.DBFile](db.client, surrealmodels.Table("file"), params)
+	dbFile, err := surrealdb.Create[models.DBFile](db.client, surrealmodels.Table("file"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to create file in DB: %v", err)
 	}
 
-	recordId := *(*rawData)[0].ID
+	recordId := dbFile.ID
 
 	nexusRecordId := surrealmodels.RecordID{
 		Table: "nexus",
@@ -66,7 +66,7 @@ func (db *DB) GetFiles(fileIds []string) ([]*models.File, error) {
 			FileName:    f.FileName,
 			// TODO: Change Later
 			SentBy:    nil,
-			Timestamp: f.Timestamp,
+			Timestamp: f.Timestamp.Time,
 		})
 	}
 

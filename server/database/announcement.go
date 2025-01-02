@@ -14,12 +14,12 @@ func (db *DB) CreateAnnouncement(title, message, nexusId, userId string) (string
 		Message: message,
 	}
 
-	rawData, err := surrealdb.Create[[]models.DBAnnouncement](db.client, surrealmodels.Table("announcement"), params)
+	dbAnnouncement, err := surrealdb.Create[models.DBAnnouncement](db.client, surrealmodels.Table("announcement"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to create announcement in DB: %v", err)
 	}
 
-	recordId := *(*rawData)[0].ID
+	recordId := dbAnnouncement.ID
 
 	userRecordId := surrealmodels.RecordID{
 		Table: "user",
@@ -78,7 +78,7 @@ func (db *DB) GetAnnouncements(announcementIds []string) ([]*models.Announcement
 			Message: a.Message,
 			// TODO: Change this to Sent By User
 			SentBy:    nil,
-			Timestamp: a.Timestamp,
+			Timestamp: a.Timestamp.Time,
 		})
 	}
 
