@@ -7,7 +7,11 @@ import (
 )
 
 func CreateNexusHandler(db *database.DB, name, userId, coreId, category string) (string, error) {
-	// Add a Check to see if the User is Member of the Core
+	if isMember, err := db.IsMember(userId, coreId); err != nil {
+		return "", err
+	} else if !isMember {
+		return "", fmt.Errorf("no privilages to create a nexus")
+	}
 
 	nexusId, err := db.CreateNexus(name, userId, coreId, category)
 	if err != nil {
@@ -18,7 +22,13 @@ func CreateNexusHandler(db *database.DB, name, userId, coreId, category string) 
 }
 
 func DeleteNexusHandler(db *database.DB, nexusId, userId string) (bool, error) {
-	//  Add Admin Check
+
+	if isAdmin, err := db.IsAdmin(userId, nexusId); err != nil {
+		return false, err
+	} else if !isAdmin {
+		return false, fmt.Errorf("no privilages to delete nexus")
+	}
+
 	if ok, err := db.DeleteNexus(nexusId); err != nil {
 		return false, err
 	} else if !ok {
@@ -26,4 +36,18 @@ func DeleteNexusHandler(db *database.DB, nexusId, userId string) (bool, error) {
 	}
 
 	return true, nil
+}
+
+func RemoveMemberFromNexusHandler(db *database.DB, adminId, userId, nexusId string) (bool, error) {
+	if isAdmin, err := db.IsAdmin(adminId, nexusId); err != nil {
+		return false, err
+	} else if !isAdmin {
+		return false, fmt.Errorf("no privilages to delete nexus")
+	}
+
+	return db.RemoveMemberRelation(userId, nexusId)
+}
+
+func LeaveNexusHandler(db *database.DB, userId, nexusId string) (bool, error) {
+	return db.RemoveMemberRelation(userId, nexusId)
 }

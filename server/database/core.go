@@ -39,26 +39,6 @@ func (db *DB) CreateCore(name, imageUrl, userId string) (string, error) {
 
 }
 
-func (db *DB) GetDBCores(_ string) ([]*models.DBCore, error) {
-	// TODO: Edit this query to get the following Data
-	// query := "SELECT *, creator.* FROM core WHERE creator = $userId OR $userId IN pseudoAdmins OR $userId IN nexus[*].creator OR $userId IN nexus[*].users[0];"
-	// params := map[string]interface{}{"userId": userId}
-
-	rawData, err := surrealdb.Select[[]models.DBCore, surrealmodels.Table](db.client, "core")
-	if err != nil {
-		return nil, fmt.Errorf("unable to fetch Cores: %v", err)
-	}
-
-	res := (*rawData)
-	cores := make([]*models.DBCore, len(res))
-
-	for _, c := range res {
-		cores = append(cores, &c)
-	}
-
-	return cores, nil
-}
-
 func (db *DB) DeleteCore(coreId string) (bool, error) {
 
 	coreRecordId := *surrealmodels.ParseRecordID(coreId)
@@ -68,31 +48,4 @@ func (db *DB) DeleteCore(coreId string) (bool, error) {
 	}
 
 	return true, nil
-}
-
-// TODO: Function to be Completed
-func (db *DB) GetCoreAdmin(coreId string) (*models.DBUser, error) {
-
-	return nil, nil
-}
-
-func (db *DB) GetCoreNameById(id string) (string, error) {
-
-	query := "SELECT name FROM $coreId;"
-	params := map[string]interface{}{
-		"coreId": id,
-	}
-
-	type coreName struct {
-		Name string `json:"name"`
-	}
-
-	rawData, err := surrealdb.Query[[]*coreName](db.client, query, params)
-	if err != nil {
-		return "", fmt.Errorf("query failed: %v", err)
-	}
-
-	res := (*rawData)[0].Result[0]
-
-	return res.Name, nil
 }

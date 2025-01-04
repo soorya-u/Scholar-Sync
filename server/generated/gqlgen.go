@@ -82,7 +82,6 @@ type ComplexityRoot struct {
 	Mutation struct {
 		AddMemberToCore       func(childComplexity int, input models.CoreMember) int
 		AddMemberToNexus      func(childComplexity int, input models.NexusMember) int
-		BuildDemoEnv          func(childComplexity int) int
 		CreateAnnouncement    func(childComplexity int, input models.AnnouncementData) int
 		CreateCore            func(childComplexity int, input models.CoreData) int
 		CreateFile            func(childComplexity int, input models.FileData) int
@@ -123,10 +122,9 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
-		GetUser     func(childComplexity int) int
-		GetUserData func(childComplexity int) int
-		Login       func(childComplexity int, input models.LoginData) int
-		Logout      func(childComplexity int) int
+		GetUser func(childComplexity int) int
+		Login   func(childComplexity int, input models.LoginData) int
+		Logout  func(childComplexity int) int
 	}
 }
 
@@ -153,7 +151,6 @@ type MutationResolver interface {
 	LeaveNexus(ctx context.Context, nexusID string) (bool, error)
 	CreateFile(ctx context.Context, input models.FileData) (string, error)
 	CreateAnnouncement(ctx context.Context, input models.AnnouncementData) (string, error)
-	BuildDemoEnv(ctx context.Context) (bool, error)
 }
 type NexusResolver interface {
 	Files(ctx context.Context, obj *models.Nexus) ([]*models.File, error)
@@ -163,7 +160,6 @@ type QueryResolver interface {
 	Login(ctx context.Context, input models.LoginData) (string, error)
 	Logout(ctx context.Context) (bool, error)
 	GetUser(ctx context.Context) (*models.Profile, error)
-	GetUserData(ctx context.Context) ([]*models.Core, error)
 }
 
 type executableSchema struct {
@@ -341,13 +337,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.AddMemberToNexus(childComplexity, args["input"].(models.NexusMember)), true
-
-	case "Mutation.buildDemoEnv":
-		if e.complexity.Mutation.BuildDemoEnv == nil {
-			break
-		}
-
-		return e.complexity.Mutation.BuildDemoEnv(childComplexity), true
 
 	case "Mutation.createAnnouncement":
 		if e.complexity.Mutation.CreateAnnouncement == nil {
@@ -607,13 +596,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.GetUser(childComplexity), true
 
-	case "Query.getUserData":
-		if e.complexity.Query.GetUserData == nil {
-			break
-		}
-
-		return e.complexity.Query.GetUserData(childComplexity), true
-
 	case "Query.login":
 		if e.complexity.Query.Login == nil {
 			break
@@ -811,8 +793,6 @@ type Mutation {
   createFile(input: FileData!): ID!
 
   createAnnouncement(input: AnnouncementData!): ID!
-
-  buildDemoEnv: Boolean!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/query.gql", Input: `input LoginData {
@@ -829,7 +809,6 @@ type Query {
   logout: Boolean!
 
   getUser: Profile!
-  getUserData: [Core]!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/types.gql", Input: `scalar Time
@@ -2764,50 +2743,6 @@ func (ec *executionContext) fieldContext_Mutation_createAnnouncement(ctx context
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_buildDemoEnv(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_buildDemoEnv(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().BuildDemoEnv(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(bool)
-	fc.Result = res
-	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Mutation_buildDemoEnv(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Mutation",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Boolean does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Nexus_id(ctx context.Context, field graphql.CollectedField, obj *models.Nexus) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Nexus_id(ctx, field)
 	if err != nil {
@@ -3744,66 +3679,6 @@ func (ec *executionContext) fieldContext_Query_getUser(_ context.Context, field 
 				return ec.fieldContext_Profile_createdAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Profile", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Query_getUserData(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Query_getUserData(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetUserData(rctx)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.Core)
-	fc.Result = res
-	return ec.marshalNCore2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Query_getUserData(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Query",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Core_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Core_name(ctx, field)
-			case "imageUrl":
-				return ec.fieldContext_Core_imageUrl(ctx, field)
-			case "members":
-				return ec.fieldContext_Core_members(ctx, field)
-			case "nexus":
-				return ec.fieldContext_Core_nexus(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Core_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Core_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Core", field.Name)
 		},
 	}
 	return fc, nil
@@ -6453,13 +6328,6 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "buildDemoEnv":
-			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_buildDemoEnv(ctx, field)
-			})
-			if out.Values[i] == graphql.Null {
-				out.Invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -6805,28 +6673,6 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getUser(ctx, field)
-				if res == graphql.Null {
-					atomic.AddUint32(&fs.Invalids, 1)
-				}
-				return res
-			}
-
-			rrm := func(ctx context.Context) graphql.Marshaler {
-				return ec.OperationContext.RootResolverMiddleware(ctx,
-					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
-			}
-
-			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
-		case "getUserData":
-			field := field
-
-			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Query_getUserData(ctx, field)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -7252,44 +7098,6 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 		}
 	}
 	return res
-}
-
-func (ec *executionContext) marshalNCore2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx context.Context, sel ast.SelectionSet, v []*models.Core) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalOCore2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalNCoreData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCoreData(ctx context.Context, v interface{}) (models.CoreData, error) {
@@ -7809,13 +7617,6 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	}
 	res := graphql.MarshalBoolean(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOCore2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐCore(ctx context.Context, sel ast.SelectionSet, v *models.Core) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Core(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOFile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐFile(ctx context.Context, sel ast.SelectionSet, v *models.File) graphql.Marshaler {

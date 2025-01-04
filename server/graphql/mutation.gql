@@ -62,6 +62,4 @@ type Mutation {
   createFile(input: FileData!): ID!
 
   createAnnouncement(input: AnnouncementData!): ID!
-
-  buildDemoEnv: Boolean!
 }
