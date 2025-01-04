@@ -45,8 +45,8 @@ type File {
   id: ID!
   title: String!
   description: String!
-  fileUrl: String!
   fileName: String!
+  fileUrl: String!
   sentBy: Profile!
   timestamp: Time!
 }

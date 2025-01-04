@@ -31,6 +31,16 @@ func DeleteCoreHandler(db *database.DB, coreId, userId string) (bool, error) {
 	return true, nil
 }
 
-func LeaveCoreHandler(db *database.DB, nexusId, userId string) (bool, error) {
-	return db.RemoveMemberRelation(userId, nexusId)
+func LeaveCoreHandler(db *database.DB, userId, coreId string) (bool, error) {
+	return db.RemoveMemberRelation(userId, coreId)
+}
+
+func RemoveMemberFromCoreHandler(db *database.DB, adminId, userId, coreId string) (bool, error) {
+	if isAdmin, err := db.IsAdmin(adminId, coreId); err != nil {
+		return false, err
+	} else if !isAdmin {
+		return false, fmt.Errorf("no privilages to delete nexus")
+	}
+
+	return db.RemoveMemberRelation(userId, coreId)
 }

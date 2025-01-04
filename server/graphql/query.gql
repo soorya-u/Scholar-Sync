@@ -12,5 +12,4 @@ type Query {
   logout: Boolean!
 
   getUser: Profile!
-  getUserData: [Core]!
 }

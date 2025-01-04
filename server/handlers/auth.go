@@ -52,7 +52,7 @@ func SignUpHandler(db *database.DB, payload models.SignUpData) (string, error) {
 		return "", err
 	}
 
-	user, err = db.AddNewUser(payload.FullName, payload.Email, hashedPassword)
+	user, err = db.CreateUser(payload.FullName, payload.Email, hashedPassword)
 	if err != nil {
 		return "", err
 	}

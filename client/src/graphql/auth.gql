@@ -1,15 +1,11 @@
 mutation SignUp($fullName: String!, $email: String!, $password: String!) {
-  signUpUser(input: { fullName: $fullName, email: $email, password: $password })
+  signUp(input: { fullName: $fullName, email: $email, password: $password })
 }
 
 query Login($email: String!, $password: String!) {
-  loginUser(input: { email: $email, password: $password })
+  login(input: { email: $email, password: $password })
 }
 
 query Logout {
-  logOut
-}
-
-query IsUserLoggedIn {
-  isUserLoggedIn
+  logout
 }

@@ -15,7 +15,6 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 		"description": description,
 		"fileUrl":     fileUrl,
 		"fileName":    fileName,
-		"sentBy":      userId,
 	}
 
 	dbFile, err := surrealdb.Create[models.DBFile](db.client, surrealmodels.Table("file"), params)
@@ -25,18 +24,26 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 
 	recordId := dbFile.ID
 
-	nexusRecordId := surrealmodels.RecordID{
-		Table: "nexus",
-		ID:    nexusId,
+	userRecordId := *surrealmodels.ParseRecordID(userId)
+	nexusRecordId := *surrealmodels.ParseRecordID(nexusId)
+
+	userToFileRelation := surrealdb.Relationship{
+		Relation: "sent",
+		In:       userRecordId,
+		Out:      recordId,
 	}
 
-	userRelation := surrealdb.Relationship{
+	nexusToFileRelation := surrealdb.Relationship{
 		Relation: "has",
 		In:       nexusRecordId,
 		Out:      recordId,
 	}
 
-	if err = surrealdb.Relate(db.client, &userRelation); err != nil {
+	if err = surrealdb.Relate(db.client, &nexusToFileRelation); err != nil {
+		return "", fmt.Errorf("unable to create relation between nexus and announcement: %v", err)
+	}
+
+	if err = surrealdb.Relate(db.client, &userToFileRelation); err != nil {
 		return "", fmt.Errorf("unable to create relation between user and announcement: %v", err)
 	}
 
@@ -44,53 +51,23 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 
 }
 
-func (db *DB) GetFiles(fileIds []string) ([]*models.File, error) {
-	// TODO: Get User as well
-	fileRecordIds := make([]surrealmodels.RecordID, len(fileIds))
-	for _, f := range fileIds {
-		fileRecordIds = append(fileRecordIds, surrealmodels.RecordID{Table: "file", ID: f})
-	}
-
-	dbFiles, err := surrealdb.Select[[]models.DBFile, []surrealmodels.RecordID](db.client, fileRecordIds)
-	if err != nil {
-		return nil, fmt.Errorf("unable to fetch files: %v", err)
-	}
-
-	filepts := make([]*models.File, len(*dbFiles))
-	for _, f := range *dbFiles {
-		filepts = append(filepts, &models.File{
-			ID:          f.ID.String(),
-			Title:       f.Title,
-			Description: f.Description,
-			FileURL:     f.FileURL,
-			FileName:    f.FileName,
-			// TODO: Change Later
-			SentBy:    nil,
-			Timestamp: f.Timestamp.Time,
-		})
-	}
-
-	return filepts, nil
-
-}
-
-func (db *DB) GetFilenameByPath(filePath string) (string, error) {
+func (db *DB) GetFileByPath(filePath string) (*models.DBFile, error) {
 	query := "SELECT * from file WHERE fileUrl = $filePath"
 	params := map[string]interface{}{
 		"filePath": filePath,
 	}
 
-	rawData, err := surrealdb.Query[[]*models.DBFile](db.client, query, params)
+	rawData, err := surrealdb.Query[[]models.DBFile](db.client, query, params)
 	if err != nil {
-		return "", fmt.Errorf("error in running query: %v", err)
+		return nil, fmt.Errorf("error in running query: %v", err)
 	}
 
 	res := (*rawData)[0].Result
 
-	if len(res) <= 0 {
-		return "", fmt.Errorf("no result found")
+	if len(res) == 0 {
+		return nil, fmt.Errorf("no result found")
 	}
 
-	return res[0].FileName, nil
+	return &res[0], nil
 
 }

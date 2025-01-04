@@ -6,10 +6,18 @@ import (
 )
 
 func GetUserHandler(db *database.DB, userId string) (*models.Profile, error) {
-	user, err := db.GetProfileByID(userId)
+	dbUser, err := db.GetUserByID(userId)
 	if err != nil {
 		return nil, err
 	}
 
+	user := &models.Profile{
+		ID:        dbUser.ID.String(),
+		FullName:  dbUser.FullName,
+		Email:     dbUser.Email,
+		CreatedAt: dbUser.CreatedAt.Time,
+	}
+
 	return user, nil
+
 }
