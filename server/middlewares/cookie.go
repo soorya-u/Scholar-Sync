@@ -43,6 +43,5 @@ func GetCookieMiddleware() gin.HandlerFunc {
 		ctx.Request = ctx.Request.WithContext(newCtx)
 
 		ctx.Next()
-		return
 	}
 }

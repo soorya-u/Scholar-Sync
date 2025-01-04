@@ -1,9 +1,9 @@
 mutation CreateAnnouncement(
   $title: String!
   $description: String!
-  $nexus: String!
+  $nexusId: String!
 ) {
   createAnnouncement(
-    input: { title: $title, message: $description, nexus: $nexus }
+    input: { title: $title, message: $description, nexusId: $nexusId }
   )
 }

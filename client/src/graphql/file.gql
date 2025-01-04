@@ -2,14 +2,14 @@ mutation CreateFile(
   $title: String!
   $description: String!
   $upload: Upload!
-  $nexus: String!
+  $nexusId: String!
 ) {
   createFile(
     input: {
       title: $title
       description: $description
       upload: $upload
-      nexus: $nexus
+      nexusId: $nexusId
     }
   )
 }

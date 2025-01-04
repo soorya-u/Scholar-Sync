@@ -12,22 +12,22 @@ input CoreData {
 }
 
 input NexusData {
-  core: String!
   name: String!
   category: String!
+  coreId: String!
 }
 
 input FileData {
   title: String!
   description: String!
   upload: Upload!
-  nexus: String!
+  nexusId: String!
 }
 
 input AnnouncementData {
   title: String!
   message: String!
-  nexus: String!
+  nexusId: String!
 }
 
 input CoreMember {
@@ -46,20 +46,20 @@ type Mutation {
   createCore(input: CoreData!): ID!
   deleteCore(coreId: String!): Boolean!
 
-  addMemberToCore(input: CoreMember!): Boolean!
+  inviteMemberToCore(input: CoreMember!): Boolean!
   removeMemberFromCore(input: CoreMember!): Boolean!
 
-  leaveCore(nexusId: String!): Boolean!
+  leaveCore(coreId: String!): Boolean!
 
   createNexus(input: NexusData!): ID!
   deleteNexus(nexusId: String!): Boolean!
 
-  addMemberToNexus(input: NexusMember!): Boolean!
+  inviteMemberToNexus(input: NexusMember!): Boolean!
   removeMemberFromNexus(input: NexusMember!): Boolean!
 
   leaveNexus(nexusId: String!): Boolean!
 
-  createFile(input: FileData!): ID!
-
   createAnnouncement(input: AnnouncementData!): ID!
+
+  createFile(input: FileData!): ID!
 }

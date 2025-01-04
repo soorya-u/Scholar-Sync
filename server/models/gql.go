@@ -22,7 +22,7 @@ type Announcement struct {
 type AnnouncementData struct {
 	Title   string `json:"title"`
 	Message string `json:"message"`
-	Nexus   string `json:"nexus"`
+	NexusID string `json:"nexusId"`
 }
 
 type Core struct {
@@ -49,8 +49,8 @@ type File struct {
 	ID          string    `json:"id"`
 	Title       string    `json:"title"`
 	Description string    `json:"description"`
-	FileURL     string    `json:"fileUrl"`
 	FileName    string    `json:"fileName"`
+	FileURL     string    `json:"fileUrl"`
 	SentBy      *Profile  `json:"sentBy"`
 	Timestamp   time.Time `json:"timestamp"`
 }
@@ -59,7 +59,7 @@ type FileData struct {
 	Title       string         `json:"title"`
 	Description string         `json:"description"`
 	Upload      graphql.Upload `json:"upload"`
-	Nexus       string         `json:"nexus"`
+	NexusID     string         `json:"nexusId"`
 }
 
 type GetNexusData struct {
@@ -86,9 +86,9 @@ type Nexus struct {
 }
 
 type NexusData struct {
-	Core     string `json:"core"`
 	Name     string `json:"name"`
 	Category string `json:"category"`
+	CoreID   string `json:"coreId"`
 }
 
 type NexusMember struct {

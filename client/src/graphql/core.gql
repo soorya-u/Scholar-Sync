@@ -6,6 +6,14 @@ mutation DeleteCore($coreId: String!) {
   deleteCore(coreId: $coreId)
 }
 
-mutation AddMemberToCore($coreId: String!) {
-  addMemberToCore(coreId: $coreId)
+mutation InviteMemberToCore($coreId: String!, $userId: String!) {
+  inviteMemberToCore(input: { coreId: $coreId, userId: $userId })
+}
+
+mutation RemoveMemberFromCore($coreId: String!, $userId: String!) {
+  removeMemberFromCore(input: { coreId: $coreId, userId: $userId })
+}
+
+mutation LeaveCore($coreId: String!) {
+  leaveCore(coreId: $coreId)
 }

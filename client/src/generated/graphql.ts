@@ -30,7 +30,7 @@ export type Announcement = {
 
 export type AnnouncementData = {
   message: Scalars['String']['input'];
-  nexus: Scalars['String']['input'];
+  nexusId: Scalars['String']['input'];
   title: Scalars['String']['input'];
 };
 
@@ -68,7 +68,7 @@ export type File = {
 
 export type FileData = {
   description: Scalars['String']['input'];
-  nexus: Scalars['String']['input'];
+  nexusId: Scalars['String']['input'];
   title: Scalars['String']['input'];
   upload: Scalars['Upload']['input'];
 };
@@ -84,30 +84,19 @@ export type LoginData = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addMemberToCore: Scalars['Boolean']['output'];
-  addMemberToNexus: Scalars['Boolean']['output'];
-  buildDemoEnv: Scalars['Boolean']['output'];
   createAnnouncement: Scalars['ID']['output'];
   createCore: Scalars['ID']['output'];
   createFile: Scalars['ID']['output'];
   createNexus: Scalars['ID']['output'];
   deleteCore: Scalars['Boolean']['output'];
   deleteNexus: Scalars['Boolean']['output'];
+  inviteMemberToCore: Scalars['Boolean']['output'];
+  inviteMemberToNexus: Scalars['Boolean']['output'];
   leaveCore: Scalars['Boolean']['output'];
   leaveNexus: Scalars['Boolean']['output'];
   removeMemberFromCore: Scalars['Boolean']['output'];
   removeMemberFromNexus: Scalars['Boolean']['output'];
-  signUpUser: Scalars['String']['output'];
-};
-
-
-export type MutationAddMemberToCoreArgs = {
-  coreId: Scalars['String']['input'];
-};
-
-
-export type MutationAddMemberToNexusArgs = {
-  nexusId: Scalars['String']['input'];
+  signUp: Scalars['String']['output'];
 };
 
 
@@ -141,8 +130,18 @@ export type MutationDeleteNexusArgs = {
 };
 
 
+export type MutationInviteMemberToCoreArgs = {
+  input: CoreMember;
+};
+
+
+export type MutationInviteMemberToNexusArgs = {
+  input: NexusMember;
+};
+
+
 export type MutationLeaveCoreArgs = {
-  nexusId: Scalars['String']['input'];
+  coreId: Scalars['String']['input'];
 };
 
 
@@ -161,7 +160,7 @@ export type MutationRemoveMemberFromNexusArgs = {
 };
 
 
-export type MutationSignUpUserArgs = {
+export type MutationSignUpArgs = {
   input: SignUpData;
 };
 
@@ -179,7 +178,7 @@ export type Nexus = {
 
 export type NexusData = {
   category: Scalars['String']['input'];
-  core: Scalars['String']['input'];
+  coreId: Scalars['String']['input'];
   name: Scalars['String']['input'];
 };
 
@@ -213,14 +212,12 @@ export type ProfileWithRole = {
 export type Query = {
   __typename?: 'Query';
   getUser: Profile;
-  getUserData: Array<Maybe<Core>>;
-  isUserLoggedIn: Scalars['Boolean']['output'];
-  logOut: Scalars['Boolean']['output'];
-  loginUser: Scalars['String']['output'];
+  login: Scalars['String']['output'];
+  logout: Scalars['Boolean']['output'];
 };
 
 
-export type QueryLoginUserArgs = {
+export type QueryLoginArgs = {
   input: LoginData;
 };
 
@@ -233,7 +230,7 @@ export type SignUpData = {
 export type CreateAnnouncementMutationVariables = Exact<{
   title: Scalars['String']['input'];
   description: Scalars['String']['input'];
-  nexus: Scalars['String']['input'];
+  nexusId: Scalars['String']['input'];
 }>;
 
 
@@ -246,7 +243,7 @@ export type SignUpMutationVariables = Exact<{
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signUpUser: string };
+export type SignUpMutation = { __typename?: 'Mutation', signUp: string };
 
 export type LoginQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -254,17 +251,12 @@ export type LoginQueryVariables = Exact<{
 }>;
 
 
-export type LoginQuery = { __typename?: 'Query', loginUser: string };
+export type LoginQuery = { __typename?: 'Query', login: string };
 
 export type LogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type LogoutQuery = { __typename?: 'Query', logOut: boolean };
-
-export type IsUserLoggedInQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type IsUserLoggedInQuery = { __typename?: 'Query', isUserLoggedIn: boolean };
+export type LogoutQuery = { __typename?: 'Query', logout: boolean };
 
 export type CreateCoreMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -281,18 +273,34 @@ export type DeleteCoreMutationVariables = Exact<{
 
 export type DeleteCoreMutation = { __typename?: 'Mutation', deleteCore: boolean };
 
-export type AddMemberToCoreMutationVariables = Exact<{
+export type InviteMemberToCoreMutationVariables = Exact<{
+  coreId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type InviteMemberToCoreMutation = { __typename?: 'Mutation', inviteMemberToCore: boolean };
+
+export type RemoveMemberFromCoreMutationVariables = Exact<{
+  coreId: Scalars['String']['input'];
+  userId: Scalars['String']['input'];
+}>;
+
+
+export type RemoveMemberFromCoreMutation = { __typename?: 'Mutation', removeMemberFromCore: boolean };
+
+export type LeaveCoreMutationVariables = Exact<{
   coreId: Scalars['String']['input'];
 }>;
 
 
-export type AddMemberToCoreMutation = { __typename?: 'Mutation', addMemberToCore: boolean };
+export type LeaveCoreMutation = { __typename?: 'Mutation', leaveCore: boolean };
 
 export type CreateFileMutationVariables = Exact<{
   title: Scalars['String']['input'];
   description: Scalars['String']['input'];
   upload: Scalars['Upload']['input'];
-  nexus: Scalars['String']['input'];
+  nexusId: Scalars['String']['input'];
 }>;
 
 
@@ -301,7 +309,7 @@ export type CreateFileMutation = { __typename?: 'Mutation', createFile: string }
 export type CreateNexusMutationVariables = Exact<{
   name: Scalars['String']['input'];
   category: Scalars['String']['input'];
-  core: Scalars['String']['input'];
+  coreId: Scalars['String']['input'];
 }>;
 
 
@@ -314,19 +322,13 @@ export type DeleteNexusMutationVariables = Exact<{
 
 export type DeleteNexusMutation = { __typename?: 'Mutation', deleteNexus: boolean };
 
-export type LeaveNexusMutationVariables = Exact<{
+export type InviteMemberToNexusMutationVariables = Exact<{
+  userId: Scalars['String']['input'];
   nexusId: Scalars['String']['input'];
 }>;
 
 
-export type LeaveNexusMutation = { __typename?: 'Mutation', leaveNexus: boolean };
-
-export type AddMemberToNexusMutationVariables = Exact<{
-  nexusId: Scalars['String']['input'];
-}>;
-
-
-export type AddMemberToNexusMutation = { __typename?: 'Mutation', addMemberToNexus: boolean };
+export type InviteMemberToNexusMutation = { __typename?: 'Mutation', inviteMemberToNexus: boolean };
 
 export type RemoveMemberFromNexusMutationVariables = Exact<{
   userId: Scalars['String']['input'];
@@ -336,20 +338,19 @@ export type RemoveMemberFromNexusMutationVariables = Exact<{
 
 export type RemoveMemberFromNexusMutation = { __typename?: 'Mutation', removeMemberFromNexus: boolean };
 
-export type CreateDemoCoreMutationVariables = Exact<{ [key: string]: never; }>;
+export type LeaveNexusMutationVariables = Exact<{
+  nexusId: Scalars['String']['input'];
+}>;
 
 
-export type CreateDemoCoreMutation = { __typename?: 'Mutation', buildDemoEnv: boolean };
-
-export type GetInitDataQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetInitDataQuery = { __typename?: 'Query', getUser: { __typename?: 'Profile', id: string, fullName: string } };
+export type LeaveNexusMutation = { __typename?: 'Mutation', leaveNexus: boolean };
 
 
 export const CreateAnnouncementDocument = gql`
-    mutation CreateAnnouncement($title: String!, $description: String!, $nexus: String!) {
-  createAnnouncement(input: {title: $title, message: $description, nexus: $nexus})
+    mutation CreateAnnouncement($title: String!, $description: String!, $nexusId: String!) {
+  createAnnouncement(
+    input: {title: $title, message: $description, nexusId: $nexusId}
+  )
 }
     `;
 export type CreateAnnouncementMutationFn = Apollo.MutationFunction<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>;
@@ -369,7 +370,7 @@ export type CreateAnnouncementMutationFn = Apollo.MutationFunction<CreateAnnounc
  *   variables: {
  *      title: // value for 'title'
  *      description: // value for 'description'
- *      nexus: // value for 'nexus'
+ *      nexusId: // value for 'nexusId'
  *   },
  * });
  */
@@ -382,7 +383,7 @@ export type CreateAnnouncementMutationResult = Apollo.MutationResult<CreateAnnou
 export type CreateAnnouncementMutationOptions = Apollo.BaseMutationOptions<CreateAnnouncementMutation, CreateAnnouncementMutationVariables>;
 export const SignUpDocument = gql`
     mutation SignUp($fullName: String!, $email: String!, $password: String!) {
-  signUpUser(input: {fullName: $fullName, email: $email, password: $password})
+  signUp(input: {fullName: $fullName, email: $email, password: $password})
 }
     `;
 export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
@@ -415,7 +416,7 @@ export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
 export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
 export const LoginDocument = gql`
     query Login($email: String!, $password: String!) {
-  loginUser(input: {email: $email, password: $password})
+  login(input: {email: $email, password: $password})
 }
     `;
 
@@ -454,7 +455,7 @@ export type LoginSuspenseQueryHookResult = ReturnType<typeof useLoginSuspenseQue
 export type LoginQueryResult = Apollo.QueryResult<LoginQuery, LoginQueryVariables>;
 export const LogoutDocument = gql`
     query Logout {
-  logOut
+  logout
 }
     `;
 
@@ -489,43 +490,6 @@ export type LogoutQueryHookResult = ReturnType<typeof useLogoutQuery>;
 export type LogoutLazyQueryHookResult = ReturnType<typeof useLogoutLazyQuery>;
 export type LogoutSuspenseQueryHookResult = ReturnType<typeof useLogoutSuspenseQuery>;
 export type LogoutQueryResult = Apollo.QueryResult<LogoutQuery, LogoutQueryVariables>;
-export const IsUserLoggedInDocument = gql`
-    query IsUserLoggedIn {
-  isUserLoggedIn
-}
-    `;
-
-/**
- * __useIsUserLoggedInQuery__
- *
- * To run a query within a React component, call `useIsUserLoggedInQuery` and pass it any options that fit your needs.
- * When your component renders, `useIsUserLoggedInQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useIsUserLoggedInQuery({
- *   variables: {
- *   },
- * });
- */
-export function useIsUserLoggedInQuery(baseOptions?: Apollo.QueryHookOptions<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>(IsUserLoggedInDocument, options);
-      }
-export function useIsUserLoggedInLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>(IsUserLoggedInDocument, options);
-        }
-export function useIsUserLoggedInSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>(IsUserLoggedInDocument, options);
-        }
-export type IsUserLoggedInQueryHookResult = ReturnType<typeof useIsUserLoggedInQuery>;
-export type IsUserLoggedInLazyQueryHookResult = ReturnType<typeof useIsUserLoggedInLazyQuery>;
-export type IsUserLoggedInSuspenseQueryHookResult = ReturnType<typeof useIsUserLoggedInSuspenseQuery>;
-export type IsUserLoggedInQueryResult = Apollo.QueryResult<IsUserLoggedInQuery, IsUserLoggedInQueryVariables>;
 export const CreateCoreDocument = gql`
     mutation CreateCore($name: String!, $imageUrl: String!) {
   createCore(input: {name: $name, imageUrl: $imageUrl})
@@ -589,41 +553,105 @@ export function useDeleteCoreMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DeleteCoreMutationHookResult = ReturnType<typeof useDeleteCoreMutation>;
 export type DeleteCoreMutationResult = Apollo.MutationResult<DeleteCoreMutation>;
 export type DeleteCoreMutationOptions = Apollo.BaseMutationOptions<DeleteCoreMutation, DeleteCoreMutationVariables>;
-export const AddMemberToCoreDocument = gql`
-    mutation AddMemberToCore($coreId: String!) {
-  addMemberToCore(coreId: $coreId)
+export const InviteMemberToCoreDocument = gql`
+    mutation InviteMemberToCore($coreId: String!, $userId: String!) {
+  inviteMemberToCore(input: {coreId: $coreId, userId: $userId})
 }
     `;
-export type AddMemberToCoreMutationFn = Apollo.MutationFunction<AddMemberToCoreMutation, AddMemberToCoreMutationVariables>;
+export type InviteMemberToCoreMutationFn = Apollo.MutationFunction<InviteMemberToCoreMutation, InviteMemberToCoreMutationVariables>;
 
 /**
- * __useAddMemberToCoreMutation__
+ * __useInviteMemberToCoreMutation__
  *
- * To run a mutation, you first call `useAddMemberToCoreMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddMemberToCoreMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useInviteMemberToCoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInviteMemberToCoreMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [addMemberToCoreMutation, { data, loading, error }] = useAddMemberToCoreMutation({
+ * const [inviteMemberToCoreMutation, { data, loading, error }] = useInviteMemberToCoreMutation({
+ *   variables: {
+ *      coreId: // value for 'coreId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useInviteMemberToCoreMutation(baseOptions?: Apollo.MutationHookOptions<InviteMemberToCoreMutation, InviteMemberToCoreMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<InviteMemberToCoreMutation, InviteMemberToCoreMutationVariables>(InviteMemberToCoreDocument, options);
+      }
+export type InviteMemberToCoreMutationHookResult = ReturnType<typeof useInviteMemberToCoreMutation>;
+export type InviteMemberToCoreMutationResult = Apollo.MutationResult<InviteMemberToCoreMutation>;
+export type InviteMemberToCoreMutationOptions = Apollo.BaseMutationOptions<InviteMemberToCoreMutation, InviteMemberToCoreMutationVariables>;
+export const RemoveMemberFromCoreDocument = gql`
+    mutation RemoveMemberFromCore($coreId: String!, $userId: String!) {
+  removeMemberFromCore(input: {coreId: $coreId, userId: $userId})
+}
+    `;
+export type RemoveMemberFromCoreMutationFn = Apollo.MutationFunction<RemoveMemberFromCoreMutation, RemoveMemberFromCoreMutationVariables>;
+
+/**
+ * __useRemoveMemberFromCoreMutation__
+ *
+ * To run a mutation, you first call `useRemoveMemberFromCoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveMemberFromCoreMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeMemberFromCoreMutation, { data, loading, error }] = useRemoveMemberFromCoreMutation({
+ *   variables: {
+ *      coreId: // value for 'coreId'
+ *      userId: // value for 'userId'
+ *   },
+ * });
+ */
+export function useRemoveMemberFromCoreMutation(baseOptions?: Apollo.MutationHookOptions<RemoveMemberFromCoreMutation, RemoveMemberFromCoreMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveMemberFromCoreMutation, RemoveMemberFromCoreMutationVariables>(RemoveMemberFromCoreDocument, options);
+      }
+export type RemoveMemberFromCoreMutationHookResult = ReturnType<typeof useRemoveMemberFromCoreMutation>;
+export type RemoveMemberFromCoreMutationResult = Apollo.MutationResult<RemoveMemberFromCoreMutation>;
+export type RemoveMemberFromCoreMutationOptions = Apollo.BaseMutationOptions<RemoveMemberFromCoreMutation, RemoveMemberFromCoreMutationVariables>;
+export const LeaveCoreDocument = gql`
+    mutation LeaveCore($coreId: String!) {
+  leaveCore(coreId: $coreId)
+}
+    `;
+export type LeaveCoreMutationFn = Apollo.MutationFunction<LeaveCoreMutation, LeaveCoreMutationVariables>;
+
+/**
+ * __useLeaveCoreMutation__
+ *
+ * To run a mutation, you first call `useLeaveCoreMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveCoreMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [leaveCoreMutation, { data, loading, error }] = useLeaveCoreMutation({
  *   variables: {
  *      coreId: // value for 'coreId'
  *   },
  * });
  */
-export function useAddMemberToCoreMutation(baseOptions?: Apollo.MutationHookOptions<AddMemberToCoreMutation, AddMemberToCoreMutationVariables>) {
+export function useLeaveCoreMutation(baseOptions?: Apollo.MutationHookOptions<LeaveCoreMutation, LeaveCoreMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddMemberToCoreMutation, AddMemberToCoreMutationVariables>(AddMemberToCoreDocument, options);
+        return Apollo.useMutation<LeaveCoreMutation, LeaveCoreMutationVariables>(LeaveCoreDocument, options);
       }
-export type AddMemberToCoreMutationHookResult = ReturnType<typeof useAddMemberToCoreMutation>;
-export type AddMemberToCoreMutationResult = Apollo.MutationResult<AddMemberToCoreMutation>;
-export type AddMemberToCoreMutationOptions = Apollo.BaseMutationOptions<AddMemberToCoreMutation, AddMemberToCoreMutationVariables>;
+export type LeaveCoreMutationHookResult = ReturnType<typeof useLeaveCoreMutation>;
+export type LeaveCoreMutationResult = Apollo.MutationResult<LeaveCoreMutation>;
+export type LeaveCoreMutationOptions = Apollo.BaseMutationOptions<LeaveCoreMutation, LeaveCoreMutationVariables>;
 export const CreateFileDocument = gql`
-    mutation CreateFile($title: String!, $description: String!, $upload: Upload!, $nexus: String!) {
+    mutation CreateFile($title: String!, $description: String!, $upload: Upload!, $nexusId: String!) {
   createFile(
-    input: {title: $title, description: $description, upload: $upload, nexus: $nexus}
+    input: {title: $title, description: $description, upload: $upload, nexusId: $nexusId}
   )
 }
     `;
@@ -645,7 +673,7 @@ export type CreateFileMutationFn = Apollo.MutationFunction<CreateFileMutation, C
  *      title: // value for 'title'
  *      description: // value for 'description'
  *      upload: // value for 'upload'
- *      nexus: // value for 'nexus'
+ *      nexusId: // value for 'nexusId'
  *   },
  * });
  */
@@ -657,8 +685,8 @@ export type CreateFileMutationHookResult = ReturnType<typeof useCreateFileMutati
 export type CreateFileMutationResult = Apollo.MutationResult<CreateFileMutation>;
 export type CreateFileMutationOptions = Apollo.BaseMutationOptions<CreateFileMutation, CreateFileMutationVariables>;
 export const CreateNexusDocument = gql`
-    mutation CreateNexus($name: String!, $category: String!, $core: String!) {
-  createNexus(input: {name: $name, category: $category, core: $core})
+    mutation CreateNexus($name: String!, $category: String!, $coreId: String!) {
+  createNexus(input: {name: $name, category: $category, coreId: $coreId})
 }
     `;
 export type CreateNexusMutationFn = Apollo.MutationFunction<CreateNexusMutation, CreateNexusMutationVariables>;
@@ -678,7 +706,7 @@ export type CreateNexusMutationFn = Apollo.MutationFunction<CreateNexusMutation,
  *   variables: {
  *      name: // value for 'name'
  *      category: // value for 'category'
- *      core: // value for 'core'
+ *      coreId: // value for 'coreId'
  *   },
  * });
  */
@@ -720,68 +748,38 @@ export function useDeleteNexusMutation(baseOptions?: Apollo.MutationHookOptions<
 export type DeleteNexusMutationHookResult = ReturnType<typeof useDeleteNexusMutation>;
 export type DeleteNexusMutationResult = Apollo.MutationResult<DeleteNexusMutation>;
 export type DeleteNexusMutationOptions = Apollo.BaseMutationOptions<DeleteNexusMutation, DeleteNexusMutationVariables>;
-export const LeaveNexusDocument = gql`
-    mutation LeaveNexus($nexusId: String!) {
-  leaveNexus(nexusId: $nexusId)
+export const InviteMemberToNexusDocument = gql`
+    mutation InviteMemberToNexus($userId: String!, $nexusId: String!) {
+  inviteMemberToNexus(input: {userId: $userId, nexusId: $nexusId})
 }
     `;
-export type LeaveNexusMutationFn = Apollo.MutationFunction<LeaveNexusMutation, LeaveNexusMutationVariables>;
+export type InviteMemberToNexusMutationFn = Apollo.MutationFunction<InviteMemberToNexusMutation, InviteMemberToNexusMutationVariables>;
 
 /**
- * __useLeaveNexusMutation__
+ * __useInviteMemberToNexusMutation__
  *
- * To run a mutation, you first call `useLeaveNexusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useLeaveNexusMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useInviteMemberToNexusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInviteMemberToNexusMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [leaveNexusMutation, { data, loading, error }] = useLeaveNexusMutation({
+ * const [inviteMemberToNexusMutation, { data, loading, error }] = useInviteMemberToNexusMutation({
  *   variables: {
+ *      userId: // value for 'userId'
  *      nexusId: // value for 'nexusId'
  *   },
  * });
  */
-export function useLeaveNexusMutation(baseOptions?: Apollo.MutationHookOptions<LeaveNexusMutation, LeaveNexusMutationVariables>) {
+export function useInviteMemberToNexusMutation(baseOptions?: Apollo.MutationHookOptions<InviteMemberToNexusMutation, InviteMemberToNexusMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<LeaveNexusMutation, LeaveNexusMutationVariables>(LeaveNexusDocument, options);
+        return Apollo.useMutation<InviteMemberToNexusMutation, InviteMemberToNexusMutationVariables>(InviteMemberToNexusDocument, options);
       }
-export type LeaveNexusMutationHookResult = ReturnType<typeof useLeaveNexusMutation>;
-export type LeaveNexusMutationResult = Apollo.MutationResult<LeaveNexusMutation>;
-export type LeaveNexusMutationOptions = Apollo.BaseMutationOptions<LeaveNexusMutation, LeaveNexusMutationVariables>;
-export const AddMemberToNexusDocument = gql`
-    mutation AddMemberToNexus($nexusId: String!) {
-  addMemberToNexus(nexusId: $nexusId)
-}
-    `;
-export type AddMemberToNexusMutationFn = Apollo.MutationFunction<AddMemberToNexusMutation, AddMemberToNexusMutationVariables>;
-
-/**
- * __useAddMemberToNexusMutation__
- *
- * To run a mutation, you first call `useAddMemberToNexusMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useAddMemberToNexusMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [addMemberToNexusMutation, { data, loading, error }] = useAddMemberToNexusMutation({
- *   variables: {
- *      nexusId: // value for 'nexusId'
- *   },
- * });
- */
-export function useAddMemberToNexusMutation(baseOptions?: Apollo.MutationHookOptions<AddMemberToNexusMutation, AddMemberToNexusMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<AddMemberToNexusMutation, AddMemberToNexusMutationVariables>(AddMemberToNexusDocument, options);
-      }
-export type AddMemberToNexusMutationHookResult = ReturnType<typeof useAddMemberToNexusMutation>;
-export type AddMemberToNexusMutationResult = Apollo.MutationResult<AddMemberToNexusMutation>;
-export type AddMemberToNexusMutationOptions = Apollo.BaseMutationOptions<AddMemberToNexusMutation, AddMemberToNexusMutationVariables>;
+export type InviteMemberToNexusMutationHookResult = ReturnType<typeof useInviteMemberToNexusMutation>;
+export type InviteMemberToNexusMutationResult = Apollo.MutationResult<InviteMemberToNexusMutation>;
+export type InviteMemberToNexusMutationOptions = Apollo.BaseMutationOptions<InviteMemberToNexusMutation, InviteMemberToNexusMutationVariables>;
 export const RemoveMemberFromNexusDocument = gql`
     mutation RemoveMemberFromNexus($userId: String!, $nexusId: String!) {
   removeMemberFromNexus(input: {userId: $userId, nexusId: $nexusId})
@@ -814,73 +812,34 @@ export function useRemoveMemberFromNexusMutation(baseOptions?: Apollo.MutationHo
 export type RemoveMemberFromNexusMutationHookResult = ReturnType<typeof useRemoveMemberFromNexusMutation>;
 export type RemoveMemberFromNexusMutationResult = Apollo.MutationResult<RemoveMemberFromNexusMutation>;
 export type RemoveMemberFromNexusMutationOptions = Apollo.BaseMutationOptions<RemoveMemberFromNexusMutation, RemoveMemberFromNexusMutationVariables>;
-export const CreateDemoCoreDocument = gql`
-    mutation CreateDemoCore {
-  buildDemoEnv
+export const LeaveNexusDocument = gql`
+    mutation LeaveNexus($nexusId: String!) {
+  leaveNexus(nexusId: $nexusId)
 }
     `;
-export type CreateDemoCoreMutationFn = Apollo.MutationFunction<CreateDemoCoreMutation, CreateDemoCoreMutationVariables>;
+export type LeaveNexusMutationFn = Apollo.MutationFunction<LeaveNexusMutation, LeaveNexusMutationVariables>;
 
 /**
- * __useCreateDemoCoreMutation__
+ * __useLeaveNexusMutation__
  *
- * To run a mutation, you first call `useCreateDemoCoreMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateDemoCoreMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useLeaveNexusMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLeaveNexusMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createDemoCoreMutation, { data, loading, error }] = useCreateDemoCoreMutation({
+ * const [leaveNexusMutation, { data, loading, error }] = useLeaveNexusMutation({
  *   variables: {
+ *      nexusId: // value for 'nexusId'
  *   },
  * });
  */
-export function useCreateDemoCoreMutation(baseOptions?: Apollo.MutationHookOptions<CreateDemoCoreMutation, CreateDemoCoreMutationVariables>) {
+export function useLeaveNexusMutation(baseOptions?: Apollo.MutationHookOptions<LeaveNexusMutation, LeaveNexusMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateDemoCoreMutation, CreateDemoCoreMutationVariables>(CreateDemoCoreDocument, options);
+        return Apollo.useMutation<LeaveNexusMutation, LeaveNexusMutationVariables>(LeaveNexusDocument, options);
       }
-export type CreateDemoCoreMutationHookResult = ReturnType<typeof useCreateDemoCoreMutation>;
-export type CreateDemoCoreMutationResult = Apollo.MutationResult<CreateDemoCoreMutation>;
-export type CreateDemoCoreMutationOptions = Apollo.BaseMutationOptions<CreateDemoCoreMutation, CreateDemoCoreMutationVariables>;
-export const GetInitDataDocument = gql`
-    query GetInitData {
-  getUser {
-    id
-    fullName
-  }
-}
-    `;
-
-/**
- * __useGetInitDataQuery__
- *
- * To run a query within a React component, call `useGetInitDataQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetInitDataQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetInitDataQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetInitDataQuery(baseOptions?: Apollo.QueryHookOptions<GetInitDataQuery, GetInitDataQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetInitDataQuery, GetInitDataQueryVariables>(GetInitDataDocument, options);
-      }
-export function useGetInitDataLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetInitDataQuery, GetInitDataQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetInitDataQuery, GetInitDataQueryVariables>(GetInitDataDocument, options);
-        }
-export function useGetInitDataSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetInitDataQuery, GetInitDataQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<GetInitDataQuery, GetInitDataQueryVariables>(GetInitDataDocument, options);
-        }
-export type GetInitDataQueryHookResult = ReturnType<typeof useGetInitDataQuery>;
-export type GetInitDataLazyQueryHookResult = ReturnType<typeof useGetInitDataLazyQuery>;
-export type GetInitDataSuspenseQueryHookResult = ReturnType<typeof useGetInitDataSuspenseQuery>;
-export type GetInitDataQueryResult = Apollo.QueryResult<GetInitDataQuery, GetInitDataQueryVariables>;
+export type LeaveNexusMutationHookResult = ReturnType<typeof useLeaveNexusMutation>;
+export type LeaveNexusMutationResult = Apollo.MutationResult<LeaveNexusMutation>;
+export type LeaveNexusMutationOptions = Apollo.BaseMutationOptions<LeaveNexusMutation, LeaveNexusMutationVariables>;
