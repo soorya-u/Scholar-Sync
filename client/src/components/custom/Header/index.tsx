@@ -9,11 +9,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/primitives/dropdown-menu";
+} from "@/components/ui/dropdown-menu";
 
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
-import { useLogOut } from "@/hooks/use-auth";
+import { useLogout } from "@/hooks/use-auth";
 import CustomAvatar from "../CustomAvatar";
 import Drawer from "../Drawer";
 import { useApiData } from "@/hooks/use-api-data";
@@ -22,7 +22,7 @@ import Link from "next/link";
 export default function Header() {
   const { toggleSidebar } = useToggler();
   const { user } = useUser();
-  const { handleClick: logOut } = useLogOut();
+  const { handleClick: logOut } = useLogout();
   const { apiData } = useApiData();
 
   return (

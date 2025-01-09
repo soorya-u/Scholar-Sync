@@ -9,7 +9,7 @@ import {
   X,
 } from "lucide-react";
 
-import { Input } from "@/components/primitives/input";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -17,9 +17,9 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/primitives/select";
-import { Button } from "@/components/primitives/button";
-import { Textarea } from "@/components/primitives/textarea";
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 import { useUser } from "@/hooks/use-user";
 
@@ -157,7 +157,7 @@ export default function Uploader() {
                       <button
                         className="absolute -right-5 -top-3 hover:opacity-65"
                         onClick={() => {
-                          setValue("upload", []);
+                          setValue("upload", new FileList());
                           setIsFileExists(false);
                         }}
                       >

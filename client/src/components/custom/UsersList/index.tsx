@@ -4,20 +4,20 @@ import { DoorOpen } from "lucide-react";
 
 import { useNexus } from "@/hooks/use-nexus";
 import { useToggler } from "@/hooks/use-toggler";
-import { useRemoveUser } from "@/hooks/use-remove";
+import { useRemoveNexusMember } from "@/hooks/use-remove";
 import { cn } from "@/utils/cn";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
-} from "@/components/primitives/context-menu";
+} from "@/components/ui/context-menu";
 import CustomAvatar from "../CustomAvatar";
 
 export default function UsersList() {
   const { isUserListOpen } = useToggler();
   const { nexus } = useNexus();
-  const { handleClick: removeUserFn } = useRemoveUser();
+  const { handleClick: removeUserFn } = useRemoveNexusMember();
 
   if (nexus.creator.id === "") return;
 

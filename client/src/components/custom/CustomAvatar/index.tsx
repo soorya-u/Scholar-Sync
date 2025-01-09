@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/utils/cn";
-import { useColor } from "@/hooks/use-color";
+import { getProfileColor } from "@/utils/colors";
 
 export default function CustomAvatar({
   id,
@@ -14,20 +14,18 @@ export default function CustomAvatar({
   className?: string;
   textClassName?: string;
 }) {
-  const c = useColor(id);
-
-  if (!c) return;
+  const { backgroundColor, color } = getProfileColor(id);
 
   return (
     <div
-      style={{ backgroundColor: c.backgroundColor }}
+      style={{ backgroundColor }}
       className={cn(
         "flex size-10 items-center justify-center rounded-full",
         className,
       )}
     >
       <span
-        style={{ color: c.color }}
+        style={{ color }}
         className={cn("font-playwrite text-lg", textClassName)}
       >
         {name[0]}

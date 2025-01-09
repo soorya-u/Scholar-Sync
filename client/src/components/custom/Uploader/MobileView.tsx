@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { useUploader } from "@/hooks/use-uploader";
 
-import { Button } from "@/components/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -11,17 +11,17 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/primitives/dialog";
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/primitives/select";
-import { Input } from "@/components/primitives/input";
-import { Label } from "@/components/primitives/label";
-import { Textarea } from "@/components/primitives/textarea";
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/utils/cn";
 
 type UploaderType = "Announcement" | "File";

@@ -4,7 +4,7 @@ import { useNexus } from "@/hooks/use-nexus";
 
 import { Announcement, File } from "@/types/api";
 
-import { Separator } from "@/components/primitives/separator";
+import { Separator } from "@/components/ui/separator";
 import FileViewer from "./FileViewer";
 import AnnouncementViewer from "./AnnouncementViewer";
 import { dateFormatter } from "@/utils/date-formatter";

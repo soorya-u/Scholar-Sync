@@ -3,16 +3,16 @@
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
-import { Button } from "@/components/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/primitives/card";
-import { Input } from "@/components/primitives/input";
-import { Label } from "@/components/primitives/label";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 import { useSignUp } from "@/hooks/use-auth";
 
@@ -22,18 +22,9 @@ export default function SignUpPage() {
   const adder = searchParams.get("l");
   const joinId = searchParams.get("j");
   const userId = searchParams.get("u");
-  const demo = searchParams.get("demo");
 
   const query =
-    adder && joinId && userId
-      ? {
-          l: adder,
-          j: joinId,
-          u: userId,
-        }
-      : demo
-        ? { demo: "true" }
-        : {};
+    adder && joinId && userId ? { l: adder, j: joinId, u: userId } : {};
 
   return (
     <main className="flex min-h-full items-center justify-center">
