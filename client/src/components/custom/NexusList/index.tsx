@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { DoorOpen, Share2Icon, Trash2 } from "lucide-react";
 
-import { useDeleteNexus, useLeaveNexus } from "@/hooks/use-remove";
-import { useLinkGenerate } from "@/hooks/use-link";
+import { useDeleteNexus } from "@/hooks/use-delete";
+import { useLeaveNexus } from "@/hooks/use-leave";
 import { useUser } from "@/hooks/use-user";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
@@ -36,7 +36,7 @@ export default function NexusList() {
   const { nexus, setNexus } = useNexus();
   const { handleClick: deleteNexusFn } = useDeleteNexus();
   const { handleClick: leaveNexusFn } = useLeaveNexus();
-  const { handleClick: generateLinkFn } = useLinkGenerate();
+  // const { handleClick: generateLinkFn } = useLinkGenerate();
 
   const { user } = useUser();
   const [selectedCategory, setSelectedCategory] = useState(
@@ -112,12 +112,13 @@ export default function NexusList() {
                   <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
                     {user.userType === "ADMIN" ||
                       (user.userType === "PSEUDOADMIN" &&
-                        n.creator === user.id) && (
+                        n.creator === user.id && (
                           <>
                             <ContextMenuItem
-                              onClick={async () =>
-                                await generateLinkFn("Nexus", n.id)
-                              }
+                              // onClick={
+                              //   async () =>
+                              //     await generateLinkFn("Nexus", n.id)
+                              // }
                               className="flex justify-between"
                             >
                               <p className="font-lato font-bold text-foreground">
@@ -127,7 +128,7 @@ export default function NexusList() {
                             </ContextMenuItem>
                             <ContextMenuSeparator className="w-[95%] self-center border" />
                           </>
-                        )}
+                        ))}
                     {user.userType === "NORMAL" && (
                       <>
                         <ContextMenuItem
