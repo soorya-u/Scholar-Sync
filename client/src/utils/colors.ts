@@ -1,5 +1,6 @@
 const getUserColor = (userId: string): string => {
   const [_, id] = userId.split(":");
+  if (!id) return "#000";
   const hexChar = id.substring(0, 6).split("");
   const hex = hexChar.map((h) => (h.charCodeAt(0) % 16).toString(16));
   return `#${hex.join("")}`;
