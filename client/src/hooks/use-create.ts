@@ -6,7 +6,6 @@ import { NexusType, nexusSchema } from "@/schema/nexus";
 
 import { useToast } from "./use-toast";
 import { useCore } from "./use-core";
-import { useInitData } from "./use-init";
 
 import { errorToast } from "@/utils/error-toast";
 
@@ -25,10 +24,9 @@ export const useCoreCreate = () => {
     defaultValues: { name: "", imageUrl: "" },
   });
   const { toast } = useToast();
-  const [mutate, { data, error }] = useCreateCoreMutation({
+  const [mutate] = useCreateCoreMutation({
     onError: (e) => errorToast(e, "Core Creation"),
   });
-  const { refetch } = useInitData();
 
   const onSubmitFunc = async (val: CoreType) => {
     // TODO: Add Core Image String
@@ -39,14 +37,13 @@ export const useCoreCreate = () => {
           val.imageUrl ??
           "https://images-platform.99static.com//rGjWkopiOtbUmFlLOkjiFkHg4fU=/0x0:2000x2000/fit-in/590x590/projects-files/47/4779/477929/8a96c2c4-aa4f-48ce-b637-11cdcffc58f0.png",
       },
-    }).then(async () => {
+    }).then(async () =>
       toast({
         title: "Core Creation Successfull!",
         variant: "default",
         description: "Core has been Successfully Created.",
-      });
-      await refetch();
-    });
+      }),
+    );
   };
 
   return {
@@ -58,7 +55,6 @@ export const useCoreCreate = () => {
 };
 
 export const useNexusCreate = () => {
-  const { refetch } = useInitData();
   const {
     register,
     handleSubmit,
@@ -86,14 +82,13 @@ export const useNexusCreate = () => {
         ...val,
         coreId: core.id,
       },
-    }).then(async () => {
+    }).then(async () =>
       toast({
         title: "Nexus Creation Successfull!",
         variant: "default",
         description: "Nexus has been Successfully Created.",
-      });
-      await refetch();
-    });
+      }),
+    );
   };
 
   return {
