@@ -2,7 +2,7 @@
 
 import { PropsWithChildren } from "react";
 
-import { Toaster as ToasterProvider } from "@/components/primitives/toaster";
+import { Toaster as ToasterProvider } from "@/components/ui/toaster";
 
 import ApolloGraphQLProvider from "./ApolloGraphQL";
 import ReduxProvider from "./Redux";

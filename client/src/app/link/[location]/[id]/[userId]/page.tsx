@@ -2,14 +2,12 @@
 
 import React from "react";
 import Gradient from "@/components/custom/Gradient";
-import { useLink } from "@/hooks/use-link";
 
 export default function JoinPage({
   params,
 }: {
   params: { location: string; id: string; userId: string };
 }) {
-  useLink(params.location, params.id, params.userId);
   return (
     <>
       <Gradient />

@@ -1,4 +1,4 @@
-import { Button } from "@/components/primitives/button";
+import { Button } from "@/components/ui/button";
 import {
   DialogContent,
   DialogDescription,
@@ -6,9 +6,9 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/primitives/dialog";
-import { Input } from "@/components/primitives/input";
-import { Label } from "@/components/primitives/label";
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { useCoreCreate } from "@/hooks/use-create";
 
 export default function CreateCore() {

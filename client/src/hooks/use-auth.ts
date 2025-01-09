@@ -1,21 +1,19 @@
-import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLazyQuery, useMutation } from "@apollo/client";
 
 import { LoginType, loginSchema } from "@/schema/login";
 import { SignUpType, signUpSchema } from "@/schema/sign-up";
 
-import { signUpMutation } from "@/graphql/mutations";
-import { loginQuery, logOutQuery } from "@/graphql/queries";
+import { useToast } from "@/hooks/use-toast";
 
-import { useToast } from "@/components/primitives/use-toast";
+import { errorToast } from "@/utils/error-toast";
 
-import { useApiData } from "./use-api-data";
-import { useUser } from "./use-user";
-import { useNexus } from "./use-nexus";
-import { useCore } from "./use-core";
+import {
+  useLoginLazyQuery,
+  useLogoutLazyQuery,
+  useSignUpMutation,
+} from "@/generated/graphql";
 
 export const useSignUp = () => {
   const {
@@ -27,8 +25,6 @@ export const useSignUp = () => {
     defaultValues: { email: "", firstName: "", lastName: "", password: "" },
   });
 
-  const [mutate, { data, error }] = useMutation(signUpMutation);
-
   const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,38 +32,10 @@ export const useSignUp = () => {
   const location = searchParams.get("l");
   const joinId = searchParams.get("j");
   const userId = searchParams.get("u");
-  const demo = searchParams.get("demo");
 
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: "Registration Unsuccessfull!",
-        variant: "destructive",
-        description: error.message.replace(
-          error.message[0],
-          error.message[0].toUpperCase(),
-        ),
-      });
-      return;
-    }
-
-    if (data) {
-      const t = toast({
-        title: "Registration Successfull!",
-        variant: "default",
-        description: "You have been Successfully Registered.",
-      });
-
-      setTimeout(() => {
-        t.dismiss();
-        if (location && joinId && userId)
-          return router.replace(`/link/${location}/${joinId}/${userId}`);
-        else if (demo) return router.replace(`/link/demo`);
-
-        router.replace("/dashboard");
-      }, 500);
-    }
-  }, [data, error]);
+  const [mutate] = useSignUpMutation({
+    onError: (e) => errorToast(e, "Registration"),
+  });
 
   const onSubmitFunc = async (val: SignUpType) => {
     await mutate({
@@ -76,6 +44,17 @@ export const useSignUp = () => {
         email: val.email,
         password: val.password,
       },
+    }).then(() => {
+      toast({
+        title: "Registration Successfull!",
+        variant: "default",
+        description: "You have been Successfully Registered.",
+      });
+      return router.replace(
+        location && joinId && userId
+          ? `/link/${location}/${joinId}/${userId}`
+          : "/dashboard",
+      );
     });
   };
 
@@ -104,39 +83,10 @@ export const useLogin = () => {
   const location = searchParams.get("l");
   const joinId = searchParams.get("j");
   const userId = searchParams.get("u");
-  const demo = searchParams.get("demo");
 
-  const [query, { data, error }] = useLazyQuery(loginQuery);
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: "Login Unsuccessfull!",
-        variant: "destructive",
-        description: error.message.replace(
-          error.message[0],
-          error.message[0].toUpperCase(),
-        ),
-      });
-      return;
-    }
-
-    if (data) {
-      const t = toast({
-        title: "Login Successfull!",
-        variant: "default",
-        description: "You have been Successfully Logged In.",
-      });
-
-      setTimeout(() => {
-        t.dismiss();
-        if (location && joinId && userId)
-          return router.replace(`/link/${location}/${joinId}/${userId}`);
-        else if (demo) return router.replace(`/link/demo`);
-        router.replace("/dashboard");
-      }, 500);
-    }
-  }, [data, error]);
+  const [query] = useLoginLazyQuery({
+    onError: (e) => errorToast(e, "Login"),
+  });
 
   const onSubmitFunc = async (val: LoginType) => {
     await query({
@@ -144,6 +94,17 @@ export const useLogin = () => {
         email: val.email,
         password: val.password,
       },
+    }).then(() => {
+      toast({
+        title: "Login Successfull!",
+        variant: "default",
+        description: "You have been Successfully Logged In.",
+      });
+      router.replace(
+        location && joinId && userId
+          ? `/link/${location}/${joinId}/${userId}`
+          : "dashboard",
+      );
     });
   };
 
@@ -155,51 +116,25 @@ export const useLogin = () => {
   };
 };
 
-export const useLogOut = () => {
-  const [query, { data, error }] = useLazyQuery(logOutQuery);
+export const useLogout = () => {
+  const [query] = useLogoutLazyQuery({
+    onError: (e) => errorToast(e, "Logout"),
+  });
   const { toast } = useToast();
   const router = useRouter();
-  const { resetApiData } = useApiData();
-  const { resetUser } = useUser();
-  const { resetCore } = useCore();
-  const { resetNexus } = useNexus();
 
-  const resetAll = () => {
-    resetApiData();
-    resetUser();
-    resetCore();
-    resetNexus();
-  };
-
-  useEffect(() => {
-    if (error) {
+  const logout = async () => {
+    await query().then(() => {
       toast({
-        title: "Logout Unsuccessfull!",
-        variant: "destructive",
-        description: error.message.replace(
-          error.message[0],
-          error.message[0].toUpperCase(),
-        ),
-      });
-      return;
-    }
-
-    if (data) {
-      const t = toast({
         title: "Logout Successfull!",
         variant: "default",
         description: "You have been Successfully Logged Out.",
       });
-
-      setTimeout(() => {
-        t.dismiss();
-        resetAll();
-        router.replace("/");
-      }, 500);
-    }
-  }, [data, error]);
+      router.replace("/");
+    });
+  };
 
   return {
-    handleClick: async () => await query(),
+    handleClick: logout,
   };
 };

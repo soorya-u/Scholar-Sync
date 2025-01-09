@@ -1,20 +1,16 @@
-import { useEffect } from "react";
-import { useMutation } from "@apollo/client";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-import {
-  createAnnouncementMutation,
-  createFileMutation,
-} from "@/graphql/mutations";
 
 import { AnnouncementType, announcementSchema } from "@/schema/announcement";
 import { FileType, fileSchema } from "@/schema/file";
 
-import { useInitData } from "./use-init";
-import { useToast } from "@/components/primitives/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { useNexus } from "./use-nexus";
-import { useRouter } from "next/navigation";
+import {
+  useCreateAnnouncementMutation,
+  useCreateFileMutation,
+} from "@/generated/graphql";
+import { errorToast } from "@/utils/error-toast";
 
 export const useUploader = (
   uploader: "Announcement" | "File",
@@ -22,16 +18,16 @@ export const useUploader = (
 ) => {
   const { toast } = useToast();
   const {
-    nexus: { id: nexus },
+    nexus: { id: nexusId },
   } = useNexus();
-  const { refetch } = useInitData();
 
-  const [mutate, { data, error }] = useMutation(
-    uploader === "File" ? createFileMutation : createAnnouncementMutation,
-    {
-      onError: (e) => console.log(e.message),
-    },
-  );
+  const [fileMutate] = useCreateFileMutation({
+    onError: (e) => errorToast(e, "File Upload"),
+  });
+
+  const [announcementMutate] = useCreateAnnouncementMutation({
+    onError: (e) => errorToast(e, "Create Announcement"),
+  });
 
   const {
     register,
@@ -46,20 +42,33 @@ export const useUploader = (
     defaultValues: {
       description: "",
       title: "",
-      upload: [],
     },
     reValidateMode: "onChange",
   });
 
   const onSubmitFn = async (val: FileType | AnnouncementType) => {
-    // @ts-ignore
-    if (val.upload) val.upload = val.upload[0];
-    await mutate({
-      variables: {
-        ...val,
-        nexus,
-      },
-    }).then(async () => await refetch());
+    const mutate =
+      uploader === "File"
+        ? announcementMutate({
+            variables: {
+              nexusId,
+              ...(val as AnnouncementType),
+            },
+          })
+        : fileMutate({
+            variables: {
+              nexusId,
+              ...(val as FileType),
+            },
+          });
+
+    await mutate.then(() =>
+      toast({
+        title: `${uploader} Creation Successfull!`,
+        variant: "default",
+        description: `${uploader} has been Successfully Created.`,
+      }),
+    );
   };
 
   const handleSubmit = handleFormSubmit(onSubmitFn, (e) => {
@@ -72,28 +81,6 @@ export const useUploader = (
         variant: "destructive",
       });
   });
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: `${uploader} Creation Unsuccessfull!`,
-        variant: "destructive",
-        description: error.message.replace(
-          error.message[0],
-          error.message[0].toUpperCase(),
-        ),
-      });
-      return;
-    }
-
-    if (data) {
-      toast({
-        title: `${uploader} Creation Successfull!`,
-        variant: "default",
-        description: "Nexus has been Successfully Created.",
-      });
-    }
-  }, [data, error]);
 
   return {
     register,

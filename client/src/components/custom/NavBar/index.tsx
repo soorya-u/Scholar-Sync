@@ -6,7 +6,7 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/primitives/breadcrumb";
+} from "@/components/ui/breadcrumb";
 import { useToggler } from "@/hooks/use-toggler";
 import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";

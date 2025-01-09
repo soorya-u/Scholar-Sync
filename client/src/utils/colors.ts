@@ -1,5 +1,8 @@
-const randomColor = (): string => {
-  return "#000000".replace(/0/g, () => (~~(Math.random() * 16)).toString(16));
+const getUserColor = (userId: string): string => {
+  const [_, id] = userId.split(":");
+  const hexChar = id.substring(0, 6).split("");
+  const hex = hexChar.map((h) => (h.charCodeAt(0) % 16).toString(16));
+  return `#${hex.join("")}`;
 };
 
 const isColorDarkOrLight = (color: string): string => {
@@ -14,8 +17,8 @@ const isColorDarkOrLight = (color: string): string => {
   return luminance > 186 ? "#000" : "#fff";
 };
 
-export const getProfileColor = () => {
-  const backgroundColor = randomColor();
+export const getProfileColor = (userId: string) => {
+  const backgroundColor = getUserColor(userId);
   const color = isColorDarkOrLight(backgroundColor);
   return { backgroundColor, color };
 };

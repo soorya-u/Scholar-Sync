@@ -8,9 +8,9 @@ import { useCore } from "@/hooks/use-core";
 import { useNexus } from "@/hooks/use-nexus";
 import { useApiData } from "@/hooks/use-api-data";
 
-import { Button } from "@/components/primitives/button";
-import { Separator } from "@/components/primitives/separator";
-import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
+import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
@@ -18,7 +18,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/primitives/select";
+} from "@/components/ui/select";
 
 import {
   ContextMenu,
@@ -26,7 +26,7 @@ import {
   ContextMenuItem,
   ContextMenuSeparator,
   ContextMenuTrigger,
-} from "@/components/primitives/context-menu";
+} from "@/components/ui/context-menu";
 
 import CreateNexus from "../CreateNexus";
 

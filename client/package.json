@@ -8,10 +8,10 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier \"**/*.{js,jsx,ts,tsx,json}\" --write",
+    "codegen": "graphql-codegen --require dotenv/config",
     "android": "bunx @capacitor/cli sync && bunx @capacitor/cli run android",
     "ios": "bunx @capacitor/cli sync && bunx @capacitor/cli run ios",
-    "assets": "capacitor-assets generate --iconBackgroundColor '#fff' --iconBackgroundColorDark '#fff' --splashBackgroundColor '#fff' --splashBackgroundColorDark '#fff' --iosProject ./mobile/ios/App --androidProject ./mobile/android",
-    "codegen": "graphql-codegen --require dotenv/config"
+    "assets": "capacitor-assets generate --iconBackgroundColor '#fff' --iconBackgroundColorDark '#fff' --splashBackgroundColor '#fff' --splashBackgroundColorDark '#fff' --iosProject ./mobile/ios/App --androidProject ./mobile/android"
   },
   "dependencies": {
     "@apollo/client": "^3.10.8",

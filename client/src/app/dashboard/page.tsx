@@ -2,7 +2,7 @@
 
 import { Loader } from "lucide-react";
 
-import { useInitData } from "@/hooks/use-init";
+// import { useInitData } from "@/hooks/use-init";
 import { useToggler } from "@/hooks/use-toggler";
 import { useUser } from "@/hooks/use-user";
 import { useApiData } from "@/hooks/use-api-data";
@@ -21,7 +21,8 @@ import { cn } from "@/utils/cn";
 import Gradient from "@/components/custom/Gradient";
 
 export default function DashboardPage() {
-  const { loading } = useInitData();
+  const loading = false;
+  // const { loading } = useInitData();
   const { isSidebarOpen } = useToggler();
   const { apiData } = useApiData();
   const { user } = useUser();
@@ -29,7 +30,7 @@ export default function DashboardPage() {
   return (
     <main
       className={cn(
-        "relative flex overflow-hidden h-screen flex-col",
+        "relative flex h-screen flex-col overflow-hidden",
         loading && "items-center justify-center bg-black/40",
       )}
     >

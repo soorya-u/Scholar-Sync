@@ -23,7 +23,7 @@ const authLink = setContext((_, { headers }) => {
   };
 });
 
-// @ts-ignore
+// @ts-expect-error wrong type
 const link = ApolloLink.from([authLink, uploadLink]);
 
 const client = new ApolloClient({

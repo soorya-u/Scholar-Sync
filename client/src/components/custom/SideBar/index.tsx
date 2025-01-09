@@ -4,8 +4,8 @@ import { useUser } from "@/hooks/use-user";
 import { useApiData } from "@/hooks/use-api-data";
 import { useCore } from "@/hooks/use-core";
 
-import { Separator } from "@/components/primitives/separator";
-import { Dialog, DialogTrigger } from "@/components/primitives/dialog";
+import { Separator } from "@/components/ui/separator";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import CreateCore from "../CreateCore";
 
 import {
@@ -14,18 +14,17 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
   ContextMenuSeparator,
-} from "@/components/primitives/context-menu";
+} from "@/components/ui/context-menu";
 
 import { cn } from "@/utils/cn";
-import { useDeleteCore } from "@/hooks/use-remove";
-import { useLinkGenerate } from "@/hooks/use-link";
+import { useDeleteCore } from "@/hooks/use-delete";
 
 export default function SideBar() {
   const { user } = useUser();
   const { apiData } = useApiData();
   const { setCore } = useCore();
   const { handleClick: deleteCoreFn } = useDeleteCore();
-  const { handleClick: generateLinkFn } = useLinkGenerate();
+  // const { handleClick: generateLinkFn } = useLinkGenerate();
 
   if (user.userType === "NORMAL") return;
 
@@ -75,7 +74,7 @@ export default function SideBar() {
               {user.userType === "ADMIN" && (
                 <ContextMenuContent className="ml-5 mt-4 flex flex-col bg-transparent backdrop-blur-md">
                   <ContextMenuItem
-                    onClick={async () => await generateLinkFn("Core", id)}
+                    // onClick={async () => await generateLinkFn("Core", id)}
                     className="flex justify-between"
                   >
                     <p className="font-lato font-bold text-foreground">Share</p>

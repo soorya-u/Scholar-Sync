@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import { LoaderCircle } from "lucide-react";
 
-import { Label } from "@/components/primitives/label";
-import { Button } from "@/components/primitives/button";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -13,8 +13,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/primitives/card";
-import { Input } from "@/components/primitives/input";
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 
 import { useLogin } from "@/hooks/use-auth";
 
@@ -24,18 +24,9 @@ export default function LoginPage() {
   const adder = searchParams.get("l");
   const joinId = searchParams.get("j");
   const userId = searchParams.get("u");
-  const demo = searchParams.get("demo");
 
   const query =
-    adder && joinId && userId
-      ? {
-          l: adder,
-          j: joinId,
-          u: userId,
-        }
-      : demo
-        ? { demo: "true" }
-        : {};
+    adder && joinId && userId ? { l: adder, j: joinId, u: userId } : {};
 
   return (
     <main className="flex min-h-full items-center justify-center">

@@ -7,8 +7,8 @@ import {
   ToastProvider,
   ToastTitle,
   ToastViewport,
-} from "@/components/primitives/toast";
-import { useToast } from "@/components/primitives/use-toast";
+} from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/utils/cn";
 
 export function Toaster() {
@@ -31,7 +31,7 @@ export function Toaster() {
                 </ToastTitle>
               )}
               {description && (
-                <ToastDescription className="text-sm">
+                <ToastDescription className="text-sm capitalize">
                   {description}
                 </ToastDescription>
               )}
