@@ -1,24 +1,22 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { CoreReduxType } from "@/types/redux";
+import { TCore, UserRole } from "@/types/api";
 
-const initialState: CoreReduxType = {
+const initialState: TCore = {
   id: "",
   name: "",
   imageUrl: "",
-  nexus: [],
+  members: [],
+  userRole: UserRole.NORMAL,
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 export const coreSlice = createSlice({
   name: "core",
   initialState,
   reducers: {
-    setCore: (state, { payload }: PayloadAction<CoreReduxType>) => {
-      return {
-        ...state,
-        ...payload,
-      };
-    },
+    setCore: (_, { payload }: PayloadAction<TCore>) => payload,
     resetCore: () => initialState,
   },
 });

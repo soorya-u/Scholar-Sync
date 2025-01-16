@@ -4,16 +4,19 @@ import { PropsWithChildren } from "react";
 
 import { Toaster as ToasterProvider } from "@/components/ui/toaster";
 
-import ApolloGraphQLProvider from "./ApolloGraphQL";
-import ReduxProvider from "./Redux";
+import ApolloProvider from "./apollo";
+import ReduxProvider from "./redux";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 export default function Providers({ children }: PropsWithChildren) {
   return (
-    <ApolloGraphQLProvider>
+    <ApolloProvider>
       <ReduxProvider>
-        {children}
-        <ToasterProvider />
+        <SidebarProvider>
+          {children}
+          <ToasterProvider />
+        </SidebarProvider>
       </ReduxProvider>
-    </ApolloGraphQLProvider>
+    </ApolloProvider>
   );
 }

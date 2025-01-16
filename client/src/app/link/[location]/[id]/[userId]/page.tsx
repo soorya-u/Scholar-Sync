@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Gradient from "@/components/custom/Gradient";
+import Gradient from "@/components/gradient";
 
 export default function JoinPage({
   params,
