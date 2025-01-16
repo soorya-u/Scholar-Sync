@@ -1,47 +1,38 @@
-export type UserType = {
+export enum UserRole {
+  NORMAL,
+  ADMIN,
+}
+
+export type TUser = {
   id: string;
   fullName: string;
-  email?: string;
-  userType: "NORMAL" | "PSEUDOADMIN" | "ADMIN";
-  createdAt?: Date;
 };
 
-export type CoreType = {
+type SharedType = {
   id: string;
   name: string;
+  userRole: UserRole;
+  members: (TUser & { role: UserRole })[];
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+export type TCore = {
   imageUrl: string;
-  creator?: UserType;
-  nexus: NexusType[];
-  createdAt?: string;
-  updatedAt?: string;
-};
+} & SharedType;
 
-export type NexusType = {
-  id: string;
-  name: string;
+export type TNexus = {
   category: string;
-  creator: UserType;
-  users: UserType[];
-  files: File[];
-  announcements: Announcement[];
-  createdAt: string;
-  updatedAt?: string;
-};
+} & SharedType;
 
-export type File = {
-  id: string;
-  title: string;
-  description: string;
-  fileUrl: string;
-  fileName: string;
-  sentBy: UserType;
-  timeStamp: string;
-};
+type TBareCores = Omit<
+  TCore,
+  "imageUrl" | "members" | "createdAt" | "updatedAt"
+>;
 
-export type Announcement = {
-  id: string;
-  title: string;
-  message: string;
-  sentBy: UserType;
-  timeStamp: string;
-};
+type TBareNexus = Omit<
+  TNexus,
+  "category" | "members" | "createdAt" | "updatedAt"
+>;
+
+export type TGroups = TBareCores & { nexus: TBareNexus[] };

@@ -2,13 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
-import Gradient from "@/components/custom/Gradient";
-import ServerHealthChecker from "@/components/custom/ServerHealthChecker";
+import Gradient from "@/components/gradient";
 
 export default function Home() {
   return (
     <div className="relative overflow-y-hidden">
-      <ServerHealthChecker />
       <Gradient />
       <main className="relative flex min-h-screen flex-col items-center justify-center gap-7 overflow-y-auto">
         <header className="flex w-full items-center justify-between px-4 pt-4 xs:px-8">

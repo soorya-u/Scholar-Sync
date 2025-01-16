@@ -1,7 +1,7 @@
 import { PropsWithChildren, Suspense } from "react";
 import { Metadata } from "next";
 
-import Gradient from "@/components/custom/Gradient";
+import Gradient from "@/components/gradient";
 
 export const metadata: Metadata = {
   description:

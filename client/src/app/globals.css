@@ -34,9 +34,25 @@
 
     --input: 20 5.9% 90%;
 
-    --ring: 20 14.3% 4.1%;
+    --ring: 43 96% 56%;
 
     --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 96%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 43 96% 56%;
   }
 }
 
@@ -63,4 +79,13 @@
 
 .h-calculated {
   height: calc((82% * 100vh)-4rem);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
