@@ -56,6 +56,7 @@ func (db *DB) GetUserByID(id string) (*models.DBUser, error) {
 
 }
 
+// TODO: Try Converting Reverse Tree to Tree Using Query
 func (db *DB) GetUserReverseTree(id string) (*[]models.DBReverseTree, error) {
 	userRecordId := *surrealmodels.ParseRecordID(id)
 
