@@ -20,12 +20,22 @@ type ProfileWithRole {
   role: ProfileType!
 }
 
+type BareNexus {
+  id: ID!
+  name: String!
+}
+
+type Tree {
+  id: ID!
+  name: String!
+  nexus: [BareNexus]!
+}
+
 type Core {
   id: ID!
   name: String!
   imageUrl: String!
   members: [ProfileWithRole]!
-  nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
 }

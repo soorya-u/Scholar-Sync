@@ -35,4 +35,4 @@ type TBareNexus = Omit<
   "category" | "members" | "createdAt" | "updatedAt"
 >;
 
-export type TGroups = TBareCores & { nexus: TBareNexus[] };
+export type TUserTree = TBareCores & { nexus: TBareNexus[] };

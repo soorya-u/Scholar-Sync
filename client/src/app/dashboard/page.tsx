@@ -1,6 +1,6 @@
 "use client";
 
-import { useGroups } from "@/hooks/use-groups";
+import { useTree } from "@/hooks/use-tree";
 
 import Header from "@/components/header";
 import Uploader from "@/components/modules/uploader";
@@ -14,7 +14,7 @@ import Viewer from "@/components/modules/viewer";
 export default function DashboardPage() {
   const loading = false;
 
-  const { groups } = useGroups();
+  const { tree } = useTree();
   const { core } = useCore();
 
   return (
@@ -26,8 +26,8 @@ export default function DashboardPage() {
           <Loader />
         ) : (
           <>
-            {groups.length === 0 ||
-            groups.find((g) => g.id === core.id)?.nexus.length === 0 ? (
+            {tree.length === 0 ||
+            tree.find((t) => t.id === core.id)?.nexus.length === 0 ? (
               <NotFound message="You need to join a Core inorder to Use the App" />
             ) : (
               <div className="flex flex-1 flex-col">

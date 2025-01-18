@@ -25,12 +25,16 @@ type AnnouncementData struct {
 	NexusID string `json:"nexusId"`
 }
 
+type BareNexus struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
 type Core struct {
 	ID        string             `json:"id"`
 	Name      string             `json:"name"`
 	ImageURL  string             `json:"imageUrl"`
 	Members   []*ProfileWithRole `json:"members"`
-	Nexus     []*Nexus           `json:"nexus"`
 	CreatedAt time.Time          `json:"createdAt"`
 	UpdatedAt time.Time          `json:"updatedAt"`
 }
@@ -118,6 +122,12 @@ type SignUpData struct {
 	FullName string `json:"fullName"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+}
+
+type Tree struct {
+	ID    string       `json:"id"`
+	Name  string       `json:"name"`
+	Nexus []*BareNexus `json:"nexus"`
 }
 
 type ProfileType string

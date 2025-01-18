@@ -44,3 +44,14 @@ type DBAnnouncement struct {
 	Message   string                `json:"message"`
 	Timestamp models.CustomDateTime `json:"timestamp"`
 }
+
+type DBCoreBareBone struct {
+	ID   models.RecordID `json:"id"`
+	Name string          `json:"name"`
+}
+
+type DBReverseTree struct {
+	ID   models.RecordID `json:"id"`
+	Name string          `json:"name"`
+	Core DBCoreBareBone  `json:"core"`
+}

@@ -55,3 +55,33 @@ func (db *DB) GetUserByID(id string) (*models.DBUser, error) {
 	return dbUser, nil
 
 }
+
+func (db *DB) GetUserReverseTree(id string) (*[]models.DBReverseTree, error) {
+	userRecordId := *surrealmodels.ParseRecordID(id)
+
+	query := `
+SELECT 
+  out.id AS id, 
+  out.name AS name,
+  (SELECT 
+    in.id AS id, 
+    in.name AS name
+      FROM contains WHERE 
+        out == out
+  )[0] as core
+    FROM member WHERE 
+      in = $userId AND 
+      record::tb(out.id) == "nexus"
+`
+
+	params := map[string]interface{}{"userId": userRecordId}
+
+	res, err := surrealdb.Query[[]models.DBReverseTree](db.client, query, params)
+	if err != nil {
+		return nil, fmt.Errorf("unable to fetch data: %v", err)
+	}
+
+	revTree := (*res)[0].Result
+
+	return &revTree, nil
+}

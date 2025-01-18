@@ -12,4 +12,5 @@ type Query {
   logout: Boolean!
 
   getUser: Profile!
+  getTree: [Tree]!
 }

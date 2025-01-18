@@ -15,12 +15,16 @@ func (r *announcementResolver) SentBy(ctx context.Context, obj *models.Announcem
 	return obj.SentBy, nil
 }
 
-func (r *coreResolver) Nexus(ctx context.Context, obj *models.Core) ([]*models.Nexus, error) {
-	return obj.Nexus, nil
+func (r *coreResolver) Members(ctx context.Context, obj *models.Core) ([]*models.ProfileWithRole, error) {
+	return obj.Members, nil
 }
 
 func (r *fileResolver) SentBy(ctx context.Context, obj *models.File) (*models.Profile, error) {
 	return obj.SentBy, nil
+}
+
+func (r *nexusResolver) Members(ctx context.Context, obj *models.Nexus) ([]*models.ProfileWithRole, error) {
+	return obj.Members, nil
 }
 
 func (r *nexusResolver) Files(ctx context.Context, obj *models.Nexus) ([]*models.File, error) {
@@ -31,6 +35,10 @@ func (r *nexusResolver) Announcements(ctx context.Context, obj *models.Nexus) ([
 	return obj.Announcements, nil
 }
 
+func (r *treeResolver) Nexus(ctx context.Context, obj *models.Tree) ([]*models.BareNexus, error) {
+	return obj.Nexus, nil
+}
+
 func (r *Resolver) Announcement() generated.AnnouncementResolver { return &announcementResolver{r} }
 
 func (r *Resolver) Core() generated.CoreResolver { return &coreResolver{r} }
@@ -39,7 +47,10 @@ func (r *Resolver) File() generated.FileResolver { return &fileResolver{r} }
 
 func (r *Resolver) Nexus() generated.NexusResolver { return &nexusResolver{r} }
 
+func (r *Resolver) Tree() generated.TreeResolver { return &treeResolver{r} }
+
 type announcementResolver struct{ *Resolver }
 type coreResolver struct{ *Resolver }
 type fileResolver struct{ *Resolver }
 type nexusResolver struct{ *Resolver }
+type treeResolver struct{ *Resolver }

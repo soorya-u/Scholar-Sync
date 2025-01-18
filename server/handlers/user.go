@@ -21,3 +21,39 @@ func GetUserHandler(db *database.DB, userId string) (*models.Profile, error) {
 	return user, nil
 
 }
+
+func GetUserTree(db *database.DB, userId string) ([]*models.Tree, error) {
+
+	revTree, err := db.GetUserReverseTree(userId)
+	if err != nil {
+		return nil, err
+	}
+
+	tree := []*models.Tree{{}}
+
+	for _, rt := range *revTree {
+		coreId := rt.Core.ID.String()
+		isFound := false
+		for _, t := range tree {
+			if t.ID == coreId {
+				t.Nexus = append(t.Nexus, &models.BareNexus{
+					ID:   rt.ID.String(),
+					Name: rt.Name,
+				})
+				isFound = true
+				break
+			}
+		}
+		if !isFound {
+			tree = append(tree, &models.Tree{
+				ID:   rt.ID.String(),
+				Name: rt.Name,
+				Nexus: []*models.BareNexus{
+					{ID: rt.ID.String(), Name: rt.Name},
+				},
+			})
+		}
+	}
+
+	return tree, nil
+}
