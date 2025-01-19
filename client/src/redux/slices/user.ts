@@ -5,6 +5,7 @@ import { TUser } from "@/types/api";
 const initialState: TUser = {
   id: "",
   fullName: "",
+  email: ""
 };
 
 export const userSlice = createSlice({
