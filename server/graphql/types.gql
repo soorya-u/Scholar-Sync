@@ -23,11 +23,13 @@ type ProfileWithRole {
 type BareNexus {
   id: ID!
   name: String!
+  category: String!
 }
 
 type Tree {
   id: ID!
   name: String!
+  imageUrl: String!
   nexus: [BareNexus]!
 }
 

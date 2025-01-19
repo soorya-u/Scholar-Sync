@@ -1,6 +1,7 @@
 "use client";
 
 import { useTree } from "@/hooks/use-tree";
+import { useTreeInit, useUserInit } from "@/hooks/use-init";
 
 import Header from "@/components/header";
 import Uploader from "@/components/modules/uploader";
@@ -12,7 +13,8 @@ import Loader from "@/components/loader";
 import Viewer from "@/components/modules/viewer";
 
 export default function DashboardPage() {
-  const loading = false;
+  const { loading } = useTreeInit();
+  useUserInit();
 
   const { tree } = useTree();
   const { core } = useCore();
@@ -28,6 +30,7 @@ export default function DashboardPage() {
           <>
             {tree.length === 0 ||
             tree.find((t) => t.id === core.id)?.nexus.length === 0 ? (
+              // TODO: Change to Better Message
               <NotFound message="You need to join a Core inorder to Use the App" />
             ) : (
               <div className="flex flex-1 flex-col">

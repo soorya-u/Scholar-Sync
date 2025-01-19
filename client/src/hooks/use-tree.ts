@@ -11,9 +11,10 @@ import { TUserTree } from "@/types/api";
 
 export const useTree = () => {
   const dispatch = useDispatch();
-
   const tree = useSelector((state: RootState) => state.trees);
+
   const setTree = (data: TUserTree[]) => dispatch(setTreeFn(data));
+
   const resetTree = () => dispatch(resetTreeFn());
 
   return { tree, setTree, resetTree };

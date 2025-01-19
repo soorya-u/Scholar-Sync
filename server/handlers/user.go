@@ -38,8 +38,9 @@ func GetUserTree(db *database.DB, userId string) ([]*models.Tree, error) {
 		for _, t := range tree {
 			if t.ID == coreId {
 				t.Nexus = append(t.Nexus, &models.BareNexus{
-					ID:   rt.ID.String(),
-					Name: rt.Name,
+					ID:       rt.ID.String(),
+					Name:     rt.Name,
+					Category: rt.Category,
 				})
 				isFound = true
 				break
@@ -47,10 +48,11 @@ func GetUserTree(db *database.DB, userId string) ([]*models.Tree, error) {
 		}
 		if !isFound {
 			tree = append(tree, &models.Tree{
-				ID:   rt.Core.ID.String(),
-				Name: rt.Core.Name,
+				ID:       rt.Core.ID.String(),
+				Name:     rt.Core.Name,
+				ImageURL: rt.Core.ImageURL,
 				Nexus: []*models.BareNexus{
-					{ID: rt.ID.String(), Name: rt.Name},
+					{ID: rt.ID.String(), Name: rt.Name, Category: rt.Category},
 				},
 			})
 		}

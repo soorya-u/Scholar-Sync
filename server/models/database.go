@@ -46,12 +46,14 @@ type DBAnnouncement struct {
 }
 
 type DBCoreBareBone struct {
-	ID   models.RecordID `json:"id"`
-	Name string          `json:"name"`
+	ID       models.RecordID `json:"id"`
+	Name     string          `json:"name"`
+	ImageURL string          `json:"imageUrl"`
 }
 
 type DBReverseTree struct {
-	ID   models.RecordID `json:"id"`
-	Name string          `json:"name"`
-	Core DBCoreBareBone  `json:"core"`
+	ID       models.RecordID `json:"id"`
+	Name     string          `json:"name"`
+	Core     DBCoreBareBone  `json:"core"`
+	Category string          `json:"category"`
 }

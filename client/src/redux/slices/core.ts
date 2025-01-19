@@ -8,8 +8,8 @@ const initialState: TCore = {
   imageUrl: "",
   members: [],
   userRole: UserRole.NORMAL,
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  // createdAt: new Date(),
+  // updatedAt: new Date(),
 };
 
 export const coreSlice = createSlice({

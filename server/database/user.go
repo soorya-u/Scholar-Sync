@@ -64,9 +64,11 @@ func (db *DB) GetUserReverseTree(id string) (*[]models.DBReverseTree, error) {
 SELECT 
   out.id AS id, 
   out.name AS name,
+	out.category AS category,
   (SELECT 
     in.id AS id, 
-    in.name AS name
+    in.name AS name,
+		in.imageUrl AS imageUrl
       FROM contains WHERE 
         out == out
   )[0] as core

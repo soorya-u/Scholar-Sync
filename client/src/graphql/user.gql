@@ -1,7 +1,21 @@
 query GetCurrentUser {
-  getUser
+  getUser {
+    id
+    fullName
+    email
+    createdAt
+  }
 }
 
 query GetTree {
-  getTree
+  getTree {
+    id
+    name
+    imageUrl
+    nexus {
+      id
+      name
+      category
+    }
+  }
 }

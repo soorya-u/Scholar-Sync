@@ -6,6 +6,7 @@ export enum UserRole {
 export type TUser = {
   id: string;
   fullName: string;
+  email: string;
 };
 
 type SharedType = {
@@ -13,8 +14,8 @@ type SharedType = {
   name: string;
   userRole: UserRole;
   members: (TUser & { role: UserRole })[];
-  createdAt: Date;
-  updatedAt: Date;
+  // createdAt: Date;
+  // updatedAt: Date;
 };
 
 export type TCore = {
@@ -27,12 +28,12 @@ export type TNexus = {
 
 type TBareCores = Omit<
   TCore,
-  "imageUrl" | "members" | "createdAt" | "updatedAt"
+  "members" | "createdAt" | "updatedAt" | "userRole"
 >;
 
 type TBareNexus = Omit<
   TNexus,
-  "category" | "members" | "createdAt" | "updatedAt"
+  "members" | "createdAt" | "updatedAt" | "userRole"
 >;
 
 export type TUserTree = TBareCores & { nexus: TBareNexus[] };

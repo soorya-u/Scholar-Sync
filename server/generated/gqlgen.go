@@ -61,8 +61,9 @@ type ComplexityRoot struct {
 	}
 
 	BareNexus struct {
-		ID   func(childComplexity int) int
-		Name func(childComplexity int) int
+		Category func(childComplexity int) int
+		ID       func(childComplexity int) int
+		Name     func(childComplexity int) int
 	}
 
 	Core struct {
@@ -134,9 +135,10 @@ type ComplexityRoot struct {
 	}
 
 	Tree struct {
-		ID    func(childComplexity int) int
-		Name  func(childComplexity int) int
-		Nexus func(childComplexity int) int
+		ID       func(childComplexity int) int
+		ImageURL func(childComplexity int) int
+		Name     func(childComplexity int) int
+		Nexus    func(childComplexity int) int
 	}
 }
 
@@ -232,6 +234,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Announcement.Title(childComplexity), true
+
+	case "BareNexus.category":
+		if e.complexity.BareNexus.Category == nil {
+			break
+		}
+
+		return e.complexity.BareNexus.Category(childComplexity), true
 
 	case "BareNexus.id":
 		if e.complexity.BareNexus.ID == nil {
@@ -653,6 +662,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Tree.ID(childComplexity), true
 
+	case "Tree.imageUrl":
+		if e.complexity.Tree.ImageURL == nil {
+			break
+		}
+
+		return e.complexity.Tree.ImageURL(childComplexity), true
+
 	case "Tree.name":
 		if e.complexity.Tree.Name == nil {
 			break
@@ -889,11 +905,13 @@ type ProfileWithRole {
 type BareNexus {
   id: ID!
   name: String!
+  category: String!
 }
 
 type Tree {
   id: ID!
   name: String!
+  imageUrl: String!
   nexus: [BareNexus]!
 }
 
@@ -1511,6 +1529,50 @@ func (ec *executionContext) _BareNexus_name(ctx context.Context, field graphql.C
 }
 
 func (ec *executionContext) fieldContext_BareNexus_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BareNexus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BareNexus_category(ctx context.Context, field graphql.CollectedField, obj *models.BareNexus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BareNexus_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BareNexus_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "BareNexus",
 		Field:      field,
@@ -3816,6 +3878,8 @@ func (ec *executionContext) fieldContext_Query_getTree(_ context.Context, field 
 				return ec.fieldContext_Tree_id(ctx, field)
 			case "name":
 				return ec.fieldContext_Tree_name(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_Tree_imageUrl(ctx, field)
 			case "nexus":
 				return ec.fieldContext_Tree_nexus(ctx, field)
 			}
@@ -4042,6 +4106,50 @@ func (ec *executionContext) fieldContext_Tree_name(_ context.Context, field grap
 	return fc, nil
 }
 
+func (ec *executionContext) _Tree_imageUrl(ctx context.Context, field graphql.CollectedField, obj *models.Tree) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tree_imageUrl(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ImageURL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tree_imageUrl(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tree",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Tree_nexus(ctx context.Context, field graphql.CollectedField, obj *models.Tree) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Tree_nexus(ctx, field)
 	if err != nil {
@@ -4085,6 +4193,8 @@ func (ec *executionContext) fieldContext_Tree_nexus(_ context.Context, field gra
 				return ec.fieldContext_BareNexus_id(ctx, field)
 			case "name":
 				return ec.fieldContext_BareNexus_name(ctx, field)
+			case "category":
+				return ec.fieldContext_BareNexus_category(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type BareNexus", field.Name)
 		},
@@ -6318,6 +6428,11 @@ func (ec *executionContext) _BareNexus(ctx context.Context, sel ast.SelectionSet
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
+		case "category":
+			out.Values[i] = ec._BareNexus_category(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7105,6 +7220,11 @@ func (ec *executionContext) _Tree(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "name":
 			out.Values[i] = ec._Tree_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "imageUrl":
+			out.Values[i] = ec._Tree_imageUrl(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

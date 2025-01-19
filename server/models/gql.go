@@ -26,8 +26,9 @@ type AnnouncementData struct {
 }
 
 type BareNexus struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Category string `json:"category"`
 }
 
 type Core struct {
@@ -125,9 +126,10 @@ type SignUpData struct {
 }
 
 type Tree struct {
-	ID    string       `json:"id"`
-	Name  string       `json:"name"`
-	Nexus []*BareNexus `json:"nexus"`
+	ID       string       `json:"id"`
+	Name     string       `json:"name"`
+	ImageURL string       `json:"imageUrl"`
+	Nexus    []*BareNexus `json:"nexus"`
 }
 
 type ProfileType string

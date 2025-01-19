@@ -6,8 +6,8 @@ const initialState: TNexus = {
   id: "",
   name: "",
   category: "",
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  // createdAt: new Date(),
+  // updatedAt: new Date(),
   members: [],
   userRole: UserRole.NORMAL,
 };
