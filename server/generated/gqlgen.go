@@ -45,6 +45,7 @@ type ResolverRoot interface {
 	Mutation() MutationResolver
 	Nexus() NexusResolver
 	Query() QueryResolver
+	Tree() TreeResolver
 }
 
 type DirectiveRoot struct {
@@ -59,13 +60,18 @@ type ComplexityRoot struct {
 		Title     func(childComplexity int) int
 	}
 
+	BareNexus struct {
+		Category func(childComplexity int) int
+		ID       func(childComplexity int) int
+		Name     func(childComplexity int) int
+	}
+
 	Core struct {
 		CreatedAt func(childComplexity int) int
 		ID        func(childComplexity int) int
 		ImageURL  func(childComplexity int) int
 		Members   func(childComplexity int) int
 		Name      func(childComplexity int) int
-		Nexus     func(childComplexity int) int
 		UpdatedAt func(childComplexity int) int
 	}
 
@@ -122,9 +128,17 @@ type ComplexityRoot struct {
 	}
 
 	Query struct {
+		GetTree func(childComplexity int) int
 		GetUser func(childComplexity int) int
 		Login   func(childComplexity int, input models.LoginData) int
 		Logout  func(childComplexity int) int
+	}
+
+	Tree struct {
+		ID       func(childComplexity int) int
+		ImageURL func(childComplexity int) int
+		Name     func(childComplexity int) int
+		Nexus    func(childComplexity int) int
 	}
 }
 
@@ -132,7 +146,7 @@ type AnnouncementResolver interface {
 	SentBy(ctx context.Context, obj *models.Announcement) (*models.Profile, error)
 }
 type CoreResolver interface {
-	Nexus(ctx context.Context, obj *models.Core) ([]*models.Nexus, error)
+	Members(ctx context.Context, obj *models.Core) ([]*models.ProfileWithRole, error)
 }
 type FileResolver interface {
 	SentBy(ctx context.Context, obj *models.File) (*models.Profile, error)
@@ -153,6 +167,7 @@ type MutationResolver interface {
 	CreateFile(ctx context.Context, input models.FileData) (string, error)
 }
 type NexusResolver interface {
+	Members(ctx context.Context, obj *models.Nexus) ([]*models.ProfileWithRole, error)
 	Files(ctx context.Context, obj *models.Nexus) ([]*models.File, error)
 	Announcements(ctx context.Context, obj *models.Nexus) ([]*models.Announcement, error)
 }
@@ -160,6 +175,10 @@ type QueryResolver interface {
 	Login(ctx context.Context, input models.LoginData) (string, error)
 	Logout(ctx context.Context) (bool, error)
 	GetUser(ctx context.Context) (*models.Profile, error)
+	GetTree(ctx context.Context) ([]*models.Tree, error)
+}
+type TreeResolver interface {
+	Nexus(ctx context.Context, obj *models.Tree) ([]*models.BareNexus, error)
 }
 
 type executableSchema struct {
@@ -216,6 +235,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Announcement.Title(childComplexity), true
 
+	case "BareNexus.category":
+		if e.complexity.BareNexus.Category == nil {
+			break
+		}
+
+		return e.complexity.BareNexus.Category(childComplexity), true
+
+	case "BareNexus.id":
+		if e.complexity.BareNexus.ID == nil {
+			break
+		}
+
+		return e.complexity.BareNexus.ID(childComplexity), true
+
+	case "BareNexus.name":
+		if e.complexity.BareNexus.Name == nil {
+			break
+		}
+
+		return e.complexity.BareNexus.Name(childComplexity), true
+
 	case "Core.createdAt":
 		if e.complexity.Core.CreatedAt == nil {
 			break
@@ -250,13 +290,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Core.Name(childComplexity), true
-
-	case "Core.nexus":
-		if e.complexity.Core.Nexus == nil {
-			break
-		}
-
-		return e.complexity.Core.Nexus(childComplexity), true
 
 	case "Core.updatedAt":
 		if e.complexity.Core.UpdatedAt == nil {
@@ -589,6 +622,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ProfileWithRole.Role(childComplexity), true
 
+	case "Query.getTree":
+		if e.complexity.Query.GetTree == nil {
+			break
+		}
+
+		return e.complexity.Query.GetTree(childComplexity), true
+
 	case "Query.getUser":
 		if e.complexity.Query.GetUser == nil {
 			break
@@ -614,6 +654,34 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.Logout(childComplexity), true
+
+	case "Tree.id":
+		if e.complexity.Tree.ID == nil {
+			break
+		}
+
+		return e.complexity.Tree.ID(childComplexity), true
+
+	case "Tree.imageUrl":
+		if e.complexity.Tree.ImageURL == nil {
+			break
+		}
+
+		return e.complexity.Tree.ImageURL(childComplexity), true
+
+	case "Tree.name":
+		if e.complexity.Tree.Name == nil {
+			break
+		}
+
+		return e.complexity.Tree.Name(childComplexity), true
+
+	case "Tree.nexus":
+		if e.complexity.Tree.Nexus == nil {
+			break
+		}
+
+		return e.complexity.Tree.Nexus(childComplexity), true
 
 	}
 	return 0, false
@@ -809,6 +877,7 @@ type Query {
   logout: Boolean!
 
   getUser: Profile!
+  getTree: [Tree]!
 }
 `, BuiltIn: false},
 	{Name: "../graphql/types.gql", Input: `scalar Time
@@ -833,12 +902,24 @@ type ProfileWithRole {
   role: ProfileType!
 }
 
+type BareNexus {
+  id: ID!
+  name: String!
+  category: String!
+}
+
+type Tree {
+  id: ID!
+  name: String!
+  imageUrl: String!
+  nexus: [BareNexus]!
+}
+
 type Core {
   id: ID!
   name: String!
   imageUrl: String!
   members: [ProfileWithRole]!
-  nexus: [Nexus]!
   createdAt: Time!
   updatedAt: Time!
 }
@@ -1372,6 +1453,138 @@ func (ec *executionContext) fieldContext_Announcement_timestamp(_ context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _BareNexus_id(ctx context.Context, field graphql.CollectedField, obj *models.BareNexus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BareNexus_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BareNexus_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BareNexus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BareNexus_name(ctx context.Context, field graphql.CollectedField, obj *models.BareNexus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BareNexus_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BareNexus_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BareNexus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _BareNexus_category(ctx context.Context, field graphql.CollectedField, obj *models.BareNexus) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_BareNexus_category(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Category, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_BareNexus_category(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "BareNexus",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Core_id(ctx context.Context, field graphql.CollectedField, obj *models.Core) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Core_id(ctx, field)
 	if err != nil {
@@ -1518,7 +1731,7 @@ func (ec *executionContext) _Core_members(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Members, nil
+		return ec.resolvers.Core().Members(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -1539,8 +1752,8 @@ func (ec *executionContext) fieldContext_Core_members(_ context.Context, field g
 	fc = &graphql.FieldContext{
 		Object:     "Core",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -1555,68 +1768,6 @@ func (ec *executionContext) fieldContext_Core_members(_ context.Context, field g
 				return ec.fieldContext_ProfileWithRole_role(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type ProfileWithRole", field.Name)
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Core_nexus(ctx context.Context, field graphql.CollectedField, obj *models.Core) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Core_nexus(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Core().Nexus(rctx, obj)
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.([]*models.Nexus)
-	fc.Result = res
-	return ec.marshalNNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Core_nexus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Core",
-		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			switch field.Name {
-			case "id":
-				return ec.fieldContext_Nexus_id(ctx, field)
-			case "name":
-				return ec.fieldContext_Nexus_name(ctx, field)
-			case "category":
-				return ec.fieldContext_Nexus_category(ctx, field)
-			case "members":
-				return ec.fieldContext_Nexus_members(ctx, field)
-			case "files":
-				return ec.fieldContext_Nexus_files(ctx, field)
-			case "announcements":
-				return ec.fieldContext_Nexus_announcements(ctx, field)
-			case "createdAt":
-				return ec.fieldContext_Nexus_createdAt(ctx, field)
-			case "updatedAt":
-				return ec.fieldContext_Nexus_updatedAt(ctx, field)
-			}
-			return nil, fmt.Errorf("no field named %q was found under type Nexus", field.Name)
 		},
 	}
 	return fc, nil
@@ -2889,7 +3040,7 @@ func (ec *executionContext) _Nexus_members(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Members, nil
+		return ec.resolvers.Nexus().Members(rctx, obj)
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -2910,8 +3061,8 @@ func (ec *executionContext) fieldContext_Nexus_members(_ context.Context, field 
 	fc = &graphql.FieldContext{
 		Object:     "Nexus",
 		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
+		IsMethod:   true,
+		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "id":
@@ -3684,6 +3835,60 @@ func (ec *executionContext) fieldContext_Query_getUser(_ context.Context, field 
 	return fc, nil
 }
 
+func (ec *executionContext) _Query_getTree(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_getTree(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().GetTree(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.Tree)
+	fc.Result = res
+	return ec.marshalNTree2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐTree(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_getTree(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Tree_id(ctx, field)
+			case "name":
+				return ec.fieldContext_Tree_name(ctx, field)
+			case "imageUrl":
+				return ec.fieldContext_Tree_imageUrl(ctx, field)
+			case "nexus":
+				return ec.fieldContext_Tree_nexus(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Tree", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Query___type(ctx, field)
 	if err != nil {
@@ -3808,6 +4013,190 @@ func (ec *executionContext) fieldContext_Query___schema(_ context.Context, field
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Tree_id(ctx context.Context, field graphql.CollectedField, obj *models.Tree) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tree_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNID2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tree_id(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tree",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type ID does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Tree_name(ctx context.Context, field graphql.CollectedField, obj *models.Tree) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tree_name(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Name, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tree_name(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tree",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Tree_imageUrl(ctx context.Context, field graphql.CollectedField, obj *models.Tree) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tree_imageUrl(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ImageURL, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tree_imageUrl(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tree",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Tree_nexus(ctx context.Context, field graphql.CollectedField, obj *models.Tree) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tree_nexus(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Tree().Nexus(rctx, obj)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.([]*models.BareNexus)
+	fc.Result = res
+	return ec.marshalNBareNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐBareNexus(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Tree_nexus(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Tree",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_BareNexus_id(ctx, field)
+			case "name":
+				return ec.fieldContext_BareNexus_name(ctx, field)
+			case "category":
+				return ec.fieldContext_BareNexus_category(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type BareNexus", field.Name)
 		},
 	}
 	return fc, nil
@@ -6018,6 +6407,55 @@ func (ec *executionContext) _Announcement(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var bareNexusImplementors = []string{"BareNexus"}
+
+func (ec *executionContext) _BareNexus(ctx context.Context, sel ast.SelectionSet, obj *models.BareNexus) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, bareNexusImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("BareNexus")
+		case "id":
+			out.Values[i] = ec._BareNexus_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "name":
+			out.Values[i] = ec._BareNexus_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "category":
+			out.Values[i] = ec._BareNexus_category(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var coreImplementors = []string{"Core"}
 
 func (ec *executionContext) _Core(ctx context.Context, sel ast.SelectionSet, obj *models.Core) graphql.Marshaler {
@@ -6045,11 +6483,6 @@ func (ec *executionContext) _Core(ctx context.Context, sel ast.SelectionSet, obj
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "members":
-			out.Values[i] = ec._Core_members(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
-			}
-		case "nexus":
 			field := field
 
 			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
@@ -6058,7 +6491,7 @@ func (ec *executionContext) _Core(ctx context.Context, sel ast.SelectionSet, obj
 						ec.Error(ctx, ec.Recover(ctx, r))
 					}
 				}()
-				res = ec._Core_nexus(ctx, field, obj)
+				res = ec._Core_members(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&fs.Invalids, 1)
 				}
@@ -6378,10 +6811,41 @@ func (ec *executionContext) _Nexus(ctx context.Context, sel ast.SelectionSet, ob
 				atomic.AddUint32(&out.Invalids, 1)
 			}
 		case "members":
-			out.Values[i] = ec._Nexus_members(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&out.Invalids, 1)
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Nexus_members(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
 			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		case "files":
 			field := field
 
@@ -6685,6 +7149,28 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "getTree":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_getTree(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "__type":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___type(ctx, field)
@@ -6693,6 +7179,91 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var treeImplementors = []string{"Tree"}
+
+func (ec *executionContext) _Tree(ctx context.Context, sel ast.SelectionSet, obj *models.Tree) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, treeImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Tree")
+		case "id":
+			out.Values[i] = ec._Tree_id(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "name":
+			out.Values[i] = ec._Tree_name(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "imageUrl":
+			out.Values[i] = ec._Tree_imageUrl(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "nexus":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Tree_nexus(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			if field.Deferrable != nil {
+				dfs, ok := deferred[field.Deferrable.Label]
+				di := 0
+				if ok {
+					dfs.AddField(field)
+					di = len(dfs.Values) - 1
+				} else {
+					dfs = graphql.NewFieldSet([]graphql.CollectedField{field})
+					deferred[field.Deferrable.Label] = dfs
+				}
+				dfs.Concurrently(di, func(ctx context.Context) graphql.Marshaler {
+					return innerFunc(ctx, dfs)
+				})
+
+				// don't run the out.Concurrently() call below
+				out.Values[i] = graphql.Null
+				continue
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -7085,6 +7656,44 @@ func (ec *executionContext) unmarshalNAnnouncementData2githubᚗcomᚋsooryaᚑu
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
+func (ec *executionContext) marshalNBareNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐBareNexus(ctx context.Context, sel ast.SelectionSet, v []*models.BareNexus) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOBareNexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐBareNexus(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
 func (ec *executionContext) unmarshalNBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -7171,44 +7780,6 @@ func (ec *executionContext) marshalNID2string(ctx context.Context, sel ast.Selec
 func (ec *executionContext) unmarshalNLoginData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐLoginData(ctx context.Context, v interface{}) (models.LoginData, error) {
 	res, err := ec.unmarshalInputLoginData(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNNexus2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v []*models.Nexus) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalONexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	return ret
 }
 
 func (ec *executionContext) unmarshalNNexusData2githubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexusData(ctx context.Context, v interface{}) (models.NexusData, error) {
@@ -7316,6 +7887,44 @@ func (ec *executionContext) marshalNTime2timeᚐTime(ctx context.Context, sel as
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) marshalNTree2ᚕᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐTree(ctx context.Context, sel ast.SelectionSet, v []*models.Tree) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOTree2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐTree(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalNUpload2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚐUpload(ctx context.Context, v interface{}) (graphql.Upload, error) {
@@ -7593,6 +8202,13 @@ func (ec *executionContext) marshalOAnnouncement2ᚖgithubᚗcomᚋsooryaᚑuᚋ
 	return ec._Announcement(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalOBareNexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐBareNexus(ctx context.Context, sel ast.SelectionSet, v *models.BareNexus) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._BareNexus(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalOBoolean2bool(ctx context.Context, v interface{}) (bool, error) {
 	res, err := graphql.UnmarshalBoolean(v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -7626,13 +8242,6 @@ func (ec *executionContext) marshalOFile2ᚖgithubᚗcomᚋsooryaᚑuᚋscholar�
 	return ec._File(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalONexus2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐNexus(ctx context.Context, sel ast.SelectionSet, v *models.Nexus) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._Nexus(ctx, sel, v)
-}
-
 func (ec *executionContext) marshalOProfileWithRole2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐProfileWithRole(ctx context.Context, sel ast.SelectionSet, v *models.ProfileWithRole) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -7654,6 +8263,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOTree2ᚖgithubᚗcomᚋsooryaᚑuᚋscholarᚑsyncᚋmodelsᚐTree(ctx context.Context, sel ast.SelectionSet, v *models.Tree) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Tree(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

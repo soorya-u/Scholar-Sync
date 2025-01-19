@@ -1,13 +1,7 @@
-import {
-  BadgeCheck,
-  Bell,
-  ChevronsUpDown,
-  CreditCard,
-  LogOut,
-  Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, DoorOpen, LogOut } from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useUser } from "@/hooks/use-user";
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,17 +17,15 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar";
+import UserAvatar from "@/components/user-avatar";
 
-type UserProp = {
-  user: {
-    name: string;
-    email: string;
-    avatar: string;
-  };
-};
-
-export default function NavUser({ user }: UserProp) {
+export default function NavUser() {
   const { isMobile } = useSidebar();
+
+  const { user } = useUser();
+
+  console.log({ user });
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -43,12 +35,13 @@ export default function NavUser({ user }: UserProp) {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={user.avatar} alt={user.name} />
-                <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-              </Avatar>
+              <UserAvatar
+                className="size-9 rounded-lg"
+                id={user.id}
+                name={user.fullName}
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="truncate font-semibold">{user.name}</span>
+                <span className="truncate font-semibold">{user.fullName}</span>
                 <span className="truncate text-xs">{user.email}</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
@@ -62,36 +55,24 @@ export default function NavUser({ user }: UserProp) {
           >
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={user.avatar} alt={user.name} />
-                  <AvatarFallback className="rounded-lg">CN</AvatarFallback>
-                </Avatar>
+                <UserAvatar
+                  className="size-8 rounded-lg"
+                  id={user.id}
+                  name={user.fullName}
+                />
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">{user.name}</span>
+                  <span className="truncate font-semibold">
+                    {user.fullName}
+                  </span>
                   <span className="truncate text-xs">{user.email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <Sparkles className="mr-2 size-4" />
-                Upgrade to Pro
-              </DropdownMenuItem>
-            </DropdownMenuGroup>
-            <DropdownMenuSeparator />
-            <DropdownMenuGroup>
-              <DropdownMenuItem>
-                <BadgeCheck className="mr-2 size-4" />
-                Account
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <CreditCard className="mr-2 size-4" />
-                Billing
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Bell className="mr-2 size-4" />
-                Notifications
+              <DropdownMenuItem className="text-red-500">
+                <DoorOpen className="mr-2 size-4" />
+                Leave Core
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />

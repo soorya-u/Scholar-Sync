@@ -6,103 +6,63 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-import {
-  AudioWaveform,
-  BookOpen,
-  Bot,
-  Command,
-  Frame,
-  GalleryVerticalEnd,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { Frame, Map, PieChart } from "lucide-react";
 
-import TeamSwitcher from "./cores";
-import NavMain from './nexus'
+import CoreSwitcher from "./cores";
+import CategoriesList from "./nexus";
 import NavProjects from "./members";
 import NavUser from "./user";
+import { useTree } from "@/hooks/use-tree";
+import { useMemo } from "react";
+import { useCore } from "@/hooks/use-core";
+
+const categoryNames = [
+  "First",
+  "Second",
+  "Third",
+  "Fourth",
+  "Fifth",
+  "Sixth",
+  "Seventh",
+  "Eighth",
+];
 
 export default function Sidebar() {
+  const { tree } = useTree();
+  const { core } = useCore();
+
+  const cores = useMemo(() => tree.map(({ nexus, ...rest }) => rest), [tree]);
+
+  const categories = useMemo(() => {
+    const activeCore = tree.find((t) => t.id === core.id);
+    return categoryNames.map((c) => {
+      const categoryNexus = !!activeCore
+        ? activeCore.nexus.filter((n) => n.category === c)
+        : [];
+      return { name: c, nexus: categoryNexus };
+    });
+  }, [tree, core]);
+
   return (
     <UISidebar collapsible="offcanvas">
       <SidebarHeader>
-        <TeamSwitcher teams={teams} />
+        <CoreSwitcher cores={cores} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={navMain} />
+        <CategoriesList categories={categories} />
         <NavProjects projects={projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={user} />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </UISidebar>
   );
 }
 
-const user = {
-  name: "shadcn",
-  email: "m@example.com",
-  avatar: "/avatars/shadcn.jpg",
-};
-
-const teams = [
-  { name: "Acme Inc", logo: GalleryVerticalEnd, plan: "Enterprise" },
-  { name: "Acme Corp.", logo: AudioWaveform, plan: "Startup" },
-  { name: "Evil Corp.", logo: Command, plan: "Free" },
-];
-
-const navMain = [
-  {
-    title: "Playground",
-    url: "#",
-    icon: SquareTerminal,
-    isActive: true,
-    items: [
-      { title: "History", url: "#" },
-      { title: "Starred", url: "#" },
-      { title: "Settings", url: "#" },
-    ],
-  },
-  {
-    title: "Models",
-    url: "#",
-    icon: Bot,
-    items: [
-      { title: "Genesis", url: "#" },
-      { title: "Explorer", url: "#" },
-      { title: "Quantum", url: "#" },
-    ],
-  },
-  {
-    title: "Documentation",
-    url: "#",
-    icon: BookOpen,
-    items: [
-      { title: "Introduction", url: "#" },
-      { title: "Get Started", url: "#" },
-      { title: "Tutorials", url: "#" },
-      { title: "Changelog", url: "#" },
-    ],
-  },
-  {
-    title: "Settings",
-    url: "#",
-    icon: Settings2,
-    items: [
-      { title: "General", url: "#" },
-      { title: "Team", url: "#" },
-      { title: "Billing", url: "#" },
-      { title: "Limits", url: "#" },
-    ],
-  },
-];
-
 const projects = [
   {
-    name: "Design Engineering",
+    name: "Design Engineering", 
     url: "#",
     icon: Frame,
   },

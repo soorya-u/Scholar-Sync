@@ -14,50 +14,43 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  
 } from "@/components/ui/sidebar";
 
-type NexusProps = {
-  items: {
-    title: string;
-    url: string;
-    icon?: LucideIcon;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
+
+type CategoryProps = {
+  categories: {
+    name: string;
+    nexus: { id: string; name: string }[];
   }[];
 };
 
-export default function NavMain({ items }: NexusProps) {
+export default function CategoriesList({ categories }: CategoryProps) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>Categories</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {categories.map((category) => (
           <Collapsible
-            key={item.title}
+            key={category.name}
             asChild
-            defaultOpen={item.isActive}
+            defaultOpen={false}
             className="group/collapsible"
           >
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
-                <SidebarMenuButton tooltip={item.title}>
-                  {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                <SidebarMenuButton tooltip={category.name}>
+                  <span>{category.name} Semester</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <SidebarMenuSub>
-                  {item.items?.map((subItem) => (
-                    <SidebarMenuSubItem key={subItem.title}>
-                      <SidebarMenuSubButton asChild>
-                        <a href={subItem.url}>
-                          <span>{subItem.title}</span>
-                        </a>
+                  {category.nexus.map((n) => (
+                    <SidebarMenuSubItem key={n.id}>
+                      <SidebarMenuSubButton
+                        onClick={() => console.log("set active nexus")}
+                      >
+                        <span>{n.name}</span>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

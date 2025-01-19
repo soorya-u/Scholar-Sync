@@ -3,7 +3,7 @@
 import { MessageSquare } from "lucide-react";
 
 import { dateTimeFormatter } from "@/utils/date-formatter";
-import UserAvatar from "@/components/avatar";
+import UserAvatar from "@/components/user-avatar";
 
 type AnnouncementViewerProps = {
   creatorId: string;

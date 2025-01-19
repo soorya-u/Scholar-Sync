@@ -55,3 +55,36 @@ func (db *DB) GetUserByID(id string) (*models.DBUser, error) {
 	return dbUser, nil
 
 }
+
+// TODO: Try Converting Reverse Tree to Tree Using Query
+func (db *DB) GetUserReverseTree(id string) (*[]models.DBReverseTree, error) {
+	userRecordId := *surrealmodels.ParseRecordID(id)
+
+	query := `
+SELECT 
+  out.id AS id, 
+  out.name AS name,
+	out.category AS category,
+  (SELECT 
+    in.id AS id, 
+    in.name AS name,
+		in.imageUrl AS imageUrl
+      FROM contains WHERE 
+        out == out
+  )[0] as core
+    FROM member WHERE 
+      in = $userId AND 
+      record::tb(out.id) == "nexus"
+`
+
+	params := map[string]interface{}{"userId": userRecordId}
+
+	res, err := surrealdb.Query[[]models.DBReverseTree](db.client, query, params)
+	if err != nil {
+		return nil, fmt.Errorf("unable to fetch data: %v", err)
+	}
+
+	revTree := (*res)[0].Result
+
+	return &revTree, nil
+}

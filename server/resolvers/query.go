@@ -49,6 +49,15 @@ func (r *queryResolver) GetUser(ctx context.Context) (*models.Profile, error) {
 	return handlers.GetUserHandler(r.Db, userId)
 }
 
+func (r *queryResolver) GetTree(ctx context.Context) ([]*models.Tree, error) {
+	userId, err := helpers.GetUserIdFromCookie(&ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return handlers.GetUserTree(r.Db, userId)
+}
+
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type queryResolver struct{ *Resolver }

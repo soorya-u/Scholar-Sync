@@ -34,6 +34,13 @@ export type AnnouncementData = {
   title: Scalars['String']['input'];
 };
 
+export type BareNexus = {
+  __typename?: 'BareNexus';
+  category: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  name: Scalars['String']['output'];
+};
+
 export type Core = {
   __typename?: 'Core';
   createdAt: Scalars['Time']['output'];
@@ -41,7 +48,6 @@ export type Core = {
   imageUrl: Scalars['String']['output'];
   members: Array<Maybe<ProfileWithRole>>;
   name: Scalars['String']['output'];
-  nexus: Array<Maybe<Nexus>>;
   updatedAt: Scalars['Time']['output'];
 };
 
@@ -211,6 +217,7 @@ export type ProfileWithRole = {
 
 export type Query = {
   __typename?: 'Query';
+  getTree: Array<Maybe<Tree>>;
   getUser: Profile;
   login: Scalars['String']['output'];
   logout: Scalars['Boolean']['output'];
@@ -225,6 +232,14 @@ export type SignUpData = {
   email: Scalars['String']['input'];
   fullName: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+export type Tree = {
+  __typename?: 'Tree';
+  id: Scalars['ID']['output'];
+  imageUrl: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  nexus: Array<Maybe<BareNexus>>;
 };
 
 export type CreateAnnouncementMutationVariables = Exact<{
@@ -344,6 +359,16 @@ export type LeaveNexusMutationVariables = Exact<{
 
 
 export type LeaveNexusMutation = { __typename?: 'Mutation', leaveNexus: boolean };
+
+export type GetCurrentUserQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetCurrentUserQuery = { __typename?: 'Query', getUser: { __typename?: 'Profile', id: string, fullName: string, email: string, createdAt: any } };
+
+export type GetTreeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTreeQuery = { __typename?: 'Query', getTree: Array<{ __typename?: 'Tree', id: string, name: string, imageUrl: string, nexus: Array<{ __typename?: 'BareNexus', id: string, name: string, category: string } | null> } | null> };
 
 
 export const CreateAnnouncementDocument = gql`
@@ -843,3 +868,91 @@ export function useLeaveNexusMutation(baseOptions?: Apollo.MutationHookOptions<L
 export type LeaveNexusMutationHookResult = ReturnType<typeof useLeaveNexusMutation>;
 export type LeaveNexusMutationResult = Apollo.MutationResult<LeaveNexusMutation>;
 export type LeaveNexusMutationOptions = Apollo.BaseMutationOptions<LeaveNexusMutation, LeaveNexusMutationVariables>;
+export const GetCurrentUserDocument = gql`
+    query GetCurrentUser {
+  getUser {
+    id
+    fullName
+    email
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useGetCurrentUserQuery__
+ *
+ * To run a query within a React component, call `useGetCurrentUserQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCurrentUserQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCurrentUserQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetCurrentUserQuery(baseOptions?: Apollo.QueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+      }
+export function useGetCurrentUserLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+        }
+export function useGetCurrentUserSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCurrentUserQuery, GetCurrentUserQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCurrentUserQuery, GetCurrentUserQueryVariables>(GetCurrentUserDocument, options);
+        }
+export type GetCurrentUserQueryHookResult = ReturnType<typeof useGetCurrentUserQuery>;
+export type GetCurrentUserLazyQueryHookResult = ReturnType<typeof useGetCurrentUserLazyQuery>;
+export type GetCurrentUserSuspenseQueryHookResult = ReturnType<typeof useGetCurrentUserSuspenseQuery>;
+export type GetCurrentUserQueryResult = Apollo.QueryResult<GetCurrentUserQuery, GetCurrentUserQueryVariables>;
+export const GetTreeDocument = gql`
+    query GetTree {
+  getTree {
+    id
+    name
+    imageUrl
+    nexus {
+      id
+      name
+      category
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTreeQuery__
+ *
+ * To run a query within a React component, call `useGetTreeQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTreeQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTreeQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTreeQuery(baseOptions?: Apollo.QueryHookOptions<GetTreeQuery, GetTreeQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTreeQuery, GetTreeQueryVariables>(GetTreeDocument, options);
+      }
+export function useGetTreeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTreeQuery, GetTreeQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTreeQuery, GetTreeQueryVariables>(GetTreeDocument, options);
+        }
+export function useGetTreeSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetTreeQuery, GetTreeQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTreeQuery, GetTreeQueryVariables>(GetTreeDocument, options);
+        }
+export type GetTreeQueryHookResult = ReturnType<typeof useGetTreeQuery>;
+export type GetTreeLazyQueryHookResult = ReturnType<typeof useGetTreeLazyQuery>;
+export type GetTreeSuspenseQueryHookResult = ReturnType<typeof useGetTreeSuspenseQuery>;
+export type GetTreeQueryResult = Apollo.QueryResult<GetTreeQuery, GetTreeQueryVariables>;
