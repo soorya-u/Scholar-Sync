@@ -14,8 +14,8 @@ type SharedType = {
   name: string;
   userRole: UserRole;
   members: (TUser & { role: UserRole })[];
-  // createdAt: Date;
-  // updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
 };
 
 export type TCore = {
