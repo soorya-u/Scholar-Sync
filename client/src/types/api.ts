@@ -1,7 +1,4 @@
-export enum UserRole {
-  NORMAL,
-  ADMIN,
-}
+import { ProfileType } from "@/generated/graphql";
 
 export type TUser = {
   id: string;
@@ -12,8 +9,8 @@ export type TUser = {
 type SharedType = {
   id: string;
   name: string;
-  userRole: UserRole;
-  members: (TUser & { role: UserRole })[];
+  userRole: ProfileType;
+  members: (TUser & { role: ProfileType })[];
   createdAt: string;
   updatedAt: string;
 };

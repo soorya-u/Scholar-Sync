@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { TNexus, UserRole } from "@/types/api";
+import { TNexus } from "@/types/api";
+import { ProfileType } from "@/generated/graphql";
 
 const initialState: TNexus = {
   id: "",
@@ -9,7 +10,7 @@ const initialState: TNexus = {
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
   members: [],
-  userRole: UserRole.NORMAL,
+  userRole: ProfileType.Normal,
 };
 
 export const nexusSlice = createSlice({

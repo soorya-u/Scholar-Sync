@@ -4,7 +4,7 @@ import (
 	"github.com/surrealdb/surrealdb.go/pkg/models"
 )
 
-type DBUser struct {
+type DbUser struct {
 	ID            models.RecordID       `json:"id"`
 	FullName      string                `json:"fullName"`
 	Email         string                `json:"email"`
@@ -13,7 +13,7 @@ type DBUser struct {
 	CreatedAt     models.CustomDateTime `json:"createdAt"`
 }
 
-type DBCore struct {
+type DbCore struct {
 	ID        models.RecordID       `json:"id"`
 	Name      string                `json:"name"`
 	ImageURL  string                `json:"imageUrl"`
@@ -21,7 +21,7 @@ type DBCore struct {
 	UpdatedAt models.CustomDateTime `json:"updatedAt"`
 }
 
-type DBNexus struct {
+type DbNexus struct {
 	ID        models.RecordID       `json:"id"`
 	Name      string                `json:"name"`
 	Category  string                `json:"category"`
@@ -29,7 +29,7 @@ type DBNexus struct {
 	UpdatedAt models.CustomDateTime `json:"updatedAt"`
 }
 
-type DBFile struct {
+type DbFile struct {
 	ID          models.RecordID       `json:"id"`
 	Title       string                `json:"title"`
 	Description string                `json:"description"`
@@ -38,22 +38,35 @@ type DBFile struct {
 	Timestamp   models.CustomDateTime `json:"timestamp"`
 }
 
-type DBAnnouncement struct {
+type DbAnnouncement struct {
 	ID        models.RecordID       `json:"id"`
 	Title     string                `json:"title"`
 	Message   string                `json:"message"`
 	Timestamp models.CustomDateTime `json:"timestamp"`
 }
 
-type DBCoreBareBone struct {
+type dbCoreBareBone struct {
 	ID       models.RecordID `json:"id"`
 	Name     string          `json:"name"`
 	ImageURL string          `json:"imageUrl"`
 }
 
-type DBReverseTree struct {
+type DbReverseTree struct {
 	ID       models.RecordID `json:"id"`
 	Name     string          `json:"name"`
-	Core     DBCoreBareBone  `json:"core"`
+	Core     dbCoreBareBone  `json:"core"`
 	Category string          `json:"category"`
+}
+
+type dbProfile struct {
+	ID        models.RecordID       `json:"id"`
+	FullName  string                `json:"fullName"`
+	Email     string                `json:"email"`
+	CreatedAt models.CustomDateTime `json:"createdAt"`
+	Role      string                `json:"role"`
+}
+
+type DbCoreWithMembers struct {
+	DbCore
+	Members []dbProfile `json:"members"`
 }

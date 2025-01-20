@@ -13,4 +13,7 @@ type Query {
 
   getUser: Profile!
   getTree: [Tree]!
+
+  getCore(coreId: String!): Core!
+  getNexus(nexusId: String!): Nexus!
 }

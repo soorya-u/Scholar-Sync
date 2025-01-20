@@ -2,6 +2,24 @@ mutation CreateCore($name: String!, $imageUrl: String!) {
   createCore(input: { name: $name, imageUrl: $imageUrl })
 }
 
+query GetCore($coreId: String!) {
+  getCore(coreId: $coreId) {
+    id
+    name
+    imageUrl
+    createdAt
+    updatedAt
+    userRole
+    members {
+      id
+      fullName
+      email
+      createdAt
+      role
+    }
+  }
+}
+
 mutation DeleteCore($coreId: String!) {
   deleteCore(coreId: $coreId)
 }

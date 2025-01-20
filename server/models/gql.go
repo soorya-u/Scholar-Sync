@@ -36,6 +36,7 @@ type Core struct {
 	Name      string             `json:"name"`
 	ImageURL  string             `json:"imageUrl"`
 	Members   []*ProfileWithRole `json:"members"`
+	UserRole  ProfileType        `json:"userRole"`
 	CreatedAt time.Time          `json:"createdAt"`
 	UpdatedAt time.Time          `json:"updatedAt"`
 }
@@ -83,6 +84,7 @@ type Nexus struct {
 	ID            string             `json:"id"`
 	Name          string             `json:"name"`
 	Category      string             `json:"category"`
+	UserRole      ProfileType        `json:"userRole"`
 	Members       []*ProfileWithRole `json:"members"`
 	Files         []*File            `json:"files"`
 	Announcements []*Announcement    `json:"announcements"`

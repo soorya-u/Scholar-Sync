@@ -27,9 +27,10 @@ export default function CoreSwitcher({
 }) {
   const { isMobile } = useSidebar();
 
-  const { core: activeCore, setCore: setActiveCore } = useCore();
+  const { core: activeCore, setCoreById } = useCore();
 
   if (activeCore.id === "")
+    // TODO: Add a Modal trigger to this
     return (
       <SidebarMenu>
         <SidebarMenuItem>
@@ -80,7 +81,7 @@ export default function CoreSwitcher({
             {cores.map((core) => (
               <DropdownMenuItem
                 key={core.id}
-                onClick={() => console.log("set active core")}
+                onClick={async () => await setCoreById(core.id)}
                 className="gap-2 p-2"
               >
                 <div className="flex size-6 items-center justify-center rounded-sm border">

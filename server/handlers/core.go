@@ -15,6 +15,38 @@ func CreateCoreHandler(db *database.DB, payload models.CoreData, userId string) 
 	return coreId, nil
 }
 
+func GetCoreWithMembersHandler(db *database.DB, userId, coreId string) (*models.Core, error) {
+	dbCore, err := db.GetCoreWithMembers(coreId)
+	if err != nil {
+		return nil, err
+	}
+
+	core := models.Core{
+		ID:        dbCore.ID.String(),
+		Name:      dbCore.Name,
+		ImageURL:  dbCore.ImageURL,
+		CreatedAt: dbCore.CreatedAt.Time,
+		UpdatedAt: dbCore.CreatedAt.Time,
+	}
+
+	for _, m := range dbCore.Members {
+		if m.ID.String() == userId {
+			core.UserRole = models.ProfileType(m.Role)
+		}
+
+		core.Members = append(core.Members, &models.ProfileWithRole{
+			ID:        m.ID.String(),
+			FullName:  m.FullName,
+			Email:     m.Email,
+			CreatedAt: m.CreatedAt.Time,
+			Role:      models.ProfileType(m.Role),
+		})
+	}
+
+	return &core, nil
+
+}
+
 func DeleteCoreHandler(db *database.DB, coreId, userId string) (bool, error) {
 	if ok, err := db.IsAdmin(coreId, userId); err != nil {
 		return false, err

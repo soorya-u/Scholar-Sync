@@ -15,7 +15,7 @@ func (db *DB) CreateNexus(name, userId, coreId, category string) (string, error)
 		"category": category,
 	}
 
-	dbNexus, err := surrealdb.Create[models.DBNexus](db.client, surrealmodels.Table("nexus"), params)
+	dbNexus, err := surrealdb.Create[models.DbNexus](db.client, surrealmodels.Table("nexus"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to add to database: %v", err)
 	}

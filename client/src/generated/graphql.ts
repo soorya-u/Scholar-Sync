@@ -49,6 +49,7 @@ export type Core = {
   members: Array<Maybe<ProfileWithRole>>;
   name: Scalars['String']['output'];
   updatedAt: Scalars['Time']['output'];
+  userRole: ProfileType;
 };
 
 export type CoreData = {
@@ -180,6 +181,7 @@ export type Nexus = {
   members: Array<Maybe<ProfileWithRole>>;
   name: Scalars['String']['output'];
   updatedAt: Scalars['Time']['output'];
+  userRole: ProfileType;
 };
 
 export type NexusData = {
@@ -217,10 +219,22 @@ export type ProfileWithRole = {
 
 export type Query = {
   __typename?: 'Query';
+  getCore: Core;
+  getNexus: Nexus;
   getTree: Array<Maybe<Tree>>;
   getUser: Profile;
   login: Scalars['String']['output'];
   logout: Scalars['Boolean']['output'];
+};
+
+
+export type QueryGetCoreArgs = {
+  coreId: Scalars['String']['input'];
+};
+
+
+export type QueryGetNexusArgs = {
+  nexusId: Scalars['String']['input'];
 };
 
 
@@ -280,6 +294,13 @@ export type CreateCoreMutationVariables = Exact<{
 
 
 export type CreateCoreMutation = { __typename?: 'Mutation', createCore: string };
+
+export type GetCoreQueryVariables = Exact<{
+  coreId: Scalars['String']['input'];
+}>;
+
+
+export type GetCoreQuery = { __typename?: 'Query', getCore: { __typename?: 'Core', id: string, name: string, imageUrl: string, createdAt: any, updatedAt: any, userRole: ProfileType, members: Array<{ __typename?: 'ProfileWithRole', id: string, fullName: string, email: string, createdAt: any, role: ProfileType } | null> } };
 
 export type DeleteCoreMutationVariables = Exact<{
   coreId: Scalars['String']['input'];
@@ -547,6 +568,58 @@ export function useCreateCoreMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateCoreMutationHookResult = ReturnType<typeof useCreateCoreMutation>;
 export type CreateCoreMutationResult = Apollo.MutationResult<CreateCoreMutation>;
 export type CreateCoreMutationOptions = Apollo.BaseMutationOptions<CreateCoreMutation, CreateCoreMutationVariables>;
+export const GetCoreDocument = gql`
+    query GetCore($coreId: String!) {
+  getCore(coreId: $coreId) {
+    id
+    name
+    imageUrl
+    createdAt
+    updatedAt
+    userRole
+    members {
+      id
+      fullName
+      email
+      createdAt
+      role
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCoreQuery__
+ *
+ * To run a query within a React component, call `useGetCoreQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCoreQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCoreQuery({
+ *   variables: {
+ *      coreId: // value for 'coreId'
+ *   },
+ * });
+ */
+export function useGetCoreQuery(baseOptions: Apollo.QueryHookOptions<GetCoreQuery, GetCoreQueryVariables> & ({ variables: GetCoreQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCoreQuery, GetCoreQueryVariables>(GetCoreDocument, options);
+      }
+export function useGetCoreLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCoreQuery, GetCoreQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCoreQuery, GetCoreQueryVariables>(GetCoreDocument, options);
+        }
+export function useGetCoreSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCoreQuery, GetCoreQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCoreQuery, GetCoreQueryVariables>(GetCoreDocument, options);
+        }
+export type GetCoreQueryHookResult = ReturnType<typeof useGetCoreQuery>;
+export type GetCoreLazyQueryHookResult = ReturnType<typeof useGetCoreLazyQuery>;
+export type GetCoreSuspenseQueryHookResult = ReturnType<typeof useGetCoreSuspenseQuery>;
+export type GetCoreQueryResult = Apollo.QueryResult<GetCoreQuery, GetCoreQueryVariables>;
 export const DeleteCoreDocument = gql`
     mutation DeleteCore($coreId: String!) {
   deleteCore(coreId: $coreId)

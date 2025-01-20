@@ -27,7 +27,8 @@ import { cn } from "@/utils/cn";
 import { useUploader } from "@/hooks/use-uploader";
 import MobileView from "./mobile-view";
 import { useNexus } from "@/hooks/use-nexus";
-import { UserRole } from "@/types/api";
+
+import { ProfileType } from "@/generated/graphql";
 
 type UploaderType = "Announcement" | "File";
 const uploaders: UploaderType[] = ["Announcement", "File"];
@@ -43,7 +44,7 @@ export default function Uploader() {
     useUploader(uploader);
 
   const userRole = nexus.members.find((m) => m.id === user.id);
-  if (!userRole || !(userRole.role === UserRole.ADMIN)) return;
+  if (!userRole || !(userRole.role === ProfileType.Admin)) return;
 
   return (
     <>
