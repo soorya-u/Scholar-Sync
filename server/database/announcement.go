@@ -9,12 +9,12 @@ import (
 )
 
 func (db *DB) CreateAnnouncement(title, message, nexusId, userId string) (string, error) {
-	params := models.DBAnnouncement{
+	params := models.DbAnnouncement{
 		Title:   title,
 		Message: message,
 	}
 
-	dbAnnouncement, err := surrealdb.Create[models.DBAnnouncement](db.client, surrealmodels.Table("announcement"), params)
+	dbAnnouncement, err := surrealdb.Create[models.DbAnnouncement](db.client, surrealmodels.Table("announcement"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to create announcement in DB: %v", err)
 	}
@@ -62,7 +62,7 @@ func (db *DB) GetAnnouncements(announcementIds []string) ([]*models.Announcement
 		"announcementIds": announcementIds,
 	}
 
-	rawData, err := surrealdb.Query[[]models.DBAnnouncement](db.client, query, params)
+	rawData, err := surrealdb.Query[[]models.DbAnnouncement](db.client, query, params)
 	if err != nil {
 		return nil, fmt.Errorf("unable to fetch announcements: %v", err)
 	}

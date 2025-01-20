@@ -17,7 +17,7 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 		"fileName":    fileName,
 	}
 
-	dbFile, err := surrealdb.Create[models.DBFile](db.client, surrealmodels.Table("file"), params)
+	dbFile, err := surrealdb.Create[models.DbFile](db.client, surrealmodels.Table("file"), params)
 	if err != nil {
 		return "", fmt.Errorf("unable to create file in DB: %v", err)
 	}
@@ -51,13 +51,13 @@ func (db *DB) CreateFile(title, description, fileName, fileUrl, nexusId, userId 
 
 }
 
-func (db *DB) GetFileByPath(filePath string) (*models.DBFile, error) {
+func (db *DB) GetFileByPath(filePath string) (*models.DbFile, error) {
 	query := "SELECT * from file WHERE fileUrl = $filePath"
 	params := map[string]interface{}{
 		"filePath": filePath,
 	}
 
-	rawData, err := surrealdb.Query[[]models.DBFile](db.client, query, params)
+	rawData, err := surrealdb.Query[[]models.DbFile](db.client, query, params)
 	if err != nil {
 		return nil, fmt.Errorf("error in running query: %v", err)
 	}

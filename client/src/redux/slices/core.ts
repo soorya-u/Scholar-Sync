@@ -1,13 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
-import { TCore, UserRole } from "@/types/api";
+import { TCore } from "@/types/api";
+import { ProfileType } from "@/generated/graphql";
 
 const initialState: TCore = {
   id: "",
   name: "",
   imageUrl: "",
   members: [],
-  userRole: UserRole.NORMAL,
+  userRole: ProfileType.Normal,
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };
@@ -16,7 +17,7 @@ export const coreSlice = createSlice({
   name: "core",
   initialState,
   reducers: {
-    setCore: (_, { payload }: PayloadAction<TCore>) => payload,
+    setCore: (_state, { payload }: PayloadAction<TCore>) => payload,
     resetCore: () => initialState,
   },
 });

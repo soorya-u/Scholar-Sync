@@ -38,6 +38,7 @@ type Core {
   name: String!
   imageUrl: String!
   members: [ProfileWithRole]!
+  userRole: ProfileType!
   createdAt: Time!
   updatedAt: Time!
 }
@@ -46,6 +47,7 @@ type Nexus {
   id: ID!
   name: String!
   category: String!
+  userRole: ProfileType!
   members: [ProfileWithRole]!
   files: [File]!
   announcements: [Announcement]!
