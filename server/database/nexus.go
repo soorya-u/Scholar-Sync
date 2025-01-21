@@ -88,6 +88,67 @@ func (db *DB) CreateNexus(name, userId, coreId, category string) (string, error)
 
 }
 
+func (db *DB) GetNexusWithDependencies(nexusId string) (*models.DbNexusWithDeps, error) {
+
+	nexusRecordId := surrealmodels.ParseRecordID(nexusId)
+
+	query := `
+SELECT 
+	*, 
+  (
+		SELECT 
+    	in.id AS id, 
+      in.fullName as fullName, 
+      in.email AS email, 
+      in.createdAt AS createdAt, 
+      role 
+    FROM <-member 
+    ORDER BY role
+	) AS members, 
+  (
+		SELECT 
+    	out.*,
+      (
+				SELECT 
+					->sentBy.out.*[0] as user 
+				FROM out.id
+			).user[0] as out.sentBy
+    FROM ->has 
+    WHERE record::tb(out) == "file"
+  ).out AS files, 
+  (
+		SELECT 
+    	out.*,
+        (
+					SELECT 
+						->sentBy.out.*[0] as user 
+					FROM out.id
+				).user[0] as out.sentBy
+    FROM ->has 
+    WHERE record::tb(out) == "announcement"
+	).out AS announcements 
+FROM $nexusId;
+`
+
+	params := map[string]interface{}{
+		"nexusId": nexusRecordId,
+	}
+
+	res, err := surrealdb.Query[[]models.DbNexusWithDeps](db.client, query, params)
+	if err != nil || len(*res) == 0 {
+		return nil, fmt.Errorf("unable to fetch nexus with deps: %v", err)
+	}
+
+	nexus := (*res)[0].Result
+
+	if len(nexus) == 0 {
+		return nil, fmt.Errorf("no nexus found")
+	}
+
+	return &nexus[0], nil
+
+}
+
 func (db *DB) DeleteNexus(nexusId string) (bool, error) {
 
 	nexusRecordId := surrealmodels.RecordID{Table: "nexus", ID: nexusId}
