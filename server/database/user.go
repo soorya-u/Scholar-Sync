@@ -68,7 +68,11 @@ SELECT
 	(SELECT 
 		id, 
 		name, 
-		imageUrl FROM <-contains[0].in)[0] as core FROM nexus WHERE $userId IN <-member.in
+		imageUrl 
+	FROM 
+		<-contains[0].in)[0] as core 
+FROM nexus 
+WHERE $userId IN <-member.in;
 `
 
 	params := map[string]interface{}{"userId": userRecordId}

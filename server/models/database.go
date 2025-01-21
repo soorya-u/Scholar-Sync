@@ -70,3 +70,24 @@ type DbCoreWithMembers struct {
 	DbCore
 	Members []dbProfile `json:"members"`
 }
+
+type dbSender struct {
+	SentBy DbUser `json:"sentBy"`
+}
+
+type dbFilesWithSender struct {
+	DbFile
+	dbSender
+}
+
+type DbAnnouncementsWithSender struct {
+	DbAnnouncement
+	dbSender
+}
+
+type DbNexusWithDeps struct {
+	DbNexus
+	Announcements []DbAnnouncementsWithSender `json:"announcements"`
+	Files         []dbFilesWithSender         `json:"files"`
+	Members       []dbProfile                 `json:"members"`
+}

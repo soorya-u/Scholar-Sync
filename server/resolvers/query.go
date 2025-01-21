@@ -6,7 +6,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/soorya-u/scholar-sync/generated"
 	"github.com/soorya-u/scholar-sync/handlers"
@@ -69,7 +68,12 @@ func (r *queryResolver) GetCore(ctx context.Context, coreID string) (*models.Cor
 }
 
 func (r *queryResolver) GetNexus(ctx context.Context, nexusID string) (*models.Nexus, error) {
-	panic(fmt.Errorf("not implemented: GetNexus - getNexus"))
+	userId, err := helpers.GetUserIdFromCookie(&ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	return handlers.GetNexusWithDeps(r.Db, userId, nexusID)
 }
 
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
