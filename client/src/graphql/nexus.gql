@@ -2,6 +2,50 @@ mutation CreateNexus($name: String!, $category: String!, $coreId: String!) {
   createNexus(input: { name: $name, category: $category, coreId: $coreId })
 }
 
+query GetNexus($nexusId: String!) {
+  getNexus(nexusId: $nexusId) {
+    id
+    name
+    category
+    createdAt
+    updatedAt
+    userRole
+    members {
+      id
+      fullName
+      email
+      createdAt
+      role
+    }
+    announcements {
+      id
+      title
+      message
+      sentBy {
+        id
+        fullName
+        email
+        createdAt
+      }
+      timestamp
+    }
+    files {
+      id
+      title
+      description
+      fileName
+      fileUrl
+      sentBy {
+        id
+        fullName
+        email
+        createdAt
+      }
+      timestamp
+    }
+  }
+}
+
 mutation DeleteNexus($nexusId: String!) {
   deleteNexus(nexusId: $nexusId)
 }

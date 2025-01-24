@@ -11,6 +11,8 @@ const initialState: TNexus = {
   updatedAt: new Date().toISOString(),
   members: [],
   userRole: ProfileType.Normal,
+  announcements: [],
+  files: [],
 };
 
 export const nexusSlice = createSlice({
