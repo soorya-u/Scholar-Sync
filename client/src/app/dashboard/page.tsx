@@ -33,7 +33,7 @@ export default function DashboardPage() {
               // TODO: Change to Better Message
               <NotFound message="You need to join a Core inorder to Use the App" />
             ) : (
-              <div className="flex flex-1 flex-col">
+              <div className="flex flex-1 flex-col overflow-y-scroll">
                 <Viewer />
                 <Uploader />
               </div>

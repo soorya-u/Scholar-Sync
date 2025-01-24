@@ -7,10 +7,7 @@ export const treeSlice = createSlice({
   name: "tree",
   initialState,
   reducers: {
-    setTree: (_state, { payload }: PayloadAction<TUserTree[]>) => {
-      console.log({ payload });
-      return payload;
-    },
+    setTree: (_state, { payload }: PayloadAction<TUserTree[]>) => payload,
     resetTree: () => initialState,
   },
 });

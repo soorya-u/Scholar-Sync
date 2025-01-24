@@ -29,6 +29,8 @@ export default function CoreSwitcher({
 
   const { core: activeCore, setCoreById } = useCore();
 
+  console.log({ activeCore });
+
   if (activeCore.id === "")
     // TODO: Add a Modal trigger to this
     return (

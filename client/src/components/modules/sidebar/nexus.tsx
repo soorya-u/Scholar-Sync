@@ -1,4 +1,6 @@
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight } from "lucide-react";
+
+import { useNexus } from "@/hooks/use-nexus";
 
 import {
   Collapsible,
@@ -16,6 +18,7 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 
+import { cn } from "@/utils/cn";
 
 type CategoryProps = {
   categories: {
@@ -25,6 +28,8 @@ type CategoryProps = {
 };
 
 export default function CategoriesList({ categories }: CategoryProps) {
+  const { nexus, setNexusById } = useNexus();
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Categories</SidebarGroupLabel>
@@ -39,7 +44,13 @@ export default function CategoriesList({ categories }: CategoryProps) {
             <SidebarMenuItem>
               <CollapsibleTrigger asChild>
                 <SidebarMenuButton tooltip={category.name}>
-                  <span>{category.name} Semester</span>
+                  <span
+                    className={cn(
+                      category.name === nexus.category && "font-semibold",
+                    )}
+                  >
+                    {category.name} Semester
+                  </span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
               </CollapsibleTrigger>
@@ -48,9 +59,14 @@ export default function CategoriesList({ categories }: CategoryProps) {
                   {category.nexus.map((n) => (
                     <SidebarMenuSubItem key={n.id}>
                       <SidebarMenuSubButton
-                        onClick={() => console.log("set active nexus")}
+                        className="cursor-pointer"
+                        onClick={async () => await setNexusById(n.id)}
                       >
-                        <span>{n.name}</span>
+                        <span
+                          className={cn(n.id === nexus.id && "font-semibold")}
+                        >
+                          {n.name}
+                        </span>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
                   ))}

@@ -1,19 +1,43 @@
-import { useEffect, useState } from "react";
+import { useMemo } from "react";
 
 import { useNexus } from "@/hooks/use-nexus";
 
 import { Separator } from "@/components/ui/separator";
+
 import FileViewer from "./file-viewer";
 import AnnouncementViewer from "./announcement-viewer";
+
 import { dateFormatter } from "@/utils/date-formatter";
+
+import { TAnnouncement, TFile } from "@/types/api";
+
+type TResource =
+  | (TAnnouncement & { type: "announcement" })
+  | (TFile & { type: "file" });
 
 export default function Viewer() {
   const { nexus } = useNexus();
-  const [dashboardList, setDashboardList] = useState<any[]>([]);
+
+  const resources: TResource[] = useMemo(() => {
+    const announcements: (TAnnouncement & { type: "announcement" })[] =
+      nexus.announcements.map((a) => ({
+        ...a,
+        type: "announcement",
+      }));
+    const files: (TFile & { type: "file" })[] = nexus.files.map((f) => ({
+      ...f,
+      type: "file",
+    }));
+
+    return [...files, ...announcements].sort(
+      (a, b) =>
+        new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime(),
+    );
+  }, [nexus]);
 
   return (
     <div className="flex-1 overflow-x-auto">
-      {dashboardList.length === 0 ? (
+      {resources.length === 0 ? (
         <div className="flex h-full flex-1 flex-col items-center justify-center gap-4 overflow-y-auto p-4">
           <h1 className="text-center font-playwrite text-3xl text-amber-300">
             No Files or Announcements Found
@@ -32,36 +56,29 @@ export default function Viewer() {
           </div>
           <Separator className="opacity-25" />
 
-          {dashboardList.map((d) => {
-            if (d.id.split(":")[0] === "announcement")
-              return (
-                <AnnouncementViewer
-                  key={d.id}
-                  creatorId={d.sentBy.id}
-                  creator={d.sentBy.fullName}
-                  date={new Date(d.timeStamp)}
-                  // @ts-ignore
-                  description={d.message}
-                  title={d.title}
-                />
-              );
-            else if (d.id.split(":")[0] === "file")
-              return (
-                <FileViewer
-                  key={d.id}
-                  creatorId={d.sentBy.id}
-                  creator={d.sentBy.fullName}
-                  date={new Date(d.timeStamp)}
-                  // @ts-ignore
-                  description={d.description}
-                  // @ts-ignore
-                  fileUrl={d.fileUrl}
-                  // @ts-ignore
-                  fileName={d.fileName}
-                  title={d.title}
-                />
-              );
-          })}
+          {resources.map((d) =>
+            d.type === "announcement" ? (
+              <AnnouncementViewer
+                key={d.id}
+                creatorId={d.sentBy.id}
+                creator={d.sentBy.fullName}
+                date={new Date(d.timestamp)}
+                description={d.message}
+                title={d.title}
+              />
+            ) : (
+              <FileViewer
+                key={d.id}
+                creatorId={d.sentBy.id}
+                creator={d.sentBy.fullName}
+                date={new Date(d.timestamp)}
+                description={d.description}
+                fileUrl={d.fileUrl}
+                fileName={d.fileName}
+                title={d.title}
+              />
+            ),
+          )}
         </div>
       )}
     </div>

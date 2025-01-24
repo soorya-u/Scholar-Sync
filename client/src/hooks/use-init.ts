@@ -6,9 +6,11 @@ import { useUser } from "./use-user";
 import { TUserTree } from "@/types/api";
 
 import { useGetCurrentUserQuery, useGetTreeQuery } from "@/generated/graphql";
+import { useCore } from "./use-core";
 
 export const useTreeInit = () => {
   const { setTree } = useTree();
+  const { setCoreById } = useCore();
 
   const { refetch, loading } = useGetTreeQuery({
     onCompleted: ({ getTree }) => {
@@ -17,6 +19,7 @@ export const useTreeInit = () => {
         .filter((p) => !!p);
 
       setTree(payload);
+      if (payload.length > 0) setCoreById(payload[0].id);
     },
   });
 

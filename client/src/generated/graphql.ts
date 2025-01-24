@@ -351,6 +351,13 @@ export type CreateNexusMutationVariables = Exact<{
 
 export type CreateNexusMutation = { __typename?: 'Mutation', createNexus: string };
 
+export type GetNexusQueryVariables = Exact<{
+  nexusId: Scalars['String']['input'];
+}>;
+
+
+export type GetNexusQuery = { __typename?: 'Query', getNexus: { __typename?: 'Nexus', id: string, name: string, category: string, createdAt: any, updatedAt: any, userRole: ProfileType, members: Array<{ __typename?: 'ProfileWithRole', id: string, fullName: string, email: string, createdAt: any, role: ProfileType } | null>, announcements: Array<{ __typename?: 'Announcement', id: string, title: string, message: string, timestamp: any, sentBy: { __typename?: 'Profile', id: string, fullName: string, email: string, createdAt: any } } | null>, files: Array<{ __typename?: 'File', id: string, title: string, description: string, fileName: string, fileUrl: string, timestamp: any, sentBy: { __typename?: 'Profile', id: string, fullName: string, email: string, createdAt: any } } | null> } };
+
 export type DeleteNexusMutationVariables = Exact<{
   nexusId: Scalars['String']['input'];
 }>;
@@ -815,6 +822,84 @@ export function useCreateNexusMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateNexusMutationHookResult = ReturnType<typeof useCreateNexusMutation>;
 export type CreateNexusMutationResult = Apollo.MutationResult<CreateNexusMutation>;
 export type CreateNexusMutationOptions = Apollo.BaseMutationOptions<CreateNexusMutation, CreateNexusMutationVariables>;
+export const GetNexusDocument = gql`
+    query GetNexus($nexusId: String!) {
+  getNexus(nexusId: $nexusId) {
+    id
+    name
+    category
+    createdAt
+    updatedAt
+    userRole
+    members {
+      id
+      fullName
+      email
+      createdAt
+      role
+    }
+    announcements {
+      id
+      title
+      message
+      sentBy {
+        id
+        fullName
+        email
+        createdAt
+      }
+      timestamp
+    }
+    files {
+      id
+      title
+      description
+      fileName
+      fileUrl
+      sentBy {
+        id
+        fullName
+        email
+        createdAt
+      }
+      timestamp
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetNexusQuery__
+ *
+ * To run a query within a React component, call `useGetNexusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetNexusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetNexusQuery({
+ *   variables: {
+ *      nexusId: // value for 'nexusId'
+ *   },
+ * });
+ */
+export function useGetNexusQuery(baseOptions: Apollo.QueryHookOptions<GetNexusQuery, GetNexusQueryVariables> & ({ variables: GetNexusQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetNexusQuery, GetNexusQueryVariables>(GetNexusDocument, options);
+      }
+export function useGetNexusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetNexusQuery, GetNexusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetNexusQuery, GetNexusQueryVariables>(GetNexusDocument, options);
+        }
+export function useGetNexusSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetNexusQuery, GetNexusQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetNexusQuery, GetNexusQueryVariables>(GetNexusDocument, options);
+        }
+export type GetNexusQueryHookResult = ReturnType<typeof useGetNexusQuery>;
+export type GetNexusLazyQueryHookResult = ReturnType<typeof useGetNexusLazyQuery>;
+export type GetNexusSuspenseQueryHookResult = ReturnType<typeof useGetNexusSuspenseQuery>;
+export type GetNexusQueryResult = Apollo.QueryResult<GetNexusQuery, GetNexusQueryVariables>;
 export const DeleteNexusDocument = gql`
     mutation DeleteNexus($nexusId: String!) {
   deleteNexus(nexusId: $nexusId)
