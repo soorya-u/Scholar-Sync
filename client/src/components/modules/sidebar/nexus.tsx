@@ -1,4 +1,4 @@
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, PlusIcon } from "lucide-react";
 
 import { useNexus } from "@/hooks/use-nexus";
 
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/sidebar";
 
 import { cn } from "@/utils/cn";
+import CreateNexusModal from "../modals/nexus";
 
 type CategoryProps = {
   categories: {
@@ -32,7 +33,14 @@ export default function CategoriesList({ categories }: CategoryProps) {
 
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Categories</SidebarGroupLabel>
+      <SidebarGroupLabel>
+        <div className="flex w-full items-center justify-between">
+          <h5>Nexus</h5>
+          <CreateNexusModal>
+            <PlusIcon className="size-4" />
+          </CreateNexusModal>
+        </div>
+      </SidebarGroupLabel>
       <SidebarMenu>
         {categories.map((category) => (
           <Collapsible

@@ -1,5 +1,8 @@
+import { PropsWithChildren } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
   DialogContent,
   DialogDescription,
   DialogFooter,
@@ -11,7 +14,23 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useCoreCreate } from "@/hooks/use-create";
 
-export default function CreateCore() {
+export default function CreateCoreModal({
+  children,
+  withoutWrapperAndTrigger = false,
+}: PropsWithChildren & { withoutWrapperAndTrigger?: boolean }) {
+  return !!withoutWrapperAndTrigger ? (
+    <CreateCoreForm />
+  ) : (
+    <Dialog>
+      <DialogTrigger className="flex items-center justify-center gap-2">
+        {children}
+      </DialogTrigger>
+      <CreateCoreForm />
+    </Dialog>
+  );
+}
+
+const CreateCoreForm = () => {
   const { errors, handleSubmit, isSubmitting, register } = useCoreCreate();
 
   return (
@@ -78,4 +97,4 @@ export default function CreateCore() {
       </form>
     </DialogContent>
   );
-}
+};
