@@ -21,8 +21,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 
-import { useUser } from "@/hooks/use-user";
-
 import { cn } from "@/utils/cn";
 import { useUploader } from "@/hooks/use-uploader";
 import MobileView from "./mobile-view";
@@ -35,7 +33,6 @@ const uploaders: UploaderType[] = ["Announcement", "File"];
 
 export default function Uploader() {
   const { nexus } = useNexus();
-  const { user } = useUser();
   const [isUploaderOpen, setIsUploaderOpen] = useState(false);
   const [uploader, setUploader] = useState<UploaderType>("Announcement");
   const [isFileExists, setIsFileExists] = useState(false);
@@ -43,8 +40,7 @@ export default function Uploader() {
   const { register, handleSubmit, isSubmitting, getValues, setValue } =
     useUploader(uploader);
 
-  const userRole = nexus.members.find((m) => m.id === user.id);
-  if (!userRole || !(userRole.role === ProfileType.Admin)) return;
+  if (nexus.userRole !== ProfileType.Admin) return;
 
   return (
     <>
