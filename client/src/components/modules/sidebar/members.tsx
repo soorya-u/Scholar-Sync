@@ -1,88 +1,122 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { useMemo } from "react";
+
+import { useCore } from "@/hooks/use-core";
+import { useNexus } from "@/hooks/use-nexus";
+import { useUser } from "@/hooks/use-user";
+
 import {
   SidebarGroup,
   SidebarGroupLabel,
   SidebarMenu,
-  SidebarMenuAction,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar";
-import {
-  Folder,
-  Forward,
-  MoreHorizontal,
-  Trash2,
-  type LucideIcon,
-} from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import UserAvatar from "@/components/user-avatar";
 
-type MembersProp = {
-  projects: {
-    name: string;
-    url: string;
-    icon: LucideIcon;
-  }[];
-};
+import { type TUser } from "@/types/api";
 
-export default function NavProjects({ projects }: MembersProp) {
+import { ProfileType } from "@/generated/graphql";
 
-  // use shadcn tabs to show members of core and nexus
+export default function Members() {
+  const {
+    user: { id: userId },
+  } = useUser();
 
-  const { isMobile } = useSidebar();
+  const {
+    nexus: { members: allNexusMembers, id: nexusId },
+  } = useNexus();
+
+  const {
+    core: { members: allCoreMembers, id: coreId },
+  } = useCore();
+
+  const coreMembers = useMemo(
+    () => ({
+      admins: allCoreMembers.filter((m) => m.role === ProfileType.Admin),
+      normalMembers: allCoreMembers.filter(
+        (m) => m.role === ProfileType.Normal,
+      ),
+    }),
+    [allCoreMembers],
+  );
+
+  const nexusMembers = useMemo(
+    () => ({
+      admins: allNexusMembers.filter((m) => m.role === ProfileType.Admin),
+      normalMembers: allNexusMembers.filter(
+        (m) => m.role === ProfileType.Normal,
+      ),
+    }),
+    [allNexusMembers],
+  );
+
+  if (coreId === "") return;
+
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
-      <SidebarGroupLabel>Projects</SidebarGroupLabel>
+    <SidebarGroup className="flex-1 group-data-[collapsible=icon]:hidden">
+      <SidebarGroupLabel>Members</SidebarGroupLabel>
       <SidebarMenu>
-        {projects.map((item) => (
-          <SidebarMenuItem key={item.name}>
-            <SidebarMenuButton asChild>
-              <a href={item.url}>
-                <item.icon />
-                <span>{item.name}</span>
-              </a>
-            </SidebarMenuButton>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuAction showOnHover>
-                  <MoreHorizontal />
-                  <span className="sr-only">More</span>
-                </SidebarMenuAction>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-48 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align={isMobile ? "end" : "start"}
-              >
-                <DropdownMenuItem>
-                  <Folder className="text-muted-foreground" />
-                  <span>View Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Forward className="text-muted-foreground" />
-                  <span>Share Project</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <Trash2 className="text-muted-foreground" />
-                  <span>Delete Project</span>
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontal className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        <Tabs defaultValue="core" className="w-full">
+          <TabsList className="sticky top-0 w-full rounded-none bg-[#F6F6F6]">
+            <TabsTrigger className="flex-1" value="core">
+              Core
+            </TabsTrigger>
+            <TabsTrigger
+              disabled={nexusId === ""}
+              className="flex-1"
+              value="nexus"
+            >
+              Nexus
+            </TabsTrigger>
+          </TabsList>
+          {[coreMembers, nexusMembers].map((m, idx) => (
+            <TabsContent
+              key={idx}
+              className="divide-y-4 divide-transparent"
+              value={idx === 0 ? "core" : "nexus"}
+            >
+              <MemberList userId={userId} title="Admins" users={m.admins} />
+              <MemberList
+                userId={userId}
+                title="Normal Members"
+                users={m.normalMembers}
+              />
+            </TabsContent>
+          ))}
+        </Tabs>
       </SidebarMenu>
     </SidebarGroup>
   );
 }
+
+type MemberListProp = {
+  title: string;
+  users: (TUser & { role: ProfileType })[];
+  userId: string;
+};
+
+const MemberList = ({ title, users, userId }: MemberListProp) =>
+  users.length > 0 && (
+    <div className="flex flex-col gap-1">
+      <h2 className="text-sm text-gray-500">{title}</h2>
+      <div className="ml-2 flex flex-col gap-2">
+        {users
+          .sort((u) => (u.id === userId ? -1 : 1))
+          .map((u) => (
+            <div key={u.id} className="flex items-center gap-2">
+              <UserAvatar
+                id={u.id}
+                name={u.fullName}
+                className="size-6"
+                textClassName="text-xs"
+              />
+              <span className="text text-[14px]">
+                {u.fullName}{" "}
+                <span className="text-[12px]">
+                  {u.id === userId && "(You)"}
+                </span>
+              </span>
+            </div>
+          ))}
+      </div>
+    </div>
+  );

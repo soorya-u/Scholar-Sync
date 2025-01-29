@@ -1,3 +1,8 @@
+import { useMemo } from "react";
+
+import { useTree } from "@/hooks/use-tree";
+import { useCore } from "@/hooks/use-core";
+
 import {
   Sidebar as UISidebar,
   SidebarContent,
@@ -6,15 +11,10 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar";
 
-import { Frame, Map, PieChart } from "lucide-react";
-
 import CoreSwitcher from "./cores";
 import CategoriesList from "./nexus";
-import NavProjects from "./members";
+import Members from "./members";
 import NavUser from "./user";
-import { useTree } from "@/hooks/use-tree";
-import { useMemo } from "react";
-import { useCore } from "@/hooks/use-core";
 
 const categoryNames = [
   "First",
@@ -50,7 +50,7 @@ export default function Sidebar() {
       </SidebarHeader>
       <SidebarContent>
         <CategoriesList categories={categories} />
-        <NavProjects projects={projects} />
+        <Members />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />
@@ -59,21 +59,3 @@ export default function Sidebar() {
     </UISidebar>
   );
 }
-
-const projects = [
-  {
-    name: "Design Engineering", 
-    url: "#",
-    icon: Frame,
-  },
-  {
-    name: "Sales & Marketing",
-    url: "#",
-    icon: PieChart,
-  },
-  {
-    name: "Travel",
-    url: "#",
-    icon: Map,
-  },
-];
