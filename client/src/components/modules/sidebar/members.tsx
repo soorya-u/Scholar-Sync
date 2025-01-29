@@ -70,6 +70,7 @@ export default function Members() {
           </TabsList>
           {[coreMembers, nexusMembers].map((m, idx) => (
             <TabsContent
+              key={idx}
               className="divide-y-4 divide-transparent"
               value={idx === 0 ? "core" : "nexus"}
             >
@@ -101,7 +102,7 @@ const MemberList = ({ title, users, userId }: MemberListProp) =>
         {users
           .sort((u) => (u.id === userId ? -1 : 1))
           .map((u) => (
-            <div className="flex items-center gap-2">
+            <div key={u.id} className="flex items-center gap-2">
               <UserAvatar
                 id={u.id}
                 name={u.fullName}
