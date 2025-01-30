@@ -34,6 +34,9 @@ const categories = [
   "Eighth",
 ] as const;
 
+// TODO: Incorrect Component. Need to change
+// Add Role of User and Core and Nexus
+// Hard Logic on Backend
 export default function InviteMemberModal({ children }: PropsWithChildren) {
   const { errors, handleSubmit, isSubmitting, register, category } =
     useNexusCreate();
