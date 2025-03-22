@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.47
 	github.com/gin-contrib/cors v1.7.2
 	github.com/gin-gonic/gin v1.10.0
-	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/golang-jwt/jwt/v5 v5.2.2
 	github.com/joho/godotenv v1.5.1
 	github.com/surrealdb/surrealdb.go v0.3.2
 	github.com/vektah/gqlparser/v2 v2.5.15
