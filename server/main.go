@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/soorya-u/scholar-sync/helpers"
@@ -26,9 +28,10 @@ func main() {
 
 	routes.GraphQLRoutes(server)
 
-	err := server.Run(port)
+	fmt.Printf("Starting Gin Server at http://localhost%v\n", port)
+	os.Stdout.Sync()
 
-	if err != nil {
+	if err := server.Run(port); err != nil {
 		log.Fatalf("Unable to Start Server: %v", err)
 	}
 }

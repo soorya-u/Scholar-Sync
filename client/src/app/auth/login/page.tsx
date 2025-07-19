@@ -44,7 +44,7 @@ export default function LoginPage() {
                 Email
               </Label>
               <Input
-                className="border-2 border-border"
+                className="border-2 border-border placeholder:text-gray-500"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 {...register("email")}
@@ -52,7 +52,7 @@ export default function LoginPage() {
                 placeholder="john-doe@example.com"
               />
               <span className="px-2 text-xs text-red-500">
-                {errors && errors.email && errors.email.message}
+                {errors.email?.message}
               </span>
             </div>
             <div className="grid gap-2">
@@ -60,7 +60,7 @@ export default function LoginPage() {
                 Password
               </Label>
               <Input
-                className="border-2 border-border"
+                className="border-2 border-border placeholder:text-gray-500"
                 disabled={isSubmitting}
                 aria-disabled={isSubmitting}
                 {...register("password")}
@@ -69,7 +69,7 @@ export default function LoginPage() {
                 placeholder="********"
               />
               <span className="px-2 text-xs text-red-500">
-                {errors && errors.password && errors.password.message}
+                {errors.password?.message}
               </span>
             </div>
           </CardContent>

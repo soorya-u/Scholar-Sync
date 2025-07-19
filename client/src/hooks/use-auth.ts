@@ -103,7 +103,7 @@ export const useLogin = () => {
       router.replace(
         location && joinId && userId
           ? `/link/${location}/${joinId}/${userId}`
-          : "dashboard",
+          : "/dashboard",
       );
     });
   };

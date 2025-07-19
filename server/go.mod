@@ -1,6 +1,6 @@
 module github.com/soorya-u/scholar-sync
 
-go 1.22.3
+go 1.23.6
 
 require (
 	github.com/99designs/gqlgen v0.17.47

@@ -4,3 +4,7 @@ database/data
 static
 .air.toml
 .gitignore
+.dockerignore
+Dockerfile
+.git
+history.txt
