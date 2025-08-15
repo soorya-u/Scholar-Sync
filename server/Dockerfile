@@ -20,10 +20,7 @@ RUN apk add --no-cache bash coreutils
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /app/dist/main .
 COPY --from=builder /app/database/init.surql ./database/init.surql
-COPY --from=builder /app/entrypoint.sh ./entrypoint.sh
-
-RUN chmod +x /app/entrypoint.sh
 
 EXPOSE 7000
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/main"]

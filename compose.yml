@@ -2,7 +2,10 @@ services:
   client:
     build:
       context: client
-    container_name: client
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+        NEXT_PUBLIC_URL: ${NEXT_PUBLIC_URL}
+    container_name: scholar-sync-client
     env_file:
       - client/.env.docker
     ports:
@@ -15,7 +18,7 @@ services:
   server:
     build:
       context: server
-    container_name: server
+    container_name: scholar-sync-server
     env_file:
       - server/.env.docker
     ports:
@@ -23,21 +26,27 @@ services:
     networks:
       - app-network
     depends_on:
-      - database
-    command: sh -c "sleep 60 && echo "yo...what happened" && /app/main"
+      surrealdb:
+        condition: service_healthy
   
-  database:
-    image: surrealdb/surrealdb:v2.1.4
-    container_name: database
+  surrealdb:
+    image: surrealdb/surrealdb:v2.1.4-dev
+    container_name: scholar-sync-surrealdb
     ports:
       - 8000:8000
     volumes:
       - ./server/database/data:/tmp/sdb/data
     networks:
       - app-network
-    command: start --user root --pass root rocksdb:/tmp/sdb/data
+    command: 
+      - start
+      - --user 
+      - ${SURREALDB_USERNAME} 
+      - --pass 
+      - ${SURREALDB_PASSWORD}
+      - rocksdb:/tmp/sdb/data
     healthcheck:
-      test: ["CMD", "arg"]
+      test: ["CMD", "/surreal", "is-ready"]
       interval: 1m30s
       timeout: 30s
       retries: 5
